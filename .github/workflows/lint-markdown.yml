@@ -29,3 +29,15 @@ jobs:
 
       - name: Dual-registration test for doc-types
         run: node scripts/tests/test-doc-types-dual-registration.mjs
+
+      - name: Install npm deps for validator tests
+        run: npm ci
+
+      - name: Handoff schema validator tests (datascout)
+        run: node tests/plugin/test_validate_handoff.mjs
+
+      - name: Handoff schema validator tests (grants)
+        run: node tests/plugin/test_validate_grants_handoff.mjs
+
+      - name: Handoff schema validator tests (gov-reuse)
+        run: node tests/plugin/test_validate_gov_reuse_handoff.mjs

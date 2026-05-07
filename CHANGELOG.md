@@ -7,7 +7,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.19.0] - 2026-05-07
+
 ### Added
+
+- **`/arckit:gov-reuse` reader/orchestrator/writer split** (Claude Code plugin only — non-Claude extensions remain at the prior single-tier shape until a follow-up release). Third command after `/arckit:datascout` (v4.16.0) and `/arckit:grants` (v4.18.0) to adopt the three-tier subagent pattern. Reader (`arckit-gov-reuse-reader`, `WebFetch` + `mcp__govreposcrape__search_uk_gov_code` only — no Write/Edit/Bash/Agent/WebSearch) searches govreposcrape per capability and fetches GitHub repo evidence. Orchestrator validates each reader payload via `validate-handoff.mjs`, scores deterministically from the YAML rubric, assigns a reuse strategy band (`Fork` / `Library` / `Reference` / `None`) by score thresholds (`>= 80 / 60-79 / 40-59 / < 40`) with licence overrides for AGPL/Proprietary/Unlicensed → forced `None`. Writer (`arckit-gov-reuse-writer`, `Read`/`Write`/`Edit` only) renders the GOVR artefact and spawns one tech-note per Fork or Library candidate.
+- **Gov-reuse handoff schema** (`arckit-claude/schemas/gov-reuse-handoff.schema.json`). 19 licence types in the allowlist, 22 languages, 28 framework hints, 15 installation methods. No `score`, `rank`, or `recommended_strategy` field — there is nowhere for a judgement to land.
+- **Gov-reuse scoring rubrics** (`arckit-claude/schemas/scoring-rubrics/gov-reuse-{generic,uk-gov}.yaml`). 5 weighted criteria summing to 100: `license_compatibility` 25 / `code_quality` 20 / `documentation` 20 / `tech_stack_alignment` 20 / `activity_maintenance` 15. UK-Gov overlay bumps OGL above MIT/Apache and adds a `trusted_org_bonus` (alphagov, NHSDigital, dfe-digital, hmrc-digital, ministryofjustice, ONSdigital, etc.) applied additively to the `code_quality` per-criterion score before weighting.
+- **CI coverage for gov-reuse schema.** New `tests/plugin/test_validate_gov_reuse_handoff.mjs` runs 2 valid + 5 reject fixtures (extra-property, oversized-summary, off-allowlist licence, injection-inflated-score, injection-extra-language) through the shared `validate-handoff.mjs`. Wired into `.github/workflows/lint-markdown.yml`.
+
+### Removed
+
+- Single-tier `arckit-claude/agents/arckit-gov-reuse.md` (Claude plugin only). The orchestrator role moved to the slash command body; reader and writer live in their own subagent files.
+
+## [4.18.2] - 2026-05-07
+
+### Added
+
+- **`inject-agent-context.mjs` PreToolUse hook** — closes the gap where ArcKit subagents dispatched via the `Agent` tool ran without project context. UserPromptSubmit hooks fire only on real user prompts, so any orchestrator-style subagent whose body assumed "the ArcKit Project Context hook has already detected all projects, artifacts" silently lost that context when invoked indirectly. The new PreToolUse hook (matcher: `Agent`) builds the same context block as `arckit-context.mjs` and prepends it to `tool_input.prompt` via `updatedInput` (the only PreToolUse return-field that propagates into the dispatched subagent's context — `additionalContext` stays in the parent thread). Scoped to `arckit-*` subagent_types; skips reader/writer subagents (their schema-validated JSON payloads must stay clean) and skips general-purpose / Plan / Explore / claude-code-guide / etc. (no spam).
+- **`project-context-builder.mjs`** — extracted the project-scanning logic from `arckit-context.mjs` into a shared module so both the UserPromptSubmit hook and the new PreToolUse hook produce identical context blocks.
+
+## [4.18.1] - 2026-05-07
+
+### Fixed
+
+- **Auto-allow hook now matches per-bucket grants tempfiles.** `allow-plugin-internals.mjs` previously only matched `/tmp/datascout-handoff*.json` and `/tmp/arckit-{name}-handoff*.json`, but at runtime the LLM names per-funder-category dispatch tempfiles like `/tmp/grants-handoff-open-data.AbCdEf.json` (suffixing the bucket name for traceability across multiple Bash invocations). The regex now broadens to `(?:arckit-)?[a-z][a-z0-9]*-handoff(?:-[a-z][a-z0-9-]*)?...`, accepting an optional `arckit-` prefix and an optional hyphenated qualifier between `-handoff` and the random tail. Read auto-allow remains scoped to /tmp and read-only.
+
+## [4.18.0] - 2026-05-07
+
+### Added
+
+- **`/arckit:grants` reader/orchestrator/writer split.** Second command (after `/arckit:datascout` in v4.16.0) to adopt the three-tier subagent pattern documented in `arckit-claude/agents/READER-PATTERN.md`. The reader (`arckit-grants-reader`, WebSearch+WebFetch only, no Write/Edit/Bash/Agent) fetches programme evidence per `funder_category` bucket; the orchestrator (in the slash-command body, since plugin subagents cannot dispatch further subagents) validates the reader's JSON via `validate-handoff.mjs`, scores deterministically from a YAML rubric, then dispatches the writer (`arckit-grants-writer`, Read+Write+Edit only) which renders the GRNT artefact and one tech-note per scored programme.
+- **Grants handoff schema** (`arckit-claude/schemas/grants-handoff.schema.json`). 15-value `funder_type` allowlist, allowlist enums for organisation type / sector / geography / application status / complexity. No `score`, `rank`, or `recommendation` field — there is nowhere for a judgement to land in the schema even if the reader is overridden.
+- **Grants scoring rubrics** (`arckit-claude/schemas/scoring-rubrics/grants-{generic,uk-gov}.yaml`). Six criteria summing to 100: `eligibility_fit` 35 (composite of organisation type / sector overlap / TRL band) / `funding_size_fit` 20 / `timing_fit` 15 (status + deadline proximity) / `complexity_burden` 10 / `historic_traction` 10 / `match_funding_burden` 10. UK-Gov overlay adds `funder_type_bonus` (UKRI / Innovate UK / NIHR / DSIT / DASA preferred) and `geography_bonus` (uk-wide preferred) as additive adjustments to the eligibility_fit per-criterion score before weighting.
+- **CI coverage for the grants schema.** New `tests/plugin/test_validate_grants_handoff.mjs` (mirrors the datascout validator test) runs 2 valid + 5 reject fixtures (extra-property, oversized-field, off-allowlist funder_type, injection-inflated-score, injection-extra-org-type) through the shared `validate-handoff.mjs`. Wired into `.github/workflows/lint-markdown.yml`.
+
+### Removed
+
+- Single-tier `arckit-claude/agents/arckit-grants.md` and the stale generated extension agent files (`arckit-codex/agents/arckit-grants.{md,toml}`, `arckit-copilot/agents/arckit-grants.agent.md`, `arckit-gemini/agents/arckit-grants.md`, `arckit-opencode/agents/arckit-grants.md`). The orchestrator role lives in `arckit-claude/commands/grants.md` from this release onward.
+
+## [4.17.1] - 2026-05-06
+
+### Fixed
+
+- **`/arckit:pages` now enumerates data-source profiles** introduced in v4.17.0. Wired the new `data-sources/{provider-slug}-profile.md` files through `sync-guides.mjs` (manifest scan + count + llms.txt entries), `pages-template.html` (sidebar section + search index category), and `commands/pages.md` (KPI table + manifest schema docs).
+
+## [4.17.0] - 2026-05-06
+
+### Added
+
+- **Datascout spawns per-source profile files.** `/arckit:datascout` now produces one `projects/{P}-{NAME}/data-sources/{provider-slug}-profile.md` per scored data source (in addition to the main DSCT artefact), mirroring the `Spawned Knowledge` pattern from `/arckit:research`. Each profile carries the full reader-extracted evidence with citation links, the deterministic weighted score breakdown, and the project requirement IDs that pointed to that source. Re-running datascout on the same project applies merge rules (preserving narrative prose, replacing factual evidence + scores with the current run, appending project references). New template at `arckit-claude/templates/data-source-profile-template.md`.
+
+## [4.16.6] - 2026-05-06
+
+### Fixed
+
+- **Telemetry now collects in plugin-only test repos.** `telemetry.mjs` and `session-learner.mjs` were silently exiting when `.arckit/` didn't exist — but plugin-only installs (test repos that use `extraKnownMarketplaces` and never run `arckit init`) only have `projects/`. Both hooks now treat either directory as a valid "ArcKit project" indicator and create `.arckit/memory/` on demand for the first telemetry write.
+
+## [4.16.5] - 2026-05-06
+
+### Fixed
+
+- **Auto-allow hook now matches `${CLAUDE_PLUGIN_ROOT}` literal in commands** (was previously only matching the resolved absolute path; the orchestrator emits the env-var form which Claude Code passes through unexpanded to the hook).
+- **Auto-allow `Read` of `/tmp/datascout-handoff*.json` tempfiles** so the orchestrator can re-inspect its own validator payloads without per-file prompts.
+- **Forbid orchestrator from writing ad-hoc helper scripts.** LLM was hallucinating `dsct-score.mjs`, `dsct-build-writer-input.mjs`, etc. — added an explicit guardrail. All scoring math and payload assembly happens directly in conversation; the only bundled executables are the validator and `scripts/bash/*.sh` helpers.
+
+## [4.16.4] - 2026-05-06
+
+### Fixed
+
+- **Auto-allow hook for plugin-internal Read/Bash now actually fires.** v4.16.2 registered `allow-plugin-internals.mjs` under `PermissionRequest`, but that event only fires for some tools and only when a permission dialog is about to show. Switched to `PreToolUse` with `permissionDecision: "allow"` in `hookSpecificOutput` — the documented pattern for blanket auto-allow on built-in Read/Bash. The datascout slash command's plugin-internal `Read`s and `Bash` invocations of bundled scripts now auto-approve.
+
+## [4.16.3] - 2026-05-06
+
+### Fixed
+
+- **Datascout orchestrator moved from agent file to slash command.** Earlier 4.16.x releases placed orchestration in a subagent that dispatched reader/writer subagents — but Claude Code plugins forbid nested subagent dispatch (*"Subagents cannot spawn other subagents"*), so users hit *"Agent tool unavailable"* errors. Resolution: orchestration moved to `arckit-claude/commands/datascout.md` (the slash command runs in the main thread where `Agent` works). Reader and writer subagents and all security allowlists unchanged. `arckit-claude/agents/arckit-datascout.md` deleted.
+
+## [4.16.2] - 2026-05-06
+
+### Added
+
+- `arckit-claude/hooks/allow-plugin-internals.mjs` — `PermissionRequest` hook that auto-approves the plugin's own internal Read/Bash patterns (any file under `${CLAUDE_PLUGIN_ROOT}/`, plus invocations of the bundled validator and `scripts/bash/*.sh` helpers). Stops the per-session permission prompts that the datascout orchestrator (and any future helper-script-using command) was triggering; non-plugin Read/Bash still falls through to the normal prompt.
+
+## [4.16.1] - 2026-05-06
+
+### Fixed
+
+- **datascout: validator no longer requires `npm install` in plugin cache.** Rewrote `validate-handoff.mjs` as a pure-Node JSON Schema 2020-12 partial validator with zero npm dependencies, and removed `ajv` / `ajv-formats` from runtime deps. v4.16.0 had them in `package.json` but the plugin marketplace doesn't run `npm install`, so users hit `Error: Cannot find module 'ajv'` on first `/arckit:datascout` run. Also drops the orchestrator's "ajv-missing → legacy single-agent fallback" path, which had been surfacing a confusing secondary error about `.arckit/templates/`.
+
+## [4.16.0] - 2026-05-06
+
+### Security
+
+- **datascout reader/orchestrator/writer split (#442 item 1).** `arckit-datascout` is now a three-tier agent: a reader subagent fetches external content with allowlist `WebSearch/WebFetch/MCP/Read` only (no `Write`/`Bash`/`Agent`), an orchestrator validates each reader's output against a JSON Schema and scores deterministically using a YAML rubric, and a writer subagent holds the only `Write` tool. Falls back to legacy single-agent mode when ajv is not installed. New files: `arckit-claude/agents/arckit-datascout-{reader,writer}.md`, `arckit-claude/agents/READER-PATTERN.md`, `arckit-claude/schemas/datascout-handoff.schema.json`, `arckit-claude/schemas/scoring-rubrics/{generic,uk-gov}.yaml`, `arckit-claude/scripts/validate-handoff.mjs`. New deps: `ajv` ^8, `ajv-formats` ^3.
+
+### Added
+
+- `arckit-claude/agents/READER-PATTERN.md` — reference doc for applying the three-tier split to other research agents.
+- `arckit-claude/scripts/validate-handoff.mjs` — shared Node + ajv validator for any future handoff schema.
 
 - **Prompt-injection hardening across all 10 research agents (#442).** Adopts patterns from `anthropics/financial-services` reference plugins:
   - **Tools allowlist (item 18).** Every research agent (`research`, `datascout`, `grants`, `aws-research`, `azure-research`, `gcp-research`, `gov-reuse`, `gov-code-search`, `gov-landscape`, `framework`) migrated from `disallowedTools: ["Edit"]` (denylist) to explicit `tools:` allowlist. New tools added to the Claude Code harness in future versions no longer auto-grant to existing agents. MCP entries enumerated per server (glob unsupported in plugin agent frontmatter — verified against current Claude Code docs).
