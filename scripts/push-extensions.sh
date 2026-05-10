@@ -101,9 +101,14 @@ for target in "${TARGETS[@]}"; do
   # Remove all tracked files (except .git) to handle deletions
   find "$clone_path" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
-  # Copy extension files
+  # Copy extension files, excluding local dependency/install artefacts.
   echo "  Syncing files from $local_dir/..."
-  cp -a "$source_path"/. "$clone_path"/
+  tar -C "$source_path" \
+    --exclude='./node_modules' \
+    --exclude='./.npm' \
+    --exclude='./.pnpm-store' \
+    --exclude='./.yarn/cache' \
+    -cf - . | tar -C "$clone_path" -xf -
 
   # Check for changes
   cd "$clone_path"

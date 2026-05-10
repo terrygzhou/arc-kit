@@ -113,7 +113,7 @@ const manifest: PaperclipPluginManifestV1 = {
   version: pkg.version,
   displayName: "ArcKit",
   description:
-    "Enterprise Architecture Governance & Vendor Procurement Toolkit — 68 commands for generating architecture artifacts",
+    "Enterprise Architecture Governance & Vendor Procurement Toolkit — 116 commands for generating architecture artifacts",
   author: "tractorjuice",
   categories: ["workspace", "automation"],
   capabilities: ["agent.tools.register"],
