@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.20.3] - 2026-05-11
+
+### Fixed
+
+- **Plugin `monitors` key wrapped under `experimental` block** (#453). Claude Code v2.1.129 moved the `monitors` (and `themes`) keys under a top-level `experimental` block in plugin manifests. ArcKit's `stale-artifact-scan` background monitor was declared at the top level and would not load on v2.1.129+ clients. The manifest is now compliant with the new schema.
+- **`validate-arc-filename` hook now soft-blocks via `{decision, reason}` JSON** (#454). The unknown-doc-type-code rejection path previously used `process.exit(2)` + stderr, surfacing as a hard permission error visible only to the user. The model received nothing actionable and could not self-correct. Migrated to the modern soft-block pattern (already used by `score-validator.mjs`) so Claude is told the rejection reason — including the offending filename, the valid-codes list, and an explicit "rename and retry" instruction — and can self-correct on the next turn without human intervention.
+
+### Changed
+
+- **Minimum Claude Code version bumped to v2.1.129** (from v2.1.121). Required by the `monitors`-under-`experimental` migration above. Also picks up the v2.1.129 fix to `ENABLE_PROMPT_CACHING_1H` (which was silently downgrading the 1-hour prompt cache TTL back to 5 minutes on earlier versions). The SessionStart version-check hook and the README/CLAUDE.md/PLATFORM-COMPARISON.md docs all reflect the new floor.
+
 ## [4.20.2] - 2026-05-11
 
 ### Changed

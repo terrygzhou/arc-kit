@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.20.3] - 2026-05-11
+
+### Fixed
+
+- **Plugin `monitors` key wrapped under `experimental` block** (#453). Claude Code v2.1.129 moved the `monitors` (and `themes`) keys under a top-level `experimental` block in plugin manifests. The `stale-artifact-scan` background monitor was declared at the top level and would not load on v2.1.129+ clients.
+- **`validate-arc-filename` hook soft-blocks via `{decision, reason}` JSON** (#454). The unknown-doc-type-code rejection path migrated from `process.exit(2)` + stderr to the modern soft-block pattern so the rejection reason is fed back to the model and Claude can self-correct (rename to a valid type code and retry) without human intervention.
+
+### Changed
+
+- **Minimum Claude Code version bumped to v2.1.129** (from v2.1.121). Required by the `monitors`-under-`experimental` migration. Also picks up the v2.1.129 fix to `ENABLE_PROMPT_CACHING_1H` (1-hour prompt cache TTL was being silently downgraded to 5 minutes on earlier versions). SessionStart `version-check.mjs` hook updated.
+
 ## [4.20.2] - 2026-05-11
 
 ### Changed
