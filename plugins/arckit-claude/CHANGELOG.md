@@ -5,6 +5,18 @@ All notable changes to the ArcKit Claude Code plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.12.0] — 2026-06-09
+
+### Added
+
+- **New `arckit-fde` tooling plugin** ships in the marketplace this release: a lean,
+  Claude Code only, white-label Forward Deploy Engineering site generator with one command,
+  `/arckit-fde:create`, that interviews the user and renders a brandable, GitHub-Pages-ready
+  consulting website into `docs/` (UK Public Sector and Generic presets; `fde-site.config.yaml`
+  for repeatable re-renders). The `arckit` core plugin is unchanged — this is a lockstep
+  version bump. arckit-fde has no dependencies, no governance doc-types, and is not converted
+  to non-Claude formats (Claude Code only).
+
 ## [5.11.2] — 2026-06-08
 
 ### Changed
