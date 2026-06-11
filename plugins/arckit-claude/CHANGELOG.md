@@ -5,6 +5,12 @@ All notable changes to the ArcKit Claude Code plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.13.1] — 2026-06-11
+
+### Changed
+
+- **Claude Code minimum-version floor raised v2.1.156 → v2.1.172.** v2.1.172 fixed wildcard-domain `WebFetch` permission rules (`WebFetch(domain:*.gov.uk)`) that never matched subdomains on earlier clients — the exact shape ArcKit's security-hooks guide recommends for confining research-agent traffic in OFFICIAL-SENSITIVE deployments, so the floor makes that shipped guidance actually hold. v2.1.172 also carries the Claude Fable 5 runtime (GA in v2.1.170); ArcKit defaults to the latest model tier. Updated `version-check.mjs` (`MIN_CLAUDE_CODE_VERSION` + warning bullets), `CLAUDE.md`, `README.md`, `docs/guides/enterprise-scale.md`, `hooks/README.md`, and the repo/test-repo `.claude/settings.json` `minimumVersion` (#593).
+
 ## [5.13.0] — 2026-06-10
 
 ### Added
