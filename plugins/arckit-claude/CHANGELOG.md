@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **STALE-EXT scans `external/` recursively (#595).** `/arckit:health` now
+  includes files nested under project `external/` subdirectories and reports
+  their relative paths, instead of only checking direct children. Session-start
+  warnings and project-context external-document listings use the same recursive
+  scan.
 - **External context supports subtitle/transcript files (#600).** Project
   `external/` guidance, scaffolding, and project context handling now include
   `.srt` and `.vtt` transcript files alongside PDFs, Word documents, Markdown,

@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **STALE-EXT scans `external/` recursively (#595).** `/arckit:health` now
+  includes files nested under project `external/` subdirectories and reports
+  their relative paths, instead of only checking direct children. Claude, Codex,
+  and Gemini session/context external-document listings use the same recursive
+  scan.
 - **Documentation site search metadata improved.** The generated site now ships
   refreshed SEO metadata, cache headers, sitemap entries, and the AI CLI harness
   article so search and social previews index the current documentation.

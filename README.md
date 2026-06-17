@@ -117,22 +117,38 @@ uv tool install arckit-cli --from git+https://github.com/tractorjuice/arc-kit.gi
 uvx --from git+https://github.com/tractorjuice/arc-kit.git arckit init my-project
 ```
 
+**Mistral Vibe CLI** — link the ArcKit extension:
+
+```bash
+# Clone the standalone extension repository
+git clone https://github.com/tractorjuice/arckit-vibe.git
+cd arckit-vibe
+
+# Create extensions directory and link
+mkdir -p ~/.vibe/extensions/
+ln -s $(pwd) ~/.vibe/extensions/arckit
+```
+
+Zero-config: 70+ official commands as skills, 10 specialized agents, all templates, and bundled MCP servers (AWS Knowledge, Microsoft Learn, Google Developer Knowledge, GovRepoScrape).
+
 **Latest Release**: [v5.13.2](https://github.com/tractorjuice/arc-kit/releases/tag/v5.13.2)
 
 ### Platform Support
 
-| Platform | Claude Code Plugin | Gemini CLI Extension | GitHub Copilot | Codex / OpenCode CLI |
-|----------|-------------------|---------------------|----------------|---------------------|
-| macOS | Full support | Full support | Full support | Full support |
-| Linux | Full support | Full support | Full support | Full support |
-| Windows (WSL2) | Full support | Full support | Full support | Full support |
-| Windows (native) | Full support | Full support | Full support | Partial |
+| Platform | Claude Code Plugin | Gemini CLI Extension | GitHub Copilot | Codex / OpenCode CLI | Mistral Vibe |
+|----------|-------------------|---------------------|----------------|---------------------|--------------|
+| macOS | Full support | Full support | Full support | Full support | Full support |
+| Linux | Full support | Full support | Full support | Full support | Full support |
+| Windows (WSL2) | Full support | Full support | Full support | Full support | Full support |
+| Windows (native) | Full support | Full support | Full support | Partial | Full support |
 
-**Windows users**: The Claude Code plugin, Gemini CLI extension, and GitHub Copilot prompt files work natively on all platforms. For Codex CLI / OpenCode CLI on native Windows (without WSL), some commands containing inline bash snippets may require [Git Bash](https://git-scm.com/downloads/win) or [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install). We recommend WSL2 for the best experience.
+**Windows users**: The Claude Code plugin, Gemini CLI extension, GitHub Copilot prompt files, and Mistral Vibe extension work natively on all platforms. For Codex CLI / OpenCode CLI on native Windows (without WSL), some commands containing inline bash snippets may require [Git Bash](https://git-scm.com/downloads/win) or [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install). We recommend WSL2 for the best experience.
 
 ### Initialize a Project
 
 **Claude Code**: No initialization needed — the plugin provides everything.
+
+**Mistral Vibe**: No initialization needed — the extension provides everything.
 
 **GitHub Copilot** (VS Code):
 
@@ -183,6 +199,17 @@ codex
 /arckit:principles Create principles for a financial services company
 /arckit:requirements Build a payment processing system...
 /arckit:sow Generate RFP for vendor selection
+
+# Mistral Vibe CLI
+cd payment-modernization
+vibe
+# Use ArcKit skills:
+/arckit-principles Create principles for a financial services company
+/arckit-requirements Build a payment processing system...
+/arckit-sow Generate RFP for vendor selection
+
+# Or use specialized agents:
+vibe --agent arckit-research "Research cloud providers"
 ```
 
 ### Upgrading
@@ -192,6 +219,8 @@ codex
 **Gemini CLI extension**: Updates via `gemini extensions update arckit`.
 
 **GitHub Copilot**: Re-run `arckit init --here --ai copilot` to update prompt files, agents, and instructions.
+
+**Mistral Vibe**: Pull the latest standalone extension repo: `cd ~/.vibe/extensions/arckit && git pull`.
 
 **Codex CLI**:
 

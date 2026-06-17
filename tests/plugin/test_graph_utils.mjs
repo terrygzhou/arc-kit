@@ -31,6 +31,7 @@ function makeFixture() {
   mkdirSync(join(projectDir, 'reviews'), { recursive: true });
   mkdirSync(join(projectDir, 'vendors', 'acme', 'reviews'), { recursive: true });
   mkdirSync(join(projectDir, 'external'), { recursive: true });
+  mkdirSync(join(projectDir, 'external', '7. RFI'), { recursive: true });
 
   const globalDir = join(projectsDir, '000-global');
   mkdirSync(globalDir, { recursive: true });
@@ -83,6 +84,7 @@ function makeFixture() {
 
   // External file
   writeFileSync(join(projectDir, 'external', 'spec.api.yaml'), 'openapi: 3.0\n');
+  writeFileSync(join(projectDir, 'external', '7. RFI', 'RFI_CAP_CoreBancario_v1.docx'), 'rfi\n');
   writeFileSync(join(projectDir, 'external', 'meeting-transcript.vtt'), 'WEBVTT\n\n00:00:00.000 --> 00:00:03.000\nArchitecture board discussion.\n');
   writeFileSync(join(projectDir, 'external', 'walkthrough-subtitles.srt'), '1\n00:00:00,000 --> 00:00:03,000\nLegacy platform walkthrough.\n');
 
@@ -249,9 +251,10 @@ test('withExternals lists external/ files', () => {
     const g = scanAllArtifacts(projectsDir, { withExternals: true });
     assert.ok(g.externalFiles);
     const ext = g.externalFiles['001-fixture'];
-    assert.equal(ext.length, 3);
+    assert.equal(ext.length, 4);
     const filenames = ext.map(f => f.filename).sort();
     assert.deepEqual(filenames, [
+      '7. RFI/RFI_CAP_CoreBancario_v1.docx',
       'meeting-transcript.vtt',
       'spec.api.yaml',
       'walkthrough-subtitles.srt',
