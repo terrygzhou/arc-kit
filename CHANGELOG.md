@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Documentation site search metadata improved.** The generated site now ships
+  refreshed SEO metadata, cache headers, sitemap entries, and the AI CLI harness
+  article so search and social previews index the current documentation.
+- **External context supports subtitle/transcript files (#600).** Project
+  `external/` guidance, scaffolding, and project context handling now include
+  `.srt` and `.vtt` transcript files alongside PDFs, Word documents, Markdown,
+  images, CSV, and SQL references.
 - **Manifest auto-update tolerates legacy entries without `documentId` (#601).**
   `hooks/update-manifest.mjs` now deduplicates existing manifest entries by
   `documentId` when present and falls back to the entry path basename when
