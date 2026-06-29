@@ -199,6 +199,7 @@ French government (apply on top of EU baseline):
 
 Published articles, newest first:
 
+- [I Built ArcKit for Myself. Thank You for Using It.](https://arckit.org/article-viewer.html?a=2026-06-29-arckit-usage-signals): Community / 29 June 2026.
 - [ArcKit and OKF: knowledge interoperability without giving up governance](https://arckit.org/article-viewer.html?a=2026-06-19-okf-compatibility-workflows): Analysis / 19 June 2026.
 - [ArcKit Self-Harness: when the governance harness starts improving itself](https://arckit.org/article-viewer.html?a=2026-06-19-self-harness-autoresearch): Technical / 19 June 2026.
 - [ArcKit v5.14: Mistral Vibe joins the harness](https://arckit.org/article-viewer.html?a=2026-06-17-arckit-vibe-extension): Release / 17 June 2026.
