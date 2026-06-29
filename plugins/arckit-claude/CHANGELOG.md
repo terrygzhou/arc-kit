@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.15.1] — 2026-06-29
+
+### Added
+
+- **OpenCode extension metadata.** Added a description to the standalone
+  `arckit-opencode` extension manifest.
+
+### Fixed
+
+- **Codex hook runner resolution (#619).** Codex lifecycle hooks now resolve the
+  hook runner from `CODEX_PLUGIN_ROOT` or the installed plugin cache instead of
+  assuming Codex was started from the extension directory. The converter and
+  Codex tests now guard both bundled plugin hooks and generated standalone
+  config hooks against cwd-dependent runner paths.
+- **Self-Harness utility hardening (#617).** Hardened the Self-Harness support
+  utilities added in v5.15.0.
+- **Standalone extension release tags (#607).** Fixed extension release
+  publishing so standalone extension repos receive release tags consistently.
+
+### Changed
+
+- **Documentation and extension coverage.** Refreshed ArcKit article indexes,
+  getting-started assistant coverage, and generated-extension validation suites
+  so plugin-adjacent documentation and release checks stay current.
+
 ## [5.15.0] — 2026-06-19
 
 ### Added
