@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.15.2] — 2026-06-30
+
+### Fixed
+
+- **Discord invite links (#623).** Updated Discord invite links across the
+  documentation site.
+
+### Changed
+
+- **Health output documentation (#620).** Clarified that `/arckit:health`
+  writes `docs/health.json` as part of its normal reporting flow.
+- **Documentation site updates.** Added the ArcKit usage thank-you article and
+  GA4 site tag.
+
 ## [5.15.1] — 2026-06-29
 
 ### Added
