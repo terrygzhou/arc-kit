@@ -108,7 +108,7 @@ The grants agent searches GrantNav with project-relevant keywords to discover fu
 Install the ArcKit plugin in Claude Code (requires v2.1.90+):
 
 ```text
-/plugin marketplace add tractorjuice/arc-kit
+/plugin marketplace add tractorjuice/arckit-claude
 ```
 
 Run grants research against an existing project:

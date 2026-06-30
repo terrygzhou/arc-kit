@@ -58,20 +58,21 @@ fi
 # (description, keywords, etc.). Catches the v5.3.0 backfill gotcha where a
 # new plugin shipped without its marketplace entry.
 
-mapfile -t MARKETPLACE_SOURCES < <(
-  jq -r '.plugins[].source | ltrimstr("./")' .claude-plugin/marketplace.json | sort
+mapfile -t MARKETPLACE_PLUGIN_NAMES < <(
+  jq -r '.plugins[].name' .claude-plugin/marketplace.json | sort
 )
 MISSING_FROM_MARKETPLACE=()
 for p in "${ALL_PLUGINS[@]}"; do
+  plugin_name=$(jq -r '.name' "$p/.claude-plugin/plugin.json")
   found=0
-  for m in "${MARKETPLACE_SOURCES[@]}"; do
-    [[ "$p" == "$m" ]] && { found=1; break; }
+  for m in "${MARKETPLACE_PLUGIN_NAMES[@]}"; do
+    [[ "$plugin_name" == "$m" ]] && { found=1; break; }
   done
-  [[ $found -eq 0 ]] && MISSING_FROM_MARKETPLACE+=("$p")
+  [[ $found -eq 0 ]] && MISSING_FROM_MARKETPLACE+=("$p ($plugin_name)")
 done
 
 if [[ ${#MISSING_FROM_MARKETPLACE[@]} -gt 0 ]]; then
-  echo "Error: plugin directories exist on disk but are missing from .claude-plugin/marketplace.json:" >&2
+  echo "Error: plugin manifests exist on disk but are missing from .claude-plugin/marketplace.json:" >&2
   for p in "${MISSING_FROM_MARKETPLACE[@]}"; do
     echo "  - $p" >&2
   done
@@ -131,7 +132,7 @@ update_file "plugins/arckit-claude/.claude-plugin/plugin.json" ".version"
 #
 # Standalone Claude marketplace metadata. The core plugin source is "." once
 # plugins/arckit-claude/ is mirrored to tractorjuice/arckit-claude; overlay
-# sources live under structured plugin/... paths in that standalone repo.
+# sources live under structured plugins/... paths in that standalone repo.
 
 jq --arg v "$NEW_VERSION" '.plugins |= map(.version = $v)' plugins/arckit-claude/.claude-plugin/marketplace.json > plugins/arckit-claude/.claude-plugin/marketplace.json.tmp
 mv plugins/arckit-claude/.claude-plugin/marketplace.json.tmp plugins/arckit-claude/.claude-plugin/marketplace.json

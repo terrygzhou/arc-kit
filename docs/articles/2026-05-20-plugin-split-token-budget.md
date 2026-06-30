@@ -113,7 +113,7 @@ If you use ArcKit: open a v5.0.0 session in any existing project and the migrati
 
 If you maintain a plugin of your own: run `claude plugin details` first, on the whole plugin and on every unit you might split out. Let the real always-on figures decide both whether to split and how big a benefit to claim. The `dependencies` field is the tool that lets you act on the result without stranding anyone.
 
-ArcKit v5.0.0 is on [GitHub](https://github.com/tractorjuice/arc-kit/releases/tag/v5.0.0). The seven plugins are in the marketplace at `tractorjuice/arc-kit`.
+ArcKit v5.0.0 is on [GitHub](https://github.com/tractorjuice/arc-kit/releases/tag/v5.0.0). The seven plugins are in the marketplace at `tractorjuice/arckit-claude`.
 
 <!-- arckit:related-articles -->
 ## Related Articles

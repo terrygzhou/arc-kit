@@ -235,7 +235,7 @@ ArcKit is available as a plugin for Claude Code, an extension for Gemini CLI and
 **Claude Code** (recommended):
 
 ```
-/install tractorjuice/arc-kit
+/plugin marketplace add tractorjuice/arckit-claude
 ```
 
 **Gemini CLI**:

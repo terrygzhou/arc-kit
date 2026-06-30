@@ -41,22 +41,22 @@ Overlay plugins are copied into structured paths:
 
 | Plugin | Standalone repo path |
 |---|---|
-| `arckit-uae` | `plugin/uae` |
-| `arckit-fr` | `plugin/fr` |
-| `arckit-ca` | `plugin/ca` |
-| `arckit-eu` | `plugin/eu` |
-| `arckit-at` | `plugin/at` |
-| `arckit-au` | `plugin/au` |
-| `arckit-au-energy` | `plugin/au/energy` |
-| `arckit-us` | `plugin/us` |
-| `arckit-uk-finance` | `plugin/uk/finance` |
-| `arckit-uk-nhs` | `plugin/uk/nhs` |
-| `arckit-fde` | `plugin/fde` |
-| `arckit-uk-gcloud` | `plugin/uk/gcloud` |
+| `arckit-uae` | `plugins/uae` |
+| `arckit-fr` | `plugins/fr` |
+| `arckit-ca` | `plugins/ca` |
+| `arckit-eu` | `plugins/eu` |
+| `arckit-at` | `plugins/at` |
+| `arckit-au` | `plugins/au` |
+| `arckit-au-energy` | `plugins/au/energy` |
+| `arckit-us` | `plugins/us` |
+| `arckit-uk-finance` | `plugins/uk/finance` |
+| `arckit-uk-nhs` | `plugins/uk/nhs` |
+| `arckit-fde` | `plugins/fde` |
+| `arckit-uk-gcloud` | `plugins/uk/gcloud` |
 
 `arckit-uk-gcloud` is public for installation and inspection but remains
 proprietary. The root standalone repo `LICENSE` must explicitly exclude
-`plugin/uk/gcloud/` from the MIT grant.
+`plugins/uk/gcloud/` from the MIT grant.
 
 ## Install Paths
 
@@ -96,9 +96,9 @@ should prefer `tractorjuice/arckit-claude`.
 - [x] Teach `scripts/push-extensions.sh claude` to publish the full Claude
       marketplace repo instead of only copying `plugins/arckit-claude/`.
 - [x] Copy the core plugin to the standalone repo root and all overlays into
-      structured `plugin/...` paths.
+      structured `plugins/...` paths.
 - [x] Generate a standalone `LICENSE` with the proprietary
-      `plugin/uk/gcloud/` exception.
+      `plugins/uk/gcloud/` exception.
 - [x] Add release-process tests for the single-repo Claude marketplace layout.
 - [x] Update install docs, test-repo templates, and release docs.
 - [x] Bump the release version to `6.0.0`.
@@ -129,6 +129,6 @@ After merge and release, verify:
 - `https://github.com/tractorjuice/arckit-claude` contains the core plugin at the
   root.
 - The standalone marketplace lists all 13 Claude plugins.
-- `plugin/uk/finance` and `plugin/uk/gcloud` exist in the standalone repo.
-- `plugin/uk/gcloud/` is covered by the proprietary license exception.
+- `plugins/uk/finance` and `plugins/uk/gcloud` exist in the standalone repo.
+- `plugins/uk/gcloud/` is covered by the proprietary license exception.
 - `claude plugin install arckit@arckit-claude` works from a clean project.

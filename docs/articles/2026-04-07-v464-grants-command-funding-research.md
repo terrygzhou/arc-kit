@@ -105,7 +105,7 @@ This release also includes improvements from v4.6.3:
 Install or update the ArcKit plugin in Claude Code:
 
 ```text
-/plugin marketplace add tractorjuice/arc-kit
+/plugin marketplace add tractorjuice/arckit-claude
 ```
 
 Run the grants command against any project with requirements:

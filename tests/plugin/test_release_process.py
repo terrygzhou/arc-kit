@@ -10,6 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 PUSH_EXTENSIONS = REPO_ROOT / "scripts" / "push-extensions.sh"
 RELEASING_DOC = REPO_ROOT / "docs" / "RELEASING.md"
 ROOT_VERSION = REPO_ROOT / "VERSION"
+ROOT_CLAUDE_MARKETPLACE = REPO_ROOT / ".claude-plugin" / "marketplace.json"
 EXPECTED_STANDALONE_REPOS = {
     "claude": ("plugins/arckit-claude", "arckit-claude"),
     "gemini": ("extensions/arckit-gemini", "arckit-gemini"),
@@ -21,21 +22,21 @@ EXPECTED_STANDALONE_REPOS = {
 }
 EXPECTED_CLAUDE_MARKETPLACE_SOURCES = {
     "arckit": (".", "plugins/arckit-claude", "MIT"),
-    "arckit-uae": ("./plugin/uae", "plugins/arckit-uae", "MIT"),
-    "arckit-fr": ("./plugin/fr", "plugins/arckit-fr", "MIT"),
-    "arckit-ca": ("./plugin/ca", "plugins/arckit-ca", "MIT"),
-    "arckit-eu": ("./plugin/eu", "plugins/arckit-eu", "MIT"),
-    "arckit-at": ("./plugin/at", "plugins/arckit-at", "MIT"),
-    "arckit-au": ("./plugin/au", "plugins/arckit-au", "MIT"),
-    "arckit-au-energy": ("./plugin/au/energy", "plugins/arckit-au-energy", "MIT"),
-    "arckit-us": ("./plugin/us", "plugins/arckit-us", "MIT"),
-    "arckit-uk-finance": ("./plugin/uk/finance", "plugins/arckit-uk-finance", "MIT"),
-    "arckit-uk-nhs": ("./plugin/uk/nhs", "plugins/arckit-uk-nhs", "MIT"),
-    "arckit-fde": ("./plugin/fde", "plugins/arckit-fde", "MIT"),
-    "arckit-uk-gcloud": ("./plugin/uk/gcloud", "plugins/arckit-uk-gcloud", "Proprietary"),
-    "arckit-togaf-adm": ("./plugin/togaf/adm", "plugins/arckit-togaf-adm", "MIT"),
+    "arckit-uae": ("./plugins/uae", "plugins/arckit-uae", "MIT"),
+    "arckit-fr": ("./plugins/fr", "plugins/arckit-fr", "MIT"),
+    "arckit-ca": ("./plugins/ca", "plugins/arckit-ca", "MIT"),
+    "arckit-eu": ("./plugins/eu", "plugins/arckit-eu", "MIT"),
+    "arckit-at": ("./plugins/at", "plugins/arckit-at", "MIT"),
+    "arckit-au": ("./plugins/au", "plugins/arckit-au", "MIT"),
+    "arckit-au-energy": ("./plugins/au/energy", "plugins/arckit-au-energy", "MIT"),
+    "arckit-us": ("./plugins/us", "plugins/arckit-us", "MIT"),
+    "arckit-uk-finance": ("./plugins/uk/finance", "plugins/arckit-uk-finance", "MIT"),
+    "arckit-uk-nhs": ("./plugins/uk/nhs", "plugins/arckit-uk-nhs", "MIT"),
+    "arckit-fde": ("./plugins/fde", "plugins/arckit-fde", "MIT"),
+    "arckit-uk-gcloud": ("./plugins/uk/gcloud", "plugins/arckit-uk-gcloud", "Proprietary"),
+    "arckit-togaf-adm": ("./plugins/togaf/adm", "plugins/arckit-togaf-adm", "MIT"),
     "arckit-agent-architecture": (
-        "./plugin/agent/architecture",
+        "./plugins/agent/architecture",
         "plugins/arckit-agent-architecture",
         "MIT",
     ),
@@ -133,6 +134,66 @@ def test_claude_standalone_marketplace_matches_plugin_version():
         assert manifest["repository"] == "https://github.com/tractorjuice/arckit-claude"
 
 
+def test_root_claude_marketplace_remains_arc_kit_compatibility_marketplace():
+    root_marketplace = json.loads(ROOT_CLAUDE_MARKETPLACE.read_text(encoding="utf-8"))
+    standalone_marketplace = json.loads(
+        (standalone_path("claude") / ".claude-plugin" / "marketplace.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert root_marketplace["name"] == "arc-kit"
+    assert standalone_marketplace["name"] == "arckit-claude"
+
+    root_plugins = {plugin["name"]: plugin for plugin in root_marketplace["plugins"]}
+    standalone_plugins = {plugin["name"]: plugin for plugin in standalone_marketplace["plugins"]}
+
+    assert set(root_plugins) == set(standalone_plugins)
+
+    for name, (_source, local_dir, _license_name) in EXPECTED_CLAUDE_MARKETPLACE_SOURCES.items():
+        root_plugin = root_plugins[name]
+        standalone_plugin = standalone_plugins[name]
+
+        assert root_plugin["source"] == f"./{local_dir}"
+        assert (REPO_ROOT / local_dir).exists()
+        assert root_plugin["version"] == standalone_plugin["version"]
+        assert root_plugin["repository"] == "https://github.com/tractorjuice/arckit-claude"
+        assert root_plugin["homepage"] == "https://github.com/tractorjuice/arckit-claude"
+
+
+def test_local_claude_standalone_plugin_paths_match_sources():
+    standalone_root = standalone_path("claude")
+    expected_files: dict[Path, Path] = {}
+
+    for name, (source, local_dir, _license_name) in EXPECTED_CLAUDE_MARKETPLACE_SOURCES.items():
+        source_path = standalone_root / source.removeprefix("./")
+
+        assert source_path.exists(), f"{name} marketplace source does not exist: {source}"
+
+        if name == "arckit":
+            continue
+
+        local_path = REPO_ROOT / local_dir
+        for path in local_path.rglob("*"):
+            if not path.is_file():
+                continue
+            relative = path.relative_to(local_path)
+            target = source_path / relative
+            assert target not in expected_files, f"duplicate standalone target: {target}"
+            expected_files[target] = path
+
+    plugin_root = standalone_root / "plugins"
+    actual_files = {path for path in plugin_root.rglob("*") if path.is_file()}
+
+    assert actual_files == set(expected_files)
+
+    for target, source in expected_files.items():
+        assert target.read_bytes() == source.read_bytes(), (
+            f"{target.relative_to(REPO_ROOT)} differs from "
+            f"{source.relative_to(REPO_ROOT)}"
+        )
+
+
 def test_push_extensions_structures_claude_plugins_in_one_repo():
     script = PUSH_EXTENSIONS.read_text(encoding="utf-8")
 
@@ -145,7 +206,7 @@ def test_push_extensions_structures_claude_plugins_in_one_repo():
         repo_subdir = source.removeprefix("./")
         assert f'"{local_dir}:{repo_subdir}"' in script
 
-    assert "plugin/uk/gcloud/" in script
+    assert "plugins/uk/gcloud/" in script
     assert "proprietary and licensed" in script
 
 

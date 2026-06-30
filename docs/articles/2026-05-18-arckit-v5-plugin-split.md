@@ -52,7 +52,7 @@ If you are upgrading from v4.x, the SessionStart hook does the work of telling y
 
 The banner is one-shot. Once you acknowledge it by running `touch .arckit/v5-migration-acked`, the banner stops appearing. That makes the migration explicit (you see it once, you act on it, you move on) without being a recurring distraction.
 
-For new projects, the install flow is the obvious one. Add the marketplace once with `/plugin marketplace add tractorjuice/arc-kit` and then `claude plugin install arckit` plus whatever overlays your jurisdictions need. The dependency resolver does the rest.
+For new projects, the install flow is the obvious one. Add the marketplace once with `/plugin marketplace add tractorjuice/arckit-claude` and then `claude plugin install arckit` plus whatever overlays your jurisdictions need. The dependency resolver does the rest.
 
 ## What is not changing
 
@@ -78,7 +78,7 @@ New projects: the [Getting Started guide](https://arckit.org/getting-started.htm
 
 Maintainers of jurisdictional overlays: your contribution surface just got smaller and clearer. The seventh plugin (`arckit-au`) is the template for the eighth.
 
-ArcKit v5.0.0 is on [GitHub](https://github.com/tractorjuice/arc-kit/releases/tag/v5.0.0). The full changelog is in the [release notes](https://github.com/tractorjuice/arc-kit/blob/main/CHANGELOG.md). The seven plugins are in the marketplace at `tractorjuice/arc-kit`.
+ArcKit v5.0.0 is on [GitHub](https://github.com/tractorjuice/arc-kit/releases/tag/v5.0.0). The full changelog is in the [release notes](https://github.com/tractorjuice/arc-kit/blob/main/CHANGELOG.md). The seven plugins are in the marketplace at `tractorjuice/arckit-claude`.
 
 <!-- arckit:related-articles -->
 ## Related Articles

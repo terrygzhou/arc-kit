@@ -16,7 +16,7 @@ If you're using ArcKit for enterprise architecture governance, update your Claud
 
 Seven reasons to update. One command to do it.
 
-`/plugin marketplace add tractorjuice/arc-kit`
+`/plugin marketplace add tractorjuice/arckit-claude`
 
 #EnterpriseArchitecture #ClaudeCode #ArcKit #AIGovernance #ArchitectureAsCode
 

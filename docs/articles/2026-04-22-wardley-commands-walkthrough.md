@@ -98,7 +98,7 @@ This is why the output is not a generic LLM gloss on Wardley Mapping. The model 
 
 If you already have ArcKit installed as a Claude Code plugin, the five Wardley commands are available as /arckit.wardley.value-chain, /arckit.wardley, /arckit.wardley.doctrine, /arckit.wardley.climate, and /arckit.wardley.gameplay. The same commands exist in the Codex, Gemini, OpenCode, Copilot, and Paperclip extensions with platform-appropriate naming.
 
-If you are new to ArcKit, install it via /plugin marketplace add tractorjuice/arc-kit inside Claude Code, or pip install arckit-cli for the CLI-based workflow.
+If you are new to ArcKit, install it via /plugin marketplace add tractorjuice/arckit-claude inside Claude Code, or pip install arckit-cli for the CLI-based workflow.
 
 Start small. Run value-chain on a single user need you know well. Let it generate a chain. Look at the scores, argue with them where they feel wrong, commit a revised version. Then run wardley on the same project and watch how the map inherits the chain's structure. Then keep going. By the time you have run all five, you will have a strategic artefact pack that most consultancies charge five-figure sums to produce.
 

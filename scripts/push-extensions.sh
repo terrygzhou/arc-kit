@@ -36,24 +36,24 @@ declare -A EXTENSIONS=(
 
 # Claude Code plugins are published together to the arckit-claude marketplace
 # repo. The core plugin stays at the repo root for compatibility with the
-# original standalone mirror. Overlays live under structured plugin paths.
+# original standalone mirror. Overlays live under structured plugins/ paths.
 CLAUDE_PLUGIN_REPO="arckit-claude"
 CLAUDE_PLUGIN_CORE_DIR="plugins/arckit-claude"
 CLAUDE_PLUGIN_LAYOUT=(
-  "plugins/arckit-uae:plugin/uae"
-  "plugins/arckit-fr:plugin/fr"
-  "plugins/arckit-ca:plugin/ca"
-  "plugins/arckit-eu:plugin/eu"
-  "plugins/arckit-at:plugin/at"
-  "plugins/arckit-au:plugin/au"
-  "plugins/arckit-au-energy:plugin/au/energy"
-  "plugins/arckit-us:plugin/us"
-  "plugins/arckit-uk-finance:plugin/uk/finance"
-  "plugins/arckit-uk-nhs:plugin/uk/nhs"
-  "plugins/arckit-fde:plugin/fde"
-  "plugins/arckit-uk-gcloud:plugin/uk/gcloud"
-  "plugins/arckit-togaf-adm:plugin/togaf/adm"
-  "plugins/arckit-agent-architecture:plugin/agent/architecture"
+  "plugins/arckit-uae:plugins/uae"
+  "plugins/arckit-fr:plugins/fr"
+  "plugins/arckit-ca:plugins/ca"
+  "plugins/arckit-eu:plugins/eu"
+  "plugins/arckit-at:plugins/at"
+  "plugins/arckit-au:plugins/au"
+  "plugins/arckit-au-energy:plugins/au/energy"
+  "plugins/arckit-us:plugins/us"
+  "plugins/arckit-uk-finance:plugins/uk/finance"
+  "plugins/arckit-uk-nhs:plugins/uk/nhs"
+  "plugins/arckit-fde:plugins/fde"
+  "plugins/arckit-uk-gcloud:plugins/uk/gcloud"
+  "plugins/arckit-togaf-adm:plugins/togaf/adm"
+  "plugins/arckit-agent-architecture:plugins/agent/architecture"
 )
 
 # ── Determine which distributions to push ─────────────────────────────────────
@@ -202,8 +202,8 @@ write_claude_standalone_license() {
 
   cat > "$license_path" <<'EOF'
 NOTE: The MIT License below applies to the arckit-claude repository EXCEPT for
-the directory `plugin/uk/gcloud/`, which is proprietary and licensed
-separately — see `plugin/uk/gcloud/LICENSE`. The MIT grant below does not
+the directory `plugins/uk/gcloud/`, which is proprietary and licensed
+separately — see `plugins/uk/gcloud/LICENSE`. The MIT grant below does not
 extend to that directory or any files within it.
 
 MIT License
