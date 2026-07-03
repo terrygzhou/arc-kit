@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcKit — TOGAF ADM</title>
+    <link rel="stylesheet" href="/static/app.css">
+    <script src="/static/htmx.min.js"></script>
+    <script src="/static/mermaid.min.js"></script>
+    <script src="/static/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ArcKit — TOGAF ADM</h1>
+            <div class="header-actions">
+                <div id="project-selector">
+                    <button class="btn" hx-get="/api/projects"
+                            hx-swap="innerHTML" hx-target="#project-list"
+                            hx-trigger="load">Load Projects</button>
+                    <div id="project-list"></div>
+                </div>
+                <button class="btn btn-primary" hx-get="/api/projects/new"
+                        hx-swap="innerHTML" hx-target="#project-list">
+                    + New Cycle
+                </button>
+            </div>
+        </header>
+
+        <main class="main-grid">
+            <!-- Phase DAG (left) -->
+            <aside id="phase-dag" class="panel">
+                <h2>Phase Progress</h2>
+                <div id="dag-mermaid" class="mermaid-container">
+                    <pre class="mermaid" id="mermaid-dag">graph LR</pre>
+                </div>
+            </aside>
+
+            <!-- Phase Form / Chat (center) -->
+            <section id="phase-panel" class="panel panel-center">
+                <h2>Phase Configuration</h2>
+                <div id="phase-form-container">
+                    <p class="hint">Select a project and phase to begin.</p>
+                </div>
+            </section>
+
+            <!-- Artifact Viewer (right) -->
+            <aside id="artifact-viewer" class="panel">
+                <h2>Generated Artifacts</h2>
+                <div id="artifact-list">
+                    <p class="hint">Complete a phase to view its artifact here.</p>
+                </div>
+            </aside>
+        </main>
+
+        <!-- HIL Conversation Panel (bottom) -->
+        <footer id="chat-panel" class="panel chat-panel">
+            <h3>Conversation</h3>
+            <div id="chat-messages" class="chat-messages"></div>
+            <div id="chat-input" class="chat-input">
+                <input type="text" id="answer-input" placeholder="Type your answer...">
+                <button class="btn" id="submit-answer">Send</button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
