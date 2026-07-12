@@ -25,5 +25,5 @@ jobs:
       - name: Build
         run: uv build
 
-      - name: Publish to PyPI
+      - name: Publish to PyPI (Trusted Publishing)
         run: uv publish --trusted-publishing always
