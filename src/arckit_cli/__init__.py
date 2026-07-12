@@ -1078,6 +1078,39 @@ def callback(ctx: typer.Context):
         console.print()
 
 
+
+@app.callback()
+def callback(ctx: typer.Context):
+    """Show banner when no subcommand is provided."""
+    if (
+        ctx.invoked_subcommand is None
+        and "--help" not in sys.argv
+        and "-h" not in sys.argv
+    ):
+        show_banner()
+        console.print(
+            Align.center("[dim]Run 'arckit --help' for usage information[/dim]")
+        )
+        console.print()
+
+
+@app.command()
+def version():
+    """Show ArcKit version."""
+    # Try to read version from VERSION file or package metadata
+    version = "unknown"
+    # Try package metadata first
+    try:
+        from importlib.metadata import version as get_version
+        version = get_version("arckit-cli")
+    except Exception:
+        # Fallback to VERSION file
+        version_path = Path(__file__).parent.parent.parent / "VERSION"
+        if version_path.exists():
+            version = version_path.read_text().strip()
+    console.print(f"arckit {version}")
+
+
 def main():
     """Main entry point for the ArcKit CLI."""
     app()
