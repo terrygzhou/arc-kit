@@ -93,7 +93,7 @@ Zero-config: all 75 official commands, templates, scripts, and bundled MCP serve
 
 ```bash
 # Install with pip
-pip install git+https://github.com/tractorjuice/arc-kit.git
+pip install arckit-cli
 
 # Scaffold a project with Copilot prompt files
 arckit init my-project --ai copilot
@@ -105,13 +105,13 @@ Creates `.github/prompts/arckit-*.prompt.md` (80 prompt files), `.github/agents/
 
 ```bash
 # Install with pip
-pip install git+https://github.com/tractorjuice/arc-kit.git
+pip install arckit-cli
 
 # Or with uv
-uv tool install arckit-cli --from git+https://github.com/tractorjuice/arc-kit.git
+uv tool install arckit-cli
 
 # Or run without installing
-uvx --from git+https://github.com/tractorjuice/arc-kit.git arckit init my-project
+uvx arckit-cli arckit init my-project
 ```
 
 **Mistral Vibe CLI** — link the ArcKit extension:
@@ -231,9 +231,9 @@ vibe --agent arckit-research "Research cloud providers"
 
 ```bash
 # Step 1: Upgrade the CLI tool
-pip install --upgrade git+https://github.com/tractorjuice/arc-kit.git
+pip install --upgrade arckit-cli
 # Or with uv:
-uv tool upgrade arckit-cli --from git+https://github.com/tractorjuice/arc-kit.git
+uv tool upgrade arckit-cli
 
 # Step 2: Update your existing project (re-run init in place)
 cd /path/to/your-existing-project
@@ -1363,7 +1363,7 @@ For GitHub Copilot users in VS Code, ArcKit commands are delivered as prompt fil
 
 ```bash
 # Install and create project (3 steps, zero config)
-pip install git+https://github.com/tractorjuice/arc-kit.git
+pip install arckit-cli
 arckit init my-project --ai copilot
 cd my-project && code .
 
@@ -1381,7 +1381,7 @@ For OpenAI Codex CLI users, ArcKit commands are delivered as skills and auto-dis
 
 ```bash
 # Install and create project (3 steps, zero config)
-pip install git+https://github.com/tractorjuice/arc-kit.git
+pip install arckit-cli
 arckit init my-project --ai codex
 cd my-project && codex
 
