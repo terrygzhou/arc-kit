@@ -4,5 +4,7 @@
   "author": {
     "name": "ArcKit Contributors",
     "url": "https://github.com/tractorjuice/arckit-claude"
-  }
+  },
+  "version": "6.2.0",
+  "dependencies": []
 }
