@@ -92,8 +92,11 @@ Zero-config: all 75 official commands, templates, scripts, and bundled MCP serve
 **GitHub Copilot** (VS Code) — install the ArcKit CLI and scaffold prompt files:
 
 ```bash
-# Install with pip
-pip install arckit-cli
+# Install (recommended — works on all platforms including Debian/Ubuntu)
+pipx install arckit-cli
+
+# Or with uv
+uv tool install arckit-cli
 
 # Scaffold a project with Copilot prompt files
 arckit init my-project --ai copilot
@@ -101,34 +104,42 @@ arckit init my-project --ai copilot
 
 Creates `.github/prompts/arckit-*.prompt.md` (80 prompt files), `.github/agents/arckit-*.agent.md` (10 custom agents), and `.github/copilot-instructions.md` (repo-wide context). Invoke commands in Copilot Chat as `/arckit-requirements`, `/arckit-stakeholders`, etc.
 
-**Codex CLI** — install the ArcKit CLI:
+### Install
+
+**Recommended** — `pipx` (isolated venv, works everywhere including Debian/Ubuntu/Pop!_OS):
 
 ```bash
-# Install with pip
-pip install arckit-cli
+pipx install arckit-cli
+```
 
-# Or with uv
+**With `uv`** (if available):
+
+```bash
 uv tool install arckit-cli
+```
 
-# Or run without installing
+**Ephemeral** — run without installing:
+
+```bash
 uvx arckit-cli arckit init my-project
 ```
 
-**Mistral Vibe CLI** — link the ArcKit extension:
+**`pip` fallback** (requires a venv on Debian/Ubuntu due to PEP 668):
 
 ```bash
-# Clone the standalone extension repository
-git clone https://github.com/tractorjuice/arckit-vibe.git
-cd arckit-vibe
+# Option A: install to user directory
+pip install --user arckit-cli
 
-# Create extensions directory and link
-mkdir -p ~/.vibe/extensions/
-ln -s $(pwd) ~/.vibe/extensions/arckit
+# Option B: use a virtual environment
+python3 -m venv .venv && source .venv/bin/activate
+pip install arckit-cli
 ```
 
-Zero-config: 75 official commands as skills, 10 specialized agents, all templates, and bundled MCP servers (AWS Knowledge, Microsoft Learn, Google Developer Knowledge, GovRepoScrape).
+**One-liner** (auto-detects `pipx` → `uv` → `pip --user`):
 
-**Latest Release**: [v6.1.1](https://github.com/tractorjuice/arc-kit/releases/tag/v6.1.1)
+```bash
+curl -fsSL https://raw.githubusercontent.com/terrygzhou/arc-kit/main/install.sh | bash
+```
 
 ### OKF Interoperability
 
