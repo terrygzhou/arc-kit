@@ -11,6 +11,7 @@ dependencies = [
     "platformdirs",
     "readchar",
     "truststore>=0.10.4",
+    "pyyaml",
 ]
 
 authors = [{ name = "Terry Zhou", email = "terrygzhou@gmail.com" }]
@@ -66,6 +67,10 @@ packages = ["src/arckit_cli"]
 "VERSION" = "share/arckit/VERSION"
 "CHANGELOG.md" = "share/arckit/CHANGELOG.md"
 "extensions/arckit-codex" = "share/arckit/extensions/arckit-codex"
+"plugins/arckit-togaf-adm/recipes" = "share/arckit/plugins/arckit-togaf-adm/recipes"
+"plugins/arckit-togaf-adm/commands" = "share/arckit/plugins/arckit-togaf-adm/commands"
+"plugins/arckit-togaf-adm/templates" = "share/arckit/plugins/arckit-togaf-adm/templates"
+
 "extensions/arckit-opencode" = "share/arckit/extensions/arckit-opencode"
 "extensions/arckit-copilot" = "share/arckit/extensions/arckit-copilot"
 "extensions/arckit-vibe" = "share/arckit/extensions/arckit-vibe"

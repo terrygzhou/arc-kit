@@ -11,9 +11,11 @@ A toolkit for enterprise architects to manage:
 - Requirements traceability
 """
 
+import asyncio
 import os
 import subprocess
 import sys
+import time
 import zipfile
 import tempfile
 import shutil
@@ -29,6 +31,7 @@ from rich.align import Align
 
 # For cross-platform keyboard input
 import readchar
+import yaml
 import ssl
 import truststore
 import platformdirs
@@ -1109,6 +1112,769 @@ def version():
         if version_path.exists():
             version = version_path.read_text().strip()
     console.print(f"arckit {version}")
+
+
+# ---------------------------------------------------------------------------
+# Config helpers
+# ---------------------------------------------------------------------------
+def _get_config_path():
+    """Return the path to the user config file."""
+    return Path(platformdirs.user_config_dir("arckit")) / "config.yaml"
+
+
+def _load_config():
+    """Load config from YAML file; returns empty dict when file does not exist."""
+    cfg_path = _get_config_path()
+    if not cfg_path.exists():
+        return {}
+    try:
+        return yaml.safe_load(cfg_path.read_text()) or {}
+    except Exception:
+        return {}
+
+
+def _save_config(cfg):
+    """Write config dict to YAML file (creates parent dir if needed)."""
+    cfg_path = _get_config_path()
+    cfg_path.parent.mkdir(parents=True, exist_ok=True)
+    cfg_path.write_text(yaml.dump(cfg, default_flow_style=False))
+
+
+def _get_nested(data, dotted_key):
+    """Resolve a dotted key (e.g. 'llm.base_url') into a nested dict."""
+    parts = dotted_key.split(".")
+    current = data
+    for part in parts:
+        if isinstance(current, dict):
+            current = current.get(part)
+        else:
+            return None
+    return current
+
+
+def _set_nested(data, dotted_key, value):
+    """Set a value at the path implied by a dotted key, creating intermediate dicts."""
+    parts = dotted_key.split(".")
+    current = data
+    for part in parts[:-1]:
+        if part not in current or not isinstance(current[part], dict):
+            current[part] = {}
+        current = current[part]
+    current[parts[-1]] = value
+
+
+def _unset_nested(data, dotted_key):
+    """Remove a leaf key from a nested dict."""
+    parts = dotted_key.split(".")
+    current = data
+    for part in parts[:-1]:
+        if isinstance(current, dict) and part in current:
+            current = current[part]
+        else:
+            return  # key does not exist — nothing to remove
+    if isinstance(current, dict) and parts[-1] in current:
+        del current[parts[-1]]
+
+
+# Registered config keys (informational, used for listing)
+_CONFIG_KEYS = [
+    "llm.provider", "llm.base_url", "llm.model", "llm.api_key",
+    "llm.max_tokens", "llm.temperature",
+    "project.default_recipe", "project.default_ai", "project.recipes_dir",
+]
+
+
+# ---------------------------------------------------------------------------
+# arckit config sub-commands
+# ---------------------------------------------------------------------------
+config_app = typer.Typer(help="Manage ArcKit configuration (YAML)")
+
+
+@config_app.command()
+def config_set(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.base_url)"),
+               value: str = typer.Argument(..., help="Value to set")):
+    """Set a configuration key."""
+    cfg = _load_config()
+    _set_nested(cfg, key, value)
+    _save_config(cfg)
+    console.print(f"[green]✓[/green] Set {key} = {value}")
+
+
+@config_app.command()
+def config_get(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.base_url)")):
+    """Get the value for a single configuration key."""
+    cfg = _load_config()
+    val = _get_nested(cfg, key)
+    if val is None:
+        console.print(f"[red]Error:[/red] Key '{key}' not found")
+        raise typer.Exit(1)
+    console.print(val)
+
+
+@config_app.command()
+def config_list():
+    """List all configuration keys and their values."""
+    cfg = _load_config()
+    if not cfg:
+        console.print("[yellow]No configuration set yet. Use 'arckit config set' to add keys.[/yellow]")
+        return
+    # Flatten nested dict into dot-notation keys for display
+    def flatten(d, prefix=""):
+        items = []
+        for k, v in d.items():
+            full_key = f"{prefix}{k}" if not prefix else f"{prefix}.{k}"
+            if isinstance(v, dict):
+                items.extend(flatten(v, full_key))
+            else:
+                items.append((full_key, v))
+        return items
+
+    flat = flatten(cfg)
+    if flat:
+        table_rows = []
+        for k, v in flat:
+            table_rows.append((k, str(v)))
+        from rich.table import Table
+        t = Table(show_header=True, header_style="bold cyan")
+        t.add_column("Key", style="cyan")
+        t.add_column("Value")
+        for row in table_rows:
+            t.add_row(*row)
+        console.print(t)
+    else:
+        console.print("[yellow]Configuration file exists but is empty.[/yellow]")
+
+
+@config_app.command()
+def config_show():
+    """Display the full configuration as YAML."""
+    cfg = _load_config()
+    if not cfg:
+        console.print("[yellow]No configuration set yet. Use 'arckit config set' to add keys.[/yellow]")
+        return
+    console.print(yaml.dump(cfg, default_flow_style=False))
+
+
+@config_app.command()
+def config_unset(key: str = typer.Argument(..., help="Dot-notation key to remove")):
+    """Remove a configuration key."""
+    cfg = _load_config()
+    _unset_nested(cfg, key)
+    _save_config(cfg)
+    console.print(f"[green]✓[/green] Unset {key}")
+
+
+# ---------------------------------------------------------------------------
+# arckit build — helpers
+# ---------------------------------------------------------------------------
+
+
+def resolve_project_path(project_arg: str) -> Path:
+    """Resolve the project path from the project argument."""
+    # If it's an existing directory, use it directly
+    p = Path(project_arg).resolve()
+    if p.is_dir() and (p / ".arckit").exists():
+        return p
+
+    # Check if we're inside an ArcKit project
+    cwd = Path.cwd().resolve()
+    if (cwd / ".arckit").exists():
+        return cwd
+
+    # Check parent directories
+    current = cwd
+    for _ in range(10):
+        if (current / ".arckit").exists():
+            return current
+        parent = current.parent
+        if parent == current:
+            break
+        current = parent
+
+    # Fall back to cwd
+    return cwd
+
+
+def resolve_recipe_path(recipe_name: str, project_root: Path) -> Path:
+    """Resolve a recipe name to a YAML file path via precedence.
+
+    Precedence:
+        1. project_root/.arckit/recipes/{recipe}.yaml  (project override)
+        2. plugins/arckit-*/recipes/{recipe}.yaml       (community plugins)
+        3. share/arckit/recipes/{recipe}.yaml           (system install)
+    """
+    candidates: list[tuple[str, Path]] = []
+
+    # 1. Project override
+    override = project_root / ".arckit" / "recipes" / f"{recipe_name}.yaml"
+    candidates.append(("project override", override))
+    if override.exists():
+        return override
+
+    # 2. Community plugins
+    plugin_base = project_root / "plugins"
+    if plugin_base.is_dir():
+        for plugin_dir in sorted(plugin_base.glob("arckit-*/recipes")):
+            plugin_file = plugin_dir / f"{recipe_name}.yaml"
+            if plugin_file.exists():
+                candidates.append((f"plugin: {plugin_dir.parent.name}", plugin_file))
+                return plugin_file
+
+    # 3. System share directory (for pip/uv installs)
+    try:
+        data_paths = get_data_paths()  # type: ignore[name-defined]
+        recipes_base = data_paths.get("scripts")  # scripts/recipes if present
+        if recipes_base and recipes_base.exists():
+            for yaml_file in sorted(recipes_base.glob("*.yaml")):
+                if yaml_file.stem == recipe_name:
+                    candidates.append(("system share", yaml_file))
+                    return yaml_file
+    except Exception:
+        pass
+
+    # 4. Also check scripts/recipes/ at repo root
+    scripts_recipes = project_root / "scripts" / "recipes"
+    if scripts_recipes.is_dir():
+        for yaml_file in sorted(scripts_recipes.glob("*.yaml")):
+            if yaml_file.stem == recipe_name:
+                candidates.append(("scripts/recipes", yaml_file))
+                return yaml_file
+
+    # Not found — collect all searched paths for error message
+    search_paths = [path for _, path in candidates]
+    raise FileNotFoundError(
+        f"Recipe '{recipe_name}' not found.\n"
+        f"Searched:\n" + "\n".join(f"  - {p}" for p in search_paths) + "\n"
+        f"Tip: Place a '{recipe_name}.yaml' file in .arckit/recipes/"
+    )
+
+
+def _git_commit(project_path: Path, message: str) -> bool:
+    """Run git add + commit in the project directory. Returns True on success."""
+    try:
+        subprocess.run(
+            ["git", "add", "."],
+            cwd=str(project_path),
+            capture_output=True,
+            timeout=10,
+        )
+        result = subprocess.run(
+            ["git", "commit", "-m", message, "--allow-empty"],
+            cwd=str(project_path),
+            capture_output=True,
+            timeout=10,
+        )
+        return result.returncode == 0
+    except (subprocess.SubprocessError, FileNotFoundError):
+        return False
+
+
+# ---------------------------------------------------------------------------
+# arckit build command
+# ---------------------------------------------------------------------------
+
+
+@app.command()
+def build(
+    project: str = typer.Argument(
+        ".", help="Project ID or path (e.g. '001', '.', or directory path)"
+    ),
+    recipe: str = typer.Option(
+        "togaf-adm-full", "--recipe", help="Recipe name (resolves via precedence)"
+    ),
+    plan: bool = typer.Option(
+        False, "--plan", help="Dry run — print wave plan, do not execute"
+    ),
+    resume: bool = typer.Option(
+        False, "--resume", help="Resume from last incomplete wave"
+    ),
+    target: str = typer.Option(
+        None, "--target", help="Build only this target and its dependencies"
+    ),
+    refresh: str = typer.Option(
+        None, "--refresh", help="Force-rebuild this target and downstream"
+    ),
+    no_commit: bool = typer.Option(
+        False, "--no-commit", help="Skip per-wave git commits"
+    ),
+    parallel: int = typer.Option(
+        4, "--parallel", help="Max concurrent LLM calls per wave"
+    ),
+    base_url: str = typer.Option(
+        None, "--base-url", help="Override LLM base URL"
+    ),
+    model: str = typer.Option(
+        None, "--model", help="Override LLM model"
+    ),
+):
+    """Execute an ArcKit recipe against a project (DAG → waves → LLM execution)."""
+
+    from arckit_cli.recipe import (
+        Target, Wave as RecipeWave, load_recipe, validate_recipe, compute_waves,
+    )
+    from arckit_cli.state import (
+        State, load_state, save_state, mark_target_complete,
+        mark_target_failed, is_target_stale,
+    )
+    from arckit_cli.llm import (
+        LLMConfig, resolve_config, execute_wave,
+    )
+    from rich.table import Table
+    from rich.console import Group
+    from datetime import datetime
+
+    console.print()
+    console.print("[bold cyan]ArcKit Build[/bold cyan]")
+    console.print(f"  Project: [green]{project}[/green]")
+    console.print(f"  Recipe:  [green]{recipe}[/green]")
+    console.print()
+
+    # ── 1. Resolve project path ──────────────────────────────────────────
+    project_root = resolve_project_path(project)
+    if not (project_root / ".arckit").exists():
+        console.print(
+            f"[yellow]Warning:[/yellow] '{project_root}' does not appear to be "
+            "an ArcKit project (no .arckit/ directory). "
+            "Running `arckit init` first is recommended."
+        )
+
+    # ── 2. Resolve recipe path ───────────────────────────────────────────
+    try:
+        recipe_path = resolve_recipe_path(recipe, project_root)
+    except FileNotFoundError as exc:
+        console.print(f"[red]Error:[/red] {exc}")
+        raise typer.Exit(1)
+
+    console.print(f"  Recipe file: [cyan]{recipe_path}[/cyan]")
+
+    # ── 3. Load and validate recipe ──────────────────────────────────────
+    try:
+        recipe_obj = load_recipe(str(recipe_path))
+    except (FileNotFoundError, ValueError) as exc:
+        console.print(f"[red]Error loading recipe:[/red] {exc}")
+        raise typer.Exit(1)
+
+    errors = validate_recipe(recipe_obj)
+    if errors:
+        console.print("[red]Recipe validation errors:[/red]")
+        for err in errors:
+            console.print(f"  ✗ {err}")
+        raise typer.Exit(1)
+
+    console.print(f"  Loaded: [green]{recipe_obj.name}[/green] "
+                  f"(v{recipe_obj.schema_version}, {len(recipe_obj.targets)} targets)")
+
+    # ── 4. Compute waves ─────────────────────────────────────────────────
+    enabled: set[str] = set()
+    excluded: set[str] = set()
+
+    # --target filters to a single target (and its deps are kept implicitly)
+    if target:
+        # Find matching target IDs
+        all_ids = [t.id for t in recipe_obj.targets]
+        import fnmatch
+        matched = [tid for tid in all_ids if fnmatch.fnmatch(tid, target)]
+        if matched:
+            enabled = set(matched)
+        else:
+            console.print(f"[red]Error:[/red] No target matches '{target}'")
+            console.print(f"  Available targets: {', '.join(all_ids)}")
+            raise typer.Exit(1)
+
+    waves = compute_waves(recipe_obj, enabled, excluded)
+
+    # ── 5. Plan mode ─────────────────────────────────────────────────────
+    if plan:
+        console.print("[bold]Wave Plan:[/bold]")
+        for wave in waves:
+            targets = [t.id for t in wave.targets]
+            console.print(
+                f"  [cyan]Wave {wave.number}[/cyan]: "
+                f"[magenta]{', '.join(targets)}[/magenta]"
+            )
+        console.print(
+            f"\n  Total: {len(waves)} waves, "
+            f"{sum(len(w.targets) for w in waves)} targets"
+        )
+        raise typer.Exit(0)
+
+    # ── 6. Resolve LLM config ──────────────────────────────────────────
+    try:
+        llm_config = resolve_config(cli_base_url=base_url, cli_model=model)
+    except RuntimeError as exc:
+        console.print(f"[red]LLM config error:[/red] {exc}")
+        raise typer.Exit(1)
+
+    console.print(f"  LLM: [cyan]{llm_config.model}[/cyan] @ {llm_config.base_url}")
+    console.print()
+
+    # ── 7. Load or create state ─────────────────────────────────────────
+    state = load_state(str(project_root))
+    if state is None or resume:
+        if state is None:
+            state = State(
+                version="1.0",
+                recipe=recipe_obj.name,
+                recipe_path=str(recipe_path),
+                project=project_root.name,
+            )
+        elif resume:
+            console.print("[cyan]Resuming previous build...[/cyan]")
+    else:
+        console.print("[cyan]Fresh build (no previous state).[/cyan]")
+
+    # ── 8. Filter waves based on --resume ───────────────────────────────
+    if resume and state.completed_waves:
+        waves = [w for w in waves if w.number not in state.completed_waves]
+        if not waves:
+            console.print(
+                "[green]All waves already completed. Nothing to do.[/green]"
+            )
+            _print_summary(state, recipe_obj, project_root)
+            raise typer.Exit(0)
+
+    # --refresh forces specific target + downstream
+    refresh_set: set[str] = set()
+    if refresh:
+        refresh_set = {refresh}
+
+    # ── 9. Execute waves ─────────────────────────────────────────────────
+    build_start = time.monotonic()
+    all_results: list[dict] = []  # Per-target build results for summary
+
+    for wave in waves:
+        wave_number = wave.number
+        wave_start = time.monotonic()
+
+        # Filter out already-complete targets (--resume)
+        active_targets: list[Target] = []
+        skip_count = 0
+        for t in wave.targets:
+            if resume and state.targets.get(t.id, {}).status == "complete":
+                skip_count += 1
+                continue
+            if refresh_set and t.id not in refresh_set:
+                # Check if it's downstream of refresh target
+                # For simplicity, only skip if already complete
+                if state.targets.get(t.id, {}).status == "complete":
+                    skip_count += 1
+                    continue
+            active_targets.append(t)
+
+        if not active_targets:
+            console.print(
+                f"  [dim]Wave {wave_number}[/dim]: "
+                f"[green]all targets up-to-date[/green]"
+            )
+            state.completed_waves.append(wave_number)
+            save_state(str(project_root), state)
+            continue
+
+        target_ids = [t.id for t in active_targets]
+        console.print(
+            f"  [bold]Wave {wave_number}[/bold]: "
+            f"[magenta]{', '.join(target_ids)}[/magenta]"
+            + (f" (skipped {skip_count})" if skip_count else "")
+        )
+
+        # Resolve skill paths and gather input artifacts for each target
+        tasks_for_wave: list[tuple[Target, Path, dict]] = []
+        for t in active_targets:
+            # Resolve skill path
+            try:
+                skill_path = _resolve_skill_path_cli(t.skill, project_root)
+            except FileNotFoundError as exc:
+                console.print(f"  [red]✗ {t.id}[/red] {exc}")
+                mark_target_failed(state, t.id, str(exc))
+                save_state(str(project_root), state)
+                raise typer.Exit(1)
+
+            # Gather input artifacts from dependency outputs
+            input_artifacts: dict[str, str] = {}
+            for dep_id in t.deps:
+                dep_state = state.targets.get(dep_id)
+                if dep_state and dep_state.output_path:
+                    dep_file = Path(dep_state.output_path)
+                    if dep_file.is_file():
+                        input_artifacts[dep_id] = dep_file.read_text(
+                            encoding="utf-8", errors="replace"
+                        )
+
+            tasks_for_wave.append((t, skill_path, input_artifacts))
+
+        # Execute wave via asyncio
+        wave_results = asyncio.run(
+            _execute_wave_with_artifacts(
+                wave, tasks_for_wave, llm_config, project_root, parallel
+            )
+        )
+
+        # Process results
+        for result in wave_results:
+            duration = time.monotonic() - wave_start
+
+            # Determine output path for state tracking
+            output_path = result.output_path or ""
+            input_files: list[str] = []
+            for t in active_targets:
+                if t.id == result.target_id and t.output:
+                    if "path" in t.output:
+                        output_path = t.output["path"]
+                        # Expand to absolute path
+                        if not Path(output_path).is_absolute():
+                            output_path = str(project_root / output_path)
+                        input_files = [
+                            str(project_root / "**/*.md"),
+                            str(project_root / "projects" / "**/*.md"),
+                        ]
+
+            if result.status == "success":
+                mark_target_complete(state, result.target_id, output_path, input_files)
+                status_icon = "[green]✓[/green]"
+                status_label = "complete"
+            else:
+                mark_target_failed(
+                    state, result.target_id, result.error or "unknown error"
+                )
+                status_icon = "[red]✗[/red]"
+                status_label = "failed"
+
+            elapsed = time.monotonic() - wave_start
+            all_results.append({
+                "target_id": result.target_id,
+                "status": status_label,
+                "status_icon": status_icon,
+                "duration": elapsed,
+                "tokens": result.tokens_used,
+                "output_path": output_path,
+            })
+
+            console.print(
+                f"    {status_icon} {result.target_id}: "
+                f"[{'green' if result.status == 'success' else 'red'}]"
+                f"{status_label}[/{'green' if result.status == 'success' else 'red'}]"
+                f" ({result.tokens:,} tokens)"
+            )
+
+            if result.status != "success":
+                console.print(f"      [red]Error: {result.error}[/red]")
+                # Halt on failure by default
+                save_state(str(project_root), state)
+                console.print(
+                    "\n[red]Build halted due to failed target.[/red]"
+                    " Use --continue (future flag) to proceed."
+                )
+                _print_summary(state, recipe_obj, project_root, all_results)
+                raise typer.Exit(1)
+
+        wave_duration = time.monotonic() - wave_start
+        state.completed_waves.append(wave_number)
+        save_state(str(project_root), state)
+
+        console.print(
+            f"  [dim]Wave {wave_number} done in "
+            f"{_format_duration(wave_duration)}[/dim]"
+        )
+
+        # Per-wave git commit
+        if not no_commit:
+            commit_msg = f"arckit: wave {wave_number} ({', '.join(target_ids)})"
+            if _git_commit(project_root, commit_msg):
+                console.print(f"  [dim]Committed: {commit_msg}[/dim]")
+            else:
+                console.print(
+                    f"  [yellow]Warning:[/yellow] Git commit failed (wave {wave_number})"
+                )
+
+    # ── 10. Post-build hooks ────────────────────────────────────────────
+    console.print()
+    console.print("[bold]Post-build hooks...[/bold]")
+    if recipe_obj.post_build_hooks:
+        for hook in recipe_obj.post_build_hooks:
+            hook_name = hook.get("name", "unknown")
+            console.print(f"  - {hook_name}: [dim]skipped (hooks not implemented yet)[/dim]")
+    else:
+        console.print("  [dim]No post-build hooks defined[/dim]")
+
+    # ── 11. Summary ─────────────────────────────────────────────────────
+    total_duration = time.monotonic() - build_start
+    console.print()
+    _print_summary(state, recipe_obj, project_root, all_results, total_duration)
+
+
+async def _execute_wave_with_artifacts(
+    wave,  # Wave from arckit_cli.recipe
+    tasks: list[tuple],
+    config,  # LLMConfig
+    project_path: Path,
+    max_parallel: int = 4,
+) -> list:
+    """Execute wave targets with pre-resolved artifacts.
+
+    Wraps the llm.execute_wave logic but accepts already-gathered artifacts
+    so the build command can inject dependency outputs from prior waves.
+    """
+    from arckit_cli.llm import execute_target, ExecutionResult
+
+    semaphore = asyncio.Semaphore(max_parallel)
+
+    async def _run(target: object, skill_path: Path, artifacts: dict) -> object:
+        async with semaphore:
+            return await execute_target(
+                target, config, project_path, skill_path, artifacts
+            )
+
+    coros = [_run(t, sp, a) for t, sp, a in tasks]
+    raw = await asyncio.gather(*coros, return_exceptions=True)
+
+    results: list = []
+    for i, r in enumerate(raw):
+        if isinstance(r, BaseException):
+            results.append(
+                ExecutionResult(
+                    target_id=tasks[i][0].id,
+                    status="failed",
+                    error=str(r),
+                )
+            )
+        else:
+            results.append(r)
+
+    return results
+
+
+def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
+    """Resolve a skill name to an absolute file path.
+
+    Precedence:
+        1. extensions/arckit-codex/skills/arckit-{name}/SKILL.md
+        2. plugins/arckit-togaf-adm/commands/{name}.md
+        3. Direct absolute or project-relative path
+    """
+    # Direct path (absolute or relative to project)
+    direct = Path(skill_name)
+    if direct.is_absolute() and direct.is_file():
+        return direct
+    if not direct.is_absolute() and (project_path / direct).is_file():
+        return project_path / direct
+
+    # 1. Codex skills directory
+    skill_file = (
+        project_path
+        / "extensions"
+        / "arckit-codex"
+        / "skills"
+        / f"arckit-{skill_name}"
+        / "SKILL.md"
+    )
+    if skill_file.is_file():
+        return skill_file
+
+    # 2. Plugin commands
+    cmd_file = (
+        project_path
+        / "plugins"
+        / "arckit-togaf-adm"
+        / "commands"
+        / f"{skill_name}.md"
+    )
+    if cmd_file.is_file():
+        return cmd_file
+
+    # 3. Also check .agents/skills/ (from arckit init)
+    agent_skill = (
+        project_path / ".agents" / "skills" / f"arckit-{skill_name}" / "SKILL.md"
+    )
+    if agent_skill.is_file():
+        return agent_skill
+
+    raise FileNotFoundError(
+        f"Skill '{skill_name}' not found at:\n"
+        f"  - {skill_file}\n"
+        f"  - {cmd_file}\n"
+        f"  - {agent_skill}"
+    )
+
+
+def _format_duration(seconds: float) -> str:
+    """Format a duration in seconds to a human-readable string."""
+    if seconds < 60:
+        return f"{seconds:.0f}s"
+    minutes = int(seconds // 60)
+    secs = int(seconds % 60)
+    return f"{minutes}m {secs}s"
+
+
+def _print_summary(
+    state: object,
+    recipe: object,
+    project_root: Path,
+    all_results: list[dict] | None = None,
+    total_duration: float | None = None,
+):
+    """Print a Rich summary table of the build results."""
+    from rich.table import Table
+    from rich.panel import Panel
+
+    table = Table(show_header=True, header_style="bold cyan", show_edge=True)
+    table.add_column("Target", style="green")
+    table.add_column("Status")
+    table.add_column("Duration", justify="right")
+    table.add_column("Tokens", justify="right")
+    table.add_column("File")
+
+    if all_results:
+        for r in all_results:
+            out = r["output_path"]
+            file_str = Path(out).name if out else "—"
+            table.add_row(
+                r["target_id"],
+                f"{r['status_icon']} {r['status']}",
+                _format_duration(r["duration"]),
+                f"{r['tokens']:,}" if r["tokens"] else "—",
+                file_str,
+            )
+    elif state.targets:
+        for tid, ts in state.targets.items():
+            out = ts.output_path or ""
+            file_str = Path(out).name if out else "—"
+            icon = "✓" if ts.status == "complete" else "✗"
+            table.add_row(
+                tid,
+                f"{icon} {ts.status}",
+                "—",
+                "—",
+                file_str,
+            )
+
+    # Totals row
+    total_targets = len(all_results) if all_results else len(state.targets)
+    complete = sum(
+        1 for r in (all_results or [{"status": ts.status} for ts in state.targets.values()])
+        if r.get("status") == "complete"
+    ) if all_results else sum(
+        1 for ts in state.targets.values() if ts.status == "complete"
+    )
+    failed = total_targets - complete
+    total_tokens = sum(
+        r.get("tokens", 0) or 0 for r in (all_results or [])
+    )
+
+    if total_duration is not None:
+        duration_str = _format_duration(total_duration)
+    else:
+        duration_str = "—"
+
+    summary_text = (
+        f"Total: {total_targets} targets, "
+        f"[green]{complete} complete[/green], "
+        f"{'[red]' if failed else ''}{failed} failed{'[/red]' if failed else ''}, "
+        f"{duration_str}"
+        + (f", {total_tokens:,} tokens" if total_tokens else "")
+    )
+
+    console.print(table)
+    console.print(Panel(summary_text, title="Build Summary", border_style="green"))
 
 
 def main():
