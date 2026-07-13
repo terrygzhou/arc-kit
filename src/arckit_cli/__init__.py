@@ -1081,22 +1081,6 @@ def callback(ctx: typer.Context):
         console.print()
 
 
-
-@app.callback()
-def callback(ctx: typer.Context):
-    """Show banner when no subcommand is provided."""
-    if (
-        ctx.invoked_subcommand is None
-        and "--help" not in sys.argv
-        and "-h" not in sys.argv
-    ):
-        show_banner()
-        console.print(
-            Align.center("[dim]Run 'arckit --help' for usage information[/dim]")
-        )
-        console.print()
-
-
 @app.command()
 def version():
     """Show ArcKit version."""
@@ -1188,6 +1172,8 @@ _CONFIG_KEYS = [
 # arckit config sub-commands
 # ---------------------------------------------------------------------------
 config_app = typer.Typer(help="Manage ArcKit configuration (YAML)")
+
+app.add_typer(config_app, name="config")
 
 
 @config_app.command()

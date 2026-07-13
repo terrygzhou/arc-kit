@@ -4,6 +4,19 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
+  # Fallback: manual release publish (catches force-pushed tags)
+  release:
+    types: [published]
+  # Hourly safety net: catch tags that slipped through
+  schedule:
+    - cron: '0 * * * *'
+  # Manual override
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g. v6.2.0)'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -16,16 +29,60 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate release notes
+      - name: Determine target tag
+        id: tag
         run: |
-          PREV_TAG=$(git tag -l 'v*' --sort=-v:refname | sed -n '2p')
-          ./scripts/generate-release-notes.sh "$PREV_TAG" > /tmp/release-notes.md
+          if [[ -n "${{ github.event.inputs.tag }}" ]]; then
+            TAG="${{ github.event.inputs.tag }}"
+          elif [[ "${{ github.event_name }}" == "release" ]]; then
+            TAG="${{ github.event.release.tag_name }}"
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            # Find latest tag without a release
+            LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -1)
+            if gh release view "$LATEST_TAG" &>/dev/null; then
+              echo "No missing releases"
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "Missing release for $LATEST_TAG"
+              echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            TAG="${{ github.ref_name }}"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if release exists
+        if: steps.tag.outputs.skip != 'true'
+        id: check
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          if gh release view "$TAG" &>/dev/null; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Release $TAG already exists, skipping"
+          fi
+
+      - name: Generate release notes
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          PREV_TAG=$(git tag -l 'v*' --sort=-v:refname | grep -v "$TAG" | head -1)
+          if [[ -z "$PREV_TAG" ]]; then
+            echo "# ArcKit $TAG" > /tmp/release-notes.md
+          else
+            PREV_TAG=$(git tag -l 'v*' --sort=-v:refname | sed -n '2p')
+            ./scripts/generate-release-notes.sh "$PREV_TAG" > /tmp/release-notes.md
+          fi
 
       - name: Create GitHub Release
+        if: steps.check.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG_NAME: ${{ github.ref_name }}
+          TAG_NAME: ${{ steps.tag.outputs.tag }}
         run: |
           gh release create "$TAG_NAME" \
             --title "ArcKit $TAG_NAME" \
-            --notes-file /tmp/release-notes.md
+            --notes-file /tmp/release-notes.md \
+            || {
+              echo "::warning::Release creation failed (may already exist or permission issue)"
+              exit 1
+            }
