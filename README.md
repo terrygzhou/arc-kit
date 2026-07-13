@@ -141,6 +141,22 @@ pip install arckit-cli
 curl -fsSL https://raw.githubusercontent.com/terrygzhou/arc-kit/main/install.sh | bash
 ```
 
+**Mistral Vibe CLI** — link the ArcKit extension:
+
+```bash
+# Clone the standalone extension repository
+git clone https://github.com/tractorjuice/arckit-vibe.git
+cd arckit-vibe
+
+# Create extensions directory and link
+mkdir -p ~/.vibe/extensions/
+ln -s $(pwd) ~/.vibe/extensions/arckit
+```
+
+Zero-config: 75 official commands as skills, 10 specialized agents, all templates, and bundled MCP servers (AWS Knowledge, Microsoft Learn, Google Developer Knowledge, GovRepoScrape).
+
+**Latest Release**: [v6.1.1](https://github.com/tractorjuice/arc-kit/releases/tag/v6.1.1)
+
 ### OKF Interoperability
 
 ArcKit can exchange Markdown knowledge bundles using an Open Knowledge Format-shaped frontmatter layer:
