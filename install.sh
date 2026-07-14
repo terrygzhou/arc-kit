@@ -29,7 +29,8 @@ elif command -v pipx >/dev/null 2>&1; then
 
 else
   warn "Neither uv nor pipx found — using pip --user"
-  pip install --user arckit-cli
+  # --break-system-packages required on PEP 668 distros (Debian/Ubuntu/Pop!_OS)
+  pip install --user --break-system-packages arckit-cli
 
   local_bin="${HOME}/.local/bin"
   if [[ -d "$local_bin" && ":${PATH}:" != *":${local_bin}:"* ]]; then
