@@ -1,16 +1,5 @@
 name: Codex Plugin
-
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".agents/plugins/marketplace.json"
-      - ".github/workflows/codex-plugin.yml"
-      - "plugins/**"
-      - "scripts/converter.py"
-      - "src/arckit_cli/**"
-      - "tests/codex/**"
-      - "pyproject.toml"
   pull_request:
     paths:
       - ".agents/plugins/marketplace.json"
@@ -20,6 +9,7 @@ on:
       - "src/arckit_cli/**"
       - "tests/codex/**"
       - "pyproject.toml"
+  workflow_dispatch:
 
 jobs:
   codex-plugin:
