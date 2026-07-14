@@ -50,6 +50,9 @@ arckit = "arckit_cli:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.hooks.custom]
+path = "hatch_build_hook.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/arckit_cli"]
 exclude = ["LICENSE"]
