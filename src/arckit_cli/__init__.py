@@ -1827,14 +1827,15 @@ def build(
                 )
 
     # ── 10. Post-build hooks ────────────────────────────────────────────
-    console.print()
-    console.print("[bold]Post-build hooks...[/bold]")
     if recipe_obj.post_build_hooks:
+        console.print()
+        console.print("[bold]Post-build hooks...[/bold]")
         for hook in recipe_obj.post_build_hooks:
             hook_name = hook.get("name", "unknown")
             console.print(f"  - {hook_name}: [dim]skipped (hooks not implemented yet)[/dim]")
     else:
-        console.print("  [dim]No post-build hooks defined[/dim]")
+        console.print()
+        console.print("[dim]No post-build hooks defined[/dim]")
 
     # ── 11. Summary ─────────────────────────────────────────────────────
     total_duration = time.monotonic() - build_start
