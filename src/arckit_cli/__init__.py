@@ -1844,10 +1844,34 @@ def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
             search_paths.append(("share: Copilot prompts", pf))
             if pf.is_file():
                 return pf
-    except Exception:
-        pass
+    except Exception as e:
+        import sys
+        print(f"DEBUG: get_data_paths() error: {e}", file=sys.stderr)
 
-    # Collect all searched paths for error message
+    # 5. Direct pipx share path (fallback in case get_data_paths() fails)
+    for pipx_share in [
+        Path.home() / ".local" / "pipx" / "venvs" / "arckit-cli" / "share" / "arckit",
+        Path.home() / ".local" / "share" / "arckit",
+    ]:
+        share_ext = pipx_share / "extensions"
+        if share_ext.exists():
+            # 5a. Codex skills
+            sf = share_ext / "arckit-codex" / "skills" / f"arckit-{cmd_name}" / "SKILL.md"
+            search_paths.append(("direct share: Codex skills", sf))
+            if sf.is_file():
+                return sf
+            # 5b. OpenCode commands
+            cf = share_ext / "arckit-opencode" / "commands" / f"arckit.{cmd_name}.md"
+            search_paths.append(("direct share: OpenCode commands", cf))
+            if cf.is_file():
+                return cf
+            # 5c. Copilot prompts
+            pf = share_ext / "arckit-copilot" / "prompts" / f"arckit-{cmd_name}.prompt.md"
+            search_paths.append(("direct share: Copilot prompts", pf))
+            if pf.is_file():
+                return pf
+
+    # All search paths exhausted
     path_list = "\n".join(f"  - {p}" for _, p in search_paths)
     raise FileNotFoundError(
         f"Skill '{skill_name}' not found at:\n"
