@@ -1672,6 +1672,114 @@ def build(
         # Replace active_targets with resolved versions
         active_targets = resolved_targets
 
+        # Search for existing artifacts — skip targets that already have valid files
+        targets_to_execute: list[Target] = []
+        targets_skipped: list[Target] = []
+        for t in active_targets:
+            # Check if all dependencies are complete
+            # A dependency is satisfied if:
+            # 1. It's marked complete in state, OR
+            # 2. Its artifact file exists on disk (even if not yet in state)
+            def _dep_satisfied(dep_id):
+                ts = state.targets.get(dep_id)
+                if ts and ts.status == "complete":
+                    return True
+                # Check if dep file exists on disk (search ALL targets in recipe)
+                for cand_target in recipe_obj.targets:
+                    if cand_target.id == dep_id and cand_target.output:
+                        if "path" in cand_target.output:
+                            p = cand_target.output["path"]
+                        elif "project" in cand_target.output:
+                            p = f"projects/{wave_values.get('P', '')}/ARC-001-{cand_target.output.get('type', 'OUT')}-v1.0.md"
+                        else:
+                            continue
+                        for k, v in wave_values.items():
+                            p = p.replace("{" + k + "}", v)
+                        if not Path(p).is_absolute():
+                            p = str(project_root / p)
+                        if Path(p).is_file():
+                            return True
+                return False
+
+            deps_complete = all(_dep_satisfied(dep_id) for dep_id in t.deps)
+            
+            # Build candidate paths to search
+            candidate_paths: list[str] = []
+            if t.output:
+                if "path" in t.output:
+                    candidate_paths.append(t.output["path"])
+                elif "project" in t.output:
+                    # Primary: recipe path (e.g., projects/001-MyProject/ARC-001-REQ-v1.0.md)
+                    candidate_paths.append(
+                        f"projects/{t.output['project']}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    )
+                    # Fallback: project ID only (e.g., projects/001/ARC-001-REQ-v1.0.md)
+                    candidate_paths.append(
+                        f"projects/{wave_values.get('P', '')}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    )
+            
+            # Resolve placeholders and find first matching file
+            check_path = None
+            for raw in candidate_paths:
+                resolved = raw
+                for k, v in wave_values.items():
+                    resolved = resolved.replace("{" + k + "}", v)
+                if not Path(resolved).is_absolute():
+                    resolved = str(project_root / resolved)
+                if Path(resolved).is_file():
+                    check_path = resolved
+                    break
+            
+            if check_path and deps_complete:
+                console.print(f"  [dim]⏭ {t.id}: skipped (file exists: {Path(check_path).name})[/dim]")
+                targets_skipped.append(t)
+                continue
+            
+            targets_to_execute.append(t)
+        
+        # Mark skipped targets complete in state and add to results
+        for t in targets_skipped:
+            # Find the actual file path (same multi-path search)
+            output_path = None
+            possible_paths: list[str] = []
+            if t.output:
+                if "path" in t.output:
+                    possible_paths.append(t.output["path"])
+                elif "project" in t.output:
+                    possible_paths.append(
+                        f"projects/{t.output['project']}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    )
+                    possible_paths.append(
+                        f"projects/{wave_values.get('P', '')}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    )
+            
+            for p in possible_paths:
+                resolved = p
+                for k, v in wave_values.items():
+                    resolved = resolved.replace("{" + k + "}", v)
+                if not Path(resolved).is_absolute():
+                    resolved = str(project_root / resolved)
+                if Path(resolved).is_file():
+                    output_path = resolved
+                    break
+            
+            if output_path:
+                mark_target_complete(state, t.id, output_path, [])
+                all_results.append({
+                    "target_id": t.id,
+                    "status": "skipped",
+                    "status_icon": "[dim]⏭[/dim]",
+                    "duration": 0,
+                    "tokens": 0,
+                    "output_path": output_path,
+                })
+
+        active_targets = targets_to_execute
+        
+        if not active_targets:
+            console.print(f"  [dim]Skipping wave (all targets have valid outputs)[/dim]")
+            continue
+
         # NOW build tasks_for_wave from resolved targets
         tasks_for_wave: list[tuple[Target, Path, dict]] = []
         for t in active_targets:
