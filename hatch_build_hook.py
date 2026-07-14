@@ -1,6 +1,6 @@
 """Hatch build hook: regenerate extensions from plugins before packaging.
 
-Ensures pipx/git installs produce wheels with all skills/commands/agents
+This ensures pipx/git installs produce wheels with all skills, commands, and agents
 even though extensions/ is gitignored in the source repo.
 """
 
@@ -10,14 +10,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
-class BuildHook:
-    """Hatchling custom build hook that runs converter.py before packaging."""
 
-    def __init__(self, root: str):
-        self.root = Path(root)
+class GenerateExtensions(BuildHookInterface):
+    """Runs scripts/converter.py during sdist/wheel build."""
 
-    def initialize(self, version: str, **kwargs: dict) -> None:
+    def initialize(self, version: str, build_data: dict) -> None:
         converter = self.root / "scripts" / "converter.py"
 
         if not converter.exists():
@@ -26,15 +25,11 @@ class BuildHook:
 
         print("[arckit] Generating extensions from plugins...")
 
-        env = dict(__import__("os").environ)
-        env["PYTHONPATH"] = str(self.root / "src")
-
         result = subprocess.run(
             [sys.executable, str(converter)],
             cwd=str(self.root),
             capture_output=True,
             text=True,
-            env=env,
         )
 
         if result.returncode != 0:
