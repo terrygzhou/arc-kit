@@ -1606,9 +1606,10 @@ def build(
         )
 
         # Collect template placeholders ({NAME}, {P}, etc.) before wave execution
-        # Only scan args strings — output is a dict, not template text
+        # Scan args and output dict values individually (not str(output) which garbles)
         wave_values: dict[str, str] = {}
         for t in active_targets:
+            # Scan args
             if t.args:
                 for m in re.finditer(r"\{([^}]+)\}", str(t.args)):
                     placeholder = m.group(1)
@@ -1617,6 +1618,17 @@ def build(
                             f"  {placeholder}",
                             default=placeholder.lower()[:20],
                         )
+            # Scan output dict values
+            if t.output:
+                for out_val in t.output.values():
+                    if isinstance(out_val, str):
+                        for m in re.finditer(r"\{([^}]+)\}", out_val):
+                            placeholder = m.group(1)
+                            if placeholder not in wave_values:
+                                wave_values[placeholder] = typer.prompt(
+                                    f"  {placeholder}",
+                                    default=placeholder.lower()[:20],
+                                )
         if wave_values:
             console.print(f"  [dim]Template values: {wave_values}[/dim]")
 
