@@ -1605,6 +1605,12 @@ def build(
             + (f" (skipped {skip_count})" if skip_count else "")
         )
 
+        # Human-readable labels and defaults for common placeholders
+        _PLACEHOLDER_LABELS = {
+            "NAME": ("Project name", "myproject"),
+            "P": ("Project prefix (e.g. 001, proj)", "001"),
+        }
+
         # Collect template placeholders ({NAME}, {P}, etc.) before wave execution
         # Scan args and output dict values individually (not str(output) which garbles)
         wave_values: dict[str, str] = {}
@@ -1614,9 +1620,10 @@ def build(
                 for m in re.finditer(r"\{([^}]+)\}", str(t.args)):
                     placeholder = m.group(1)
                     if placeholder not in wave_values:
+                        label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, placeholder.lower()[:20]))
                         wave_values[placeholder] = typer.prompt(
-                            f"  {placeholder}",
-                            default=placeholder.lower()[:20],
+                            f"  {label}",
+                            default=default,
                         )
             # Scan output dict values
             if t.output:
@@ -1625,9 +1632,10 @@ def build(
                         for m in re.finditer(r"\{([^}]+)\}", out_val):
                             placeholder = m.group(1)
                             if placeholder not in wave_values:
+                                label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, placeholder.lower()[:20]))
                                 wave_values[placeholder] = typer.prompt(
-                                    f"  {placeholder}",
-                                    default=placeholder.lower()[:20],
+                                    f"  {label}",
+                                    default=default,
                                 )
         if wave_values:
             console.print(f"  [dim]Template values: {wave_values}[/dim]")
