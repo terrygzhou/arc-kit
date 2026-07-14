@@ -17,7 +17,8 @@ class GenerateExtensions(BuildHookInterface):
     """Runs scripts/converter.py during sdist/wheel build."""
 
     def initialize(self, version: str, build_data: dict) -> None:
-        converter = self.root / "scripts" / "converter.py"
+        root = Path(self.root)
+        converter = root / "scripts" / "converter.py"
 
         if not converter.exists():
             print("[arckit] WARNING: converter.py not found, skipping extension generation")
@@ -27,7 +28,7 @@ class GenerateExtensions(BuildHookInterface):
 
         result = subprocess.run(
             [sys.executable, str(converter)],
-            cwd=str(self.root),
+            cwd=str(root),
             capture_output=True,
             text=True,
         )
