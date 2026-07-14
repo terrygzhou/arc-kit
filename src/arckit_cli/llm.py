@@ -475,6 +475,25 @@ async def execute_target(
     """
     result = ExecutionResult(target_id=target.id, status="failed")
 
+    # Pre-execution: check if output file already exists
+    if target.output:
+        expected_path = None
+        if "path" in target.output:
+            expected_path = target.output["path"]
+        elif "project" in target.output:
+            expected_path = f"projects/{target.output['project']}/ARC-001-{target.output.get('type', 'OUT')}-v1.0.md"
+        
+        if expected_path:
+            if not Path(expected_path).is_absolute():
+                expected_path = str(project_path / expected_path)
+            if Path(expected_path).is_file():
+                # File exists, skip LLM call
+                result.status = "success"
+                result.output_path = expected_path
+                result.tokens_used = 0
+                logger.info(f"Target {target.id}: skipped (file exists: {expected_path})")
+                return result
+
     try:
         # Step 1: Build system prompt from skill file
         system_prompt = _build_system_prompt(skill_path)
