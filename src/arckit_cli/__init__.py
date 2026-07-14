@@ -1773,8 +1773,9 @@ def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
     Precedence:
         1. Direct path (absolute or relative)
         2. extensions/arckit-codex/skills/arckit-{name}/SKILL.md
-        3. All plugin commands dirs for {command}.md
+        3. plugins/*/commands/{command}.md
         4. .agents/skills/arckit-{name}/SKILL.md
+        5. Installed package share dirs (Codex, OpenCode, Copilot, etc.)
 
     Strips 'arckit:' prefix from skill names (e.g. 'arckit:principles' → 'principles').
     """
@@ -1790,29 +1791,64 @@ def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
     if cmd_name.startswith("arckit:"):
         cmd_name = cmd_name[len("arckit:"):]
 
-    # 1. Codex skills directory
+    search_paths: list[tuple[str, Path]] = []
+
+    # 1. Codex skills directory (project-local)
     skill_file = project_path / "extensions" / "arckit-codex" / "skills" / f"arckit-{cmd_name}" / "SKILL.md"
+    search_paths.append(("Codex skills", skill_file))
     if skill_file.is_file():
         return skill_file
 
-    # 2. Search all plugin commands dirs
+    # 2. Search all plugin commands dirs (project-local)
     plugin_base = project_path / "plugins"
     if plugin_base.is_dir():
         for plugin_cmd_dir in sorted(plugin_base.glob("arckit-*/commands")):
             cmd_file = plugin_cmd_dir / f"{cmd_name}.md"
+            search_paths.append((f"plugin: {plugin_cmd_dir.parent.name}", cmd_file))
             if cmd_file.is_file():
                 return cmd_file
 
     # 3. Also check .agents/skills/ (from arckit init)
     agent_skill = project_path / ".agents" / "skills" / f"arckit-{cmd_name}" / "SKILL.md"
+    search_paths.append((".agents/skills", agent_skill))
     if agent_skill.is_file():
         return agent_skill
 
+    # 4. Installed package share directories
+    try:
+        data_paths = get_data_paths()  # type: ignore[name-defined]
+
+        # 4a. Codex skills (share/arckit/extensions/arckit-codex/skills/arckit-{name}/SKILL.md)
+        codex_skills = data_paths.get("codex_skills")
+        if codex_skills and codex_skills.is_dir():
+            sf = codex_skills / f"arckit-{cmd_name}" / "SKILL.md"
+            search_paths.append(("share: Codex skills", sf))
+            if sf.is_file():
+                return sf
+
+        # 4b. OpenCode commands (share/arckit/extensions/arckit-opencode/commands/arckit.{name}.md)
+        oc_commands = data_paths.get("opencode_commands")
+        if oc_commands and oc_commands.is_dir():
+            cf = oc_commands / f"arckit.{cmd_name}.md"
+            search_paths.append(("share: OpenCode commands", cf))
+            if cf.is_file():
+                return cf
+
+        # 4c. Copilot prompts (share/arckit/extensions/arckit-copilot/prompts/arckit-{name}.prompt.md)
+        cp_prompts = data_paths.get("copilot_prompts")
+        if cp_prompts and cp_prompts.is_dir():
+            pf = cp_prompts / f"arckit-{cmd_name}.prompt.md"
+            search_paths.append(("share: Copilot prompts", pf))
+            if pf.is_file():
+                return pf
+    except Exception:
+        pass
+
+    # Collect all searched paths for error message
+    path_list = "\n".join(f"  - {p}" for _, p in search_paths)
     raise FileNotFoundError(
         f"Skill '{skill_name}' not found at:\n"
-        f"  - {skill_file}\n"
-        f"  - plugins/*/commands/{cmd_name}.md\n"
-        f"  - {agent_skill}"
+        f"{path_list}"
     )
 
 
