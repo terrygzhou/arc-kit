@@ -47,7 +47,7 @@ Issues = "https://github.com/terrygzhou/arc-kit/issues"
 arckit = "arckit_cli:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "pyyaml"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.hooks.custom]
