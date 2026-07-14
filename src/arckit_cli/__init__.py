@@ -1578,6 +1578,7 @@ def build(
         active_targets: list[Target] = []
         skip_count = 0
         for t in wave.targets:
+            # First check state-based skipping (--resume)
             if resume and state.targets.get(t.id, {}).status == "complete":
                 skip_count += 1
                 continue
@@ -1670,6 +1671,36 @@ def build(
 
         # Replace active_targets with resolved versions
         active_targets = resolved_targets
+
+        # Search for existing artifacts — skip targets that already have valid files
+        remaining_targets: list[Target] = []
+        for t in active_targets:
+            if t.output:
+                if "path" in t.output:
+                    check_path = t.output["path"]
+                elif "project" in t.output:
+                    check_path = f"projects/{t.output['project']}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                else:
+                    check_path = None
+            else:
+                check_path = None
+            
+            if check_path:
+                for k, v in wave_values.items():
+                    check_path = check_path.replace("{" + k + "}", v)
+                if not Path(check_path).is_absolute():
+                    check_path = str(project_root / check_path)
+                if Path(check_path).is_file():
+                    console.print(f"  [dim]⏭ {t.id} already exists ({check_path})[/dim]")
+                    continue
+            
+            remaining_targets.append(t)
+        
+        active_targets = remaining_targets
+        
+        if not active_targets:
+            console.print(f"  [dim]Skipping wave (all targets have valid outputs)[/dim]")
+            continue
 
         # NOW build tasks_for_wave from resolved targets
         tasks_for_wave: list[tuple[Target, Path, dict]] = []
