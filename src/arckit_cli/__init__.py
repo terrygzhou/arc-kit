@@ -222,6 +222,18 @@ def get_data_paths():
     except Exception:
         pass
 
+    # Try pipx installation (macOS/Linux)
+    # pipx installs in ~/.local/pipx/venvs/<name>/ but data lands in site-packages/../share/arckit/
+    try:
+        pipx_base = Path.home() / ".local" / "pipx" / "venvs" / "arckit-cli"
+        if pipx_base.exists():
+            # pipx shared data lives alongside the venv
+            share_path = pipx_base.parent.parent / "share" / "arckit"
+            if share_path.exists():
+                return build_paths(share_path)
+    except Exception:
+        pass
+
     # Fallback to source directory if installation check failed
     return build_paths(source_root)
 
@@ -1299,8 +1311,10 @@ def resolve_recipe_path(recipe_name: str, project_root: Path) -> Path:
 
     Precedence:
         1. project_root/.arckit/recipes/{recipe}.yaml  (project override)
-        2. plugins/arckit-*/recipes/{recipe}.yaml       (community plugins)
-        3. share/arckit/recipes/{recipe}.yaml           (system install)
+        2. project_root/plugins/arckit-*/recipes/{recipe}.yaml (community plugins)
+        3a. share/arckit/scripts/{recipe}.yaml           (legacy system install)
+        3b. share/arckit/plugins/arckit-*/recipes/{recipe}.yaml (installed plugins)
+        4. project_root/scripts/recipes/{recipe}.yaml    (local scripts)
     """
     candidates: list[tuple[str, Path]] = []
 
@@ -1322,12 +1336,23 @@ def resolve_recipe_path(recipe_name: str, project_root: Path) -> Path:
     # 3. System share directory (for pip/uv installs)
     try:
         data_paths = get_data_paths()  # type: ignore[name-defined]
-        recipes_base = data_paths.get("scripts")  # scripts/recipes if present
+        # 3a. Check scripts/recipes/ (legacy)
+        recipes_base = data_paths.get("scripts")
         if recipes_base and recipes_base.exists():
             for yaml_file in sorted(recipes_base.glob("*.yaml")):
                 if yaml_file.stem == recipe_name:
                     candidates.append(("system share", yaml_file))
                     return yaml_file
+        # 3b. Check share/arckit/plugins/arckit-*/recipes/ (installed plugin recipes)
+        share_root = data_paths.get("scripts")
+        if share_root:
+            plugins_base = share_root.parent / "plugins"
+            if plugins_base.exists():
+                for plugin_recipes in sorted(plugins_base.glob("arckit-*/recipes")):
+                    plugin_file = plugin_recipes / f"{recipe_name}.yaml"
+                    if plugin_file.exists():
+                        candidates.append((f"plugin share: {plugin_recipes.parent.name}", plugin_file))
+                        return plugin_file
     except Exception:
         pass
 
