@@ -20,21 +20,30 @@ from typing import Optional
 import httpx
 import yaml
 
-# Lazy imports — resolve at runtime from the package root
-def _import_config():
-    """Import config helpers from arckit_cli.__init__ (runs after package installed)."""
+# Config helpers — self-contained (avoids circular import with __init__.py)
+import platformdirs
+
+def _get_config_path():
+    return Path(platformdirs.user_config_dir("arckit")) / "config.yaml"
+
+def _load_config():
+    cfg_path = _get_config_path()
+    if not cfg_path.exists():
+        return {}
     try:
-        from arckit_cli import _load_config, _get_nested  # noqa: F401
-        return _load_config, _get_nested
-    except ImportError:
-        # Fallback for development: import from sibling file
-        import importlib.util
-        from pathlib import Path
-        init_path = Path(__file__).parent / "__init__.py"
-        spec = importlib.util.spec_from_file_location("arckit_cli", init_path)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        return mod._load_config, mod._get_nested
+        return yaml.safe_load(cfg_path.read_text()) or {}
+    except Exception:
+        return {}
+
+def _get_nested(data, dotted_key):
+    parts = dotted_key.split(".")
+    current = data
+    for part in parts:
+        if isinstance(current, dict):
+            current = current.get(part)
+        else:
+            return None
+    return current
 from arckit_cli.recipe import Target, Wave
 
 logger = logging.getLogger(__name__)
@@ -657,12 +666,13 @@ def _resolve_skill_path(skill_name: str, project_path: Path) -> Path:
     """Resolve a skill name to a file path.
 
     Checks:
-        1. extensions/arckit-codex/skills/arckit-{name}/SKILL.md
-        2. plugins/arckit-togaf-adm/commands/{name}.md
-        3. Direct path (absolute or relative to project)
+        1. Direct path (absolute or relative)
+        2. extensions/arckit-codex/skills/arckit-{name}/SKILL.md
+        3. All plugin commands dirs for {command}.md
+        4. .agents/skills/arckit-{name}/SKILL.md
 
     Args:
-        skill_name: Skill identifier or path.
+        skill_name: Skill identifier (e.g. 'arckit:principles') or path.
         project_path: Project root directory.
 
     Returns:
@@ -678,20 +688,33 @@ def _resolve_skill_path(skill_name: str, project_path: Path) -> Path:
     if not direct.is_absolute() and (project_path / direct).is_file():
         return project_path / direct
 
+    # Strip 'arckit:' prefix for command name lookup
+    cmd_name = skill_name
+    if cmd_name.startswith("arckit:"):
+        cmd_name = cmd_name[len("arckit:"):]
+
     # extensions/arckit-codex/skills/arckit-{name}/SKILL.md
-    skill_dir = project_path / "extensions" / "arckit-codex" / "skills" / f"arckit-{skill_name}"
+    skill_dir = project_path / "extensions" / "arckit-codex" / "skills" / f"arckit-{cmd_name}"
     skill_file = skill_dir / "SKILL.md"
     if skill_file.is_file():
         return skill_file
 
-    # plugins/arckit-togaf-adm/commands/{name}.md
-    cmd_file = project_path / "plugins" / "arckit-togaf-adm" / "commands" / f"{skill_name}.md"
-    if cmd_file.is_file():
-        return cmd_file
+    # .agents/skills/arckit-{name}/SKILL.md
+    agent_skill = project_path / ".agents" / "skills" / f"arckit-{cmd_name}" / "SKILL.md"
+    if agent_skill.is_file():
+        return agent_skill
+
+    # Search all plugin commands dirs
+    plugin_base = project_path / "plugins"
+    if plugin_base.is_dir():
+        for plugin_cmd_dir in sorted(plugin_base.glob("arckit-*/commands")):
+            cmd_file = plugin_cmd_dir / f"{cmd_name}.md"
+            if cmd_file.is_file():
+                return cmd_file
 
     raise FileNotFoundError(
         f"Skill '{skill_name}' not found at:\n"
         f"  - {skill_file}\n"
-        f"  - {cmd_file}\n"
-        f"  - {direct} (relative to {project_path})"
+        f"  - {agent_skill}\n"
+        f"  - plugins/*/commands/{cmd_name}.md\n"
     )

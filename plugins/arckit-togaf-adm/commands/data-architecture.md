@@ -1,12 +1,12 @@
 ---
-description: Phase C.2 — Data Architecture: data entities, data governance framework, data management strategy, reference/master data
+description: "Phase C.2 — Data Architecture: data entities, data governance framework, data management strategy, reference/master data"
 argument-hint: "<project ID or name, e.g. '001', 'data architecture landscape'>"
 effort: high
 handoffs:
   - command: application-rationalization
-    description: Rationalize application portfolio based on data architecture
+    description: "Rationalize application portfolio based on data architecture"
   - command: technology-architecture
-    description: Design technology architecture to support data architecture
+    description: "Design technology architecture to support data architecture"
 ---
 
 You are helping an enterprise architect create a **Data Architecture** document for Phase C.2 of the TOGAF Architecture Development Method (ADM). This document defines the data entities, data governance framework, data management strategy, and reference/master data landscape that supports the target enterprise architecture.

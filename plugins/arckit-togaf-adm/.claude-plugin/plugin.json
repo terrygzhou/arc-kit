@@ -9,5 +9,5 @@
   "repository": "https://github.com/tractorjuice/arckit-claude",
   "license": "MIT",
   "defaultEnabled": false,
-  "dependencies": []
+  "dependencies": ["arckit"]
 }

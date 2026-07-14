@@ -413,7 +413,20 @@ def init(
                 "[yellow]Git not found - will skip repository initialization[/yellow]"
             )
 
-    # Select AI assistant
+    # Check LLM config first — if base_url is set, auto-select opencode (local LLM)
+    if not ai_assistant:
+        cfg = _load_config()
+        base_url = _get_nested(cfg, "llm.base_url")
+        model = _get_nested(cfg, "llm.model")
+        if base_url:
+            ai_assistant = "opencode"
+            console.print(f"\n[cyan]Detected local LLM config:[/cyan]")
+            console.print(f"  Base URL: {base_url}")
+            if model:
+                console.print(f"  Model: {model}")
+            console.print(f"  → Auto-selecting [green]opencode[/green] for local LLM\n")
+
+    # Select AI assistant interactively if not set by --ai or config
     if not ai_assistant:
         console.print("\n[cyan]Select your AI assistant:[/cyan]")
         console.print("1. codex (OpenAI Codex CLI)")
@@ -1176,9 +1189,9 @@ config_app = typer.Typer(help="Manage ArcKit configuration (YAML)")
 app.add_typer(config_app, name="config")
 
 
-@config_app.command()
-def config_set(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.base_url)"),
-               value: str = typer.Argument(..., help="Value to set")):
+@config_app.command(name="set")
+def _config_set(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.base_url)"),
+                value: str = typer.Argument(..., help="Value to set")):
     """Set a configuration key."""
     cfg = _load_config()
     _set_nested(cfg, key, value)
@@ -1186,8 +1199,8 @@ def config_set(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.b
     console.print(f"[green]✓[/green] Set {key} = {value}")
 
 
-@config_app.command()
-def config_get(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.base_url)")):
+@config_app.command(name="get")
+def _config_get(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.base_url)")):
     """Get the value for a single configuration key."""
     cfg = _load_config()
     val = _get_nested(cfg, key)
@@ -1197,8 +1210,8 @@ def config_get(key: str = typer.Argument(..., help="Dot-notation key (e.g. llm.b
     console.print(val)
 
 
-@config_app.command()
-def config_list():
+@config_app.command(name="list")
+def _config_list():
     """List all configuration keys and their values."""
     cfg = _load_config()
     if not cfg:
@@ -1637,9 +1650,9 @@ def build(
 
             console.print(
                 f"    {status_icon} {result.target_id}: "
-                f"[{'green' if result.status == 'success' else 'red'}]"
-                f"{status_label}[/{'green' if result.status == 'success' else 'red'}]"
-                f" ({result.tokens:,} tokens)"
+                            f"[{'green' if result.status == 'success' else 'red'}]"
+                            f"{status_label}[/{'green' if result.status == 'success' else 'red'}]"
+                            f" ({result.tokens_used:,} tokens)"
             )
 
             if result.status != "success":
@@ -1733,9 +1746,12 @@ def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
     """Resolve a skill name to an absolute file path.
 
     Precedence:
-        1. extensions/arckit-codex/skills/arckit-{name}/SKILL.md
-        2. plugins/arckit-togaf-adm/commands/{name}.md
-        3. Direct absolute or project-relative path
+        1. Direct path (absolute or relative)
+        2. extensions/arckit-codex/skills/arckit-{name}/SKILL.md
+        3. All plugin commands dirs for {command}.md
+        4. .agents/skills/arckit-{name}/SKILL.md
+
+    Strips 'arckit:' prefix from skill names (e.g. 'arckit:principles' → 'principles').
     """
     # Direct path (absolute or relative to project)
     direct = Path(skill_name)
@@ -1744,40 +1760,33 @@ def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
     if not direct.is_absolute() and (project_path / direct).is_file():
         return project_path / direct
 
+    # Strip 'arckit:' prefix for command name lookup
+    cmd_name = skill_name
+    if cmd_name.startswith("arckit:"):
+        cmd_name = cmd_name[len("arckit:"):]
+
     # 1. Codex skills directory
-    skill_file = (
-        project_path
-        / "extensions"
-        / "arckit-codex"
-        / "skills"
-        / f"arckit-{skill_name}"
-        / "SKILL.md"
-    )
+    skill_file = project_path / "extensions" / "arckit-codex" / "skills" / f"arckit-{cmd_name}" / "SKILL.md"
     if skill_file.is_file():
         return skill_file
 
-    # 2. Plugin commands
-    cmd_file = (
-        project_path
-        / "plugins"
-        / "arckit-togaf-adm"
-        / "commands"
-        / f"{skill_name}.md"
-    )
-    if cmd_file.is_file():
-        return cmd_file
+    # 2. Search all plugin commands dirs
+    plugin_base = project_path / "plugins"
+    if plugin_base.is_dir():
+        for plugin_cmd_dir in sorted(plugin_base.glob("arckit-*/commands")):
+            cmd_file = plugin_cmd_dir / f"{cmd_name}.md"
+            if cmd_file.is_file():
+                return cmd_file
 
     # 3. Also check .agents/skills/ (from arckit init)
-    agent_skill = (
-        project_path / ".agents" / "skills" / f"arckit-{skill_name}" / "SKILL.md"
-    )
+    agent_skill = project_path / ".agents" / "skills" / f"arckit-{cmd_name}" / "SKILL.md"
     if agent_skill.is_file():
         return agent_skill
 
     raise FileNotFoundError(
         f"Skill '{skill_name}' not found at:\n"
         f"  - {skill_file}\n"
-        f"  - {cmd_file}\n"
+        f"  - plugins/*/commands/{cmd_name}.md\n"
         f"  - {agent_skill}"
     )
 

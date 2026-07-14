@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "recipe": "togaf-adm-full",
+  "recipe_path": "/home/terry/workspace/projects/arc-kit/plugins/arckit-togaf-adm/recipes/togaf-adm-full.yaml",
+  "project": "arc-kit",
+  "current_wave": 0,
+  "completed_waves": [
+    1
+  ],
+  "targets": {
+    "PRIN": {
+      "status": "complete",
+      "output_path": "/home/terry/workspace/projects/arc-kit/projects/000-global/ARC-000-PRIN-v1.1.md",
+      "output_sha256": "d1484e2c6cf25e815de1dd99c32fb47e0e9082e73b157bc8401d0c5178f8181d",
+      "input_hashes": {},
+      "completed_at": "2026-07-14T01:20:29.924890+00:00",
+      "error": null
+    }
+  }
+}

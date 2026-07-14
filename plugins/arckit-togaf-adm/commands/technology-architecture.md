@@ -1,5 +1,5 @@
 ---
-description: Phase D — Technology Architecture: infrastructure, platform, network, deployment, integration architecture
+description: "Phase D — Technology Architecture: infrastructure, platform, network, deployment, integration architecture"
 argument-hint: "<project ID or name, e.g. '001', 'technology architecture landscape'>"
 effort: high
 handoffs:
