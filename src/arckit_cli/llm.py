@@ -432,6 +432,10 @@ def _build_user_prompt(target, input_artifacts: dict[str, str]) -> str:
         parts.append("\n## Expected Output")
         if "path" in output:
             parts.append(f"- Write output to: {output['path']}")
+        elif "project" in output:
+            proj = output["project"]
+            typ = output.get("type", "OUT")
+            parts.append(f"- Write output to: projects/{proj}/ARC-001-{typ}-v1.0.md")
         if "format" in output:
             parts.append(f"- Format: {output['format']}")
 

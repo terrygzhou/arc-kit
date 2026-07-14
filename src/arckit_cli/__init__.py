@@ -1684,15 +1684,38 @@ def build(
                 raise typer.Exit(1)
 
             # Gather input artifacts from dependency outputs
+            # Summarize to avoid context overflow (raw artifacts can be 50K+ tokens)
+            def _summarize_artifact(content: str, max_chars: int = 8000) -> str:
+                """Summarize artifact: keep headings/structure, trim body text."""
+                if len(content) <= max_chars:
+                    return content
+                # Keep title and first few sections, truncate rest
+                lines = content.split("\n")
+                result_lines: list[str] = []
+                section_count = 0
+                max_sections = 3
+                for line in lines:
+                    if line.startswith("#"):
+                        result_lines.append(line)
+                        section_count += 1
+                        if section_count > max_sections:
+                            result_lines.append(f"\n... ({len(lines) - len(result_lines)} lines omitted for brevity)")
+                            break
+                    elif line.strip() and not line.startswith("#"):
+                        if section_count <= max_sections:
+                            result_lines.append(line)
+                if len(result_lines) < len(lines):
+                    result_lines.append(f"\n[Truncated: full artifact at {dep_file}]")
+                return "\n".join(result_lines)
+
             input_artifacts: dict[str, str] = {}
             for dep_id in t.deps:
                 dep_state = state.targets.get(dep_id)
                 if dep_state and dep_state.output_path:
                     dep_file = Path(dep_state.output_path)
                     if dep_file.is_file():
-                        input_artifacts[dep_id] = dep_file.read_text(
-                            encoding="utf-8", errors="replace"
-                        )
+                        raw = dep_file.read_text(encoding="utf-8", errors="replace")
+                        input_artifacts[dep_id] = _summarize_artifact(raw)
 
             tasks_for_wave.append((t, skill_path, input_artifacts))
 
@@ -1712,11 +1735,16 @@ def build(
             input_files: list[str] = []
             for t in active_targets:
                 if t.id == result.target_id and t.output:
+                    # Handle output formats: {"path": "..."} or {"project": "...", "type": "..."}
                     if "path" in t.output:
                         output_path = t.output["path"]
-                        # Expand to absolute path
-                        if not Path(output_path).is_absolute():
-                            output_path = str(project_root / output_path)
+                    elif "project" in t.output:
+                        # Construct conventional path: projects/{project}/{type}.md
+                        output_path = f"projects/{t.output['project']}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    # Expand to absolute path
+                    if output_path and not Path(output_path).is_absolute():
+                        output_path = str(project_root / output_path)
+                    if output_path:
                         input_files = [
                             str(project_root / "**/*.md"),
                             str(project_root / "projects" / "**/*.md"),
