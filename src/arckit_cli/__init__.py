@@ -1609,6 +1609,8 @@ def build(
         _PLACEHOLDER_LABELS = {
             "NAME": ("Project name", "myproject"),
             "P": ("Project prefix (e.g. 001, proj)", "001"),
+            "REQ_SCOPE": ("Requirements scope (functional areas, priorities)", "cloud migration, PCI-DSS compliance"),
+            "STKE_SCOPE": ("Stakeholder focus (key drivers, conflicts)", "CFO cost savings, CTO innovation"),
         }
 
         # Collect template placeholders ({NAME}, {P}, etc.) before wave execution
