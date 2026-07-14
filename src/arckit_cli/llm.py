@@ -477,21 +477,24 @@ async def execute_target(
 
     # Pre-execution: check if output file already exists
     if target.output:
-        expected_path = None
+        expected_paths: list[str] = []
+        artifact = f"ARC-001-{target.output.get('type', 'OUT')}-v1.0.md"
         if "path" in target.output:
-            expected_path = target.output["path"]
+            expected_paths.append(target.output["path"])
         elif "project" in target.output:
-            expected_path = f"projects/{target.output['project']}/ARC-001-{target.output.get('type', 'OUT')}-v1.0.md"
+            expected_paths.append(f"projects/{target.output['project']}/{artifact}")
+            # Fallback: project ID only
+            if project_path.name:
+                expected_paths.append(f"projects/{project_path.name}/{artifact}")
         
-        if expected_path:
-            if not Path(expected_path).is_absolute():
-                expected_path = str(project_path / expected_path)
-            if Path(expected_path).is_file():
-                # File exists, skip LLM call
+        for path in expected_paths:
+            if not Path(path).is_absolute():
+                path = str(project_path / path)
+            if Path(path).is_file():
                 result.status = "success"
-                result.output_path = expected_path
+                result.output_path = path
                 result.tokens_used = 0
-                logger.info(f"Target {target.id}: skipped (file exists: {expected_path})")
+                logger.info(f"Target {target.id}: skipped (file exists: {path})")
                 return result
 
     try:

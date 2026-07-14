@@ -1687,36 +1687,40 @@ def build(
                 # Check if dep file exists on disk (search ALL targets in recipe)
                 for cand_target in recipe_obj.targets:
                     if cand_target.id == dep_id and cand_target.output:
+                        dep_artifact = f"ARC-001-{cand_target.output.get('type', 'OUT')}-v1.0.md"
+                        paths_to_check: list[str] = []
                         if "path" in cand_target.output:
-                            p = cand_target.output["path"]
+                            paths_to_check.append(cand_target.output["path"])
                         elif "project" in cand_target.output:
-                            p = f"projects/{wave_values.get('P', '')}/ARC-001-{cand_target.output.get('type', 'OUT')}-v1.0.md"
-                        else:
-                            continue
-                        for k, v in wave_values.items():
-                            p = p.replace("{" + k + "}", v)
-                        if not Path(p).is_absolute():
-                            p = str(project_root / p)
-                        if Path(p).is_file():
-                            return True
+                            paths_to_check.append(f"projects/{cand_target.output['project']}/{dep_artifact}")
+                            # Fallback: project ID only (e.g., projects/001/)
+                            for pid in (wave_values.get('P', ''), project_root.name):
+                                if pid:
+                                    paths_to_check.append(f"projects/{pid}/{dep_artifact}")
+                        for p in paths_to_check:
+                            for k, v in wave_values.items():
+                                p = p.replace("{" + k + "}", v)
+                            if not Path(p).is_absolute():
+                                p = str(project_root / p)
+                            if Path(p).is_file():
+                                return True
                 return False
 
             deps_complete = all(_dep_satisfied(dep_id) for dep_id in t.deps)
-            
-            # Build candidate paths to search
+
+            # Build candidate paths to search (recipe path + all known fallbacks)
             candidate_paths: list[str] = []
             if t.output:
                 if "path" in t.output:
                     candidate_paths.append(t.output["path"])
                 elif "project" in t.output:
-                    # Primary: recipe path (e.g., projects/001-MyProject/ARC-001-REQ-v1.0.md)
-                    candidate_paths.append(
-                        f"projects/{t.output['project']}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
-                    )
-                    # Fallback: project ID only (e.g., projects/001/ARC-001-REQ-v1.0.md)
-                    candidate_paths.append(
-                        f"projects/{wave_values.get('P', '')}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
-                    )
+                    artifact = f"ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    # Primary: recipe output path (e.g., projects/001-MyProject/ARC-001-REQ-v1.0.md)
+                    candidate_paths.append(f"projects/{t.output['project']}/{artifact}")
+                    # Fallbacks: project ID only (e.g., projects/001/ARC-001-REQ-v1.0.md)
+                    for proj_id in (wave_values.get('P', ''), project_root.name):
+                        if proj_id:
+                            candidate_paths.append(f"projects/{proj_id}/{artifact}")
             
             # Resolve placeholders and find first matching file
             check_path = None
@@ -1746,12 +1750,11 @@ def build(
                 if "path" in t.output:
                     possible_paths.append(t.output["path"])
                 elif "project" in t.output:
-                    possible_paths.append(
-                        f"projects/{t.output['project']}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
-                    )
-                    possible_paths.append(
-                        f"projects/{wave_values.get('P', '')}/ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
-                    )
+                    artifact = f"ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    possible_paths.append(f"projects/{t.output['project']}/{artifact}")
+                    for pid in (wave_values.get('P', ''), project_root.name):
+                        if pid:
+                            possible_paths.append(f"projects/{pid}/{artifact}")
             
             for p in possible_paths:
                 resolved = p
