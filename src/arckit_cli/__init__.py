@@ -1817,7 +1817,7 @@ def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
     if agent_skill.is_file():
         return agent_skill
 
-    # 4. Installed package share directories
+    # 4. Installed package share directories (fallback for pipx/git installs)
     try:
         data_paths = get_data_paths()  # type: ignore[name-defined]
 
@@ -1844,9 +1844,10 @@ def _resolve_skill_path_cli(skill_name: str, project_path: Path) -> Path:
             search_paths.append(("share: Copilot prompts", pf))
             if pf.is_file():
                 return pf
-    except Exception as e:
-        import sys
-        print(f"DEBUG: get_data_paths() error: {e}", file=sys.stderr)
+    except Exception:
+        # get_data_paths() may fail if package is installed via pipx with missing data files
+        # Step 5 below provides a direct fallback
+        pass
 
     # 5. Direct pipx share path (fallback in case get_data_paths() fails)
     for pipx_share in [
