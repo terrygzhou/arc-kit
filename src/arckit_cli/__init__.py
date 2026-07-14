@@ -223,14 +223,17 @@ def get_data_paths():
         pass
 
     # Try pipx installation (macOS/Linux)
-    # pipx installs in ~/.local/pipx/venvs/<name>/ but data lands in site-packages/../share/arckit/
+    # pipx installs data in ~/.local/pipx/venvs/<name>/share/arckit/
     try:
         pipx_base = Path.home() / ".local" / "pipx" / "venvs" / "arckit-cli"
-        if pipx_base.exists():
-            # pipx shared data lives alongside the venv
-            share_path = pipx_base.parent.parent / "share" / "arckit"
-            if share_path.exists():
-                return build_paths(share_path)
+        # Check inside the venv itself first
+        share_path = pipx_base / "share" / "arckit"
+        if share_path.exists():
+            return build_paths(share_path)
+        # Also try ~/.local/share/arckit
+        share_path = Path.home() / ".local" / "share" / "arckit"
+        if share_path.exists():
+            return build_paths(share_path)
     except Exception:
         pass
 
