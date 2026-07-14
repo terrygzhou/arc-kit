@@ -162,6 +162,7 @@ def compute_waves(
     recipe: Recipe,
     enabled: Optional[set[str]] = None,
     excluded: Optional[set[str]] = None,
+    filter_targets: Optional[set[str]] = None,
 ) -> list[Wave]:
     """Compute wave decomposition from a recipe using topological sort.
 
@@ -211,6 +212,22 @@ def compute_waves(
     # Remove excluded targets from active set
     exclude_set = _expand_exclusions(excluded, all_targets)
     active_ids -= exclude_set
+
+    # Apply filter_targets: restrict to requested targets + their transitive deps
+    if filter_targets:
+        filter_closure = set(filter_targets)
+        changed = True
+        while changed:
+            changed = False
+            for tid in list(filter_closure):
+                if tid in all_targets:
+                    for dep in all_targets[tid].deps:
+                        resolved = _resolve_glob_deps(dep, set(all_targets.keys()))
+                        for resolved_tid in resolved:
+                            if resolved_tid not in filter_closure:
+                                filter_closure.add(resolved_tid)
+                                changed = True
+        active_ids &= filter_closure
 
     # Cascade removal: remove targets whose deps are not in active set
     changed = True

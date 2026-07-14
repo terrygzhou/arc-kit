@@ -13,6 +13,7 @@ A toolkit for enterprise architects to manage:
 
 import asyncio
 import os
+import re
 import subprocess
 import sys
 import time
@@ -1508,7 +1509,7 @@ def build(
             console.print(f"  Available targets: {', '.join(all_ids)}")
             raise typer.Exit(1)
 
-    waves = compute_waves(recipe_obj, enabled, excluded)
+    waves = compute_waves(recipe_obj, enabled, excluded, filter_targets=enabled if target else None)
 
     # ── 5. Plan mode ─────────────────────────────────────────────────────
     if plan:
@@ -1604,7 +1605,51 @@ def build(
             + (f" (skipped {skip_count})" if skip_count else "")
         )
 
-        # Resolve skill paths and gather input artifacts for each target
+        # Collect template placeholders ({NAME}, {P}, etc.) before wave execution
+        # Only scan args strings — output is a dict, not template text
+        wave_values: dict[str, str] = {}
+        for t in active_targets:
+            if t.args:
+                for m in re.finditer(r"\{([^}]+)\}", str(t.args)):
+                    placeholder = m.group(1)
+                    if placeholder not in wave_values:
+                        wave_values[placeholder] = typer.prompt(
+                            f"  {placeholder}",
+                            default=placeholder.lower()[:20],
+                        )
+        if wave_values:
+            console.print(f"  [dim]Template values: {wave_values}[/dim]")
+
+        # Substitute collected values into target args/output
+        import dataclasses
+        resolved_targets: list[Target] = []
+        for t in active_targets:
+            # Resolve args
+            resolved_args = str(t.args) if t.args else ""
+            for k, v in wave_values.items():
+                resolved_args = resolved_args.replace("{" + k + "}", v)
+
+            # Resolve output dict values
+            resolved_output = None
+            if t.output:
+                resolved_output = {}
+                for out_k, out_v in t.output.items():
+                    resolved_output[out_k] = str(out_v)
+                    for k, v in wave_values.items():
+                        resolved_output[out_k] = resolved_output[out_k].replace("{" + k + "}", v)
+
+            # Create resolved Target via dataclasses.replace
+            new_t = t
+            if t.args:
+                new_t = dataclasses.replace(new_t, args=resolved_args)
+            if resolved_output:
+                new_t = dataclasses.replace(new_t, output=resolved_output)
+            resolved_targets.append(new_t)
+
+        # Replace active_targets with resolved versions
+        active_targets = resolved_targets
+
+        # NOW build tasks_for_wave from resolved targets
         tasks_for_wave: list[tuple[Target, Path, dict]] = []
         for t in active_targets:
             # Resolve skill path
@@ -1656,7 +1701,25 @@ def build(
                         ]
 
             if result.status == "success":
-                mark_target_complete(state, result.target_id, output_path, input_files)
+                # Resolve output path — guard against empty/invalid paths
+                resolved_path = None
+                if output_path and Path(output_path).is_file():
+                    resolved_path = output_path
+                elif result.output_path and Path(result.output_path).is_file():
+                    resolved_path = result.output_path
+
+                if resolved_path:
+                    mark_target_complete(state, result.target_id, resolved_path, input_files)
+                else:
+                    # Output path unresolved (e.g. template placeholders not expanded)
+                    # Mark complete with result's own path to avoid crash
+                    from arckit_cli.state import TargetState as _TS
+                    import datetime as _dt
+                    state.targets[result.target_id] = _TS(
+                        status="complete",
+                        output_path=output_path or result.output_path,
+                        completed_at=_dt.datetime.now(_dt.timezone.utc).isoformat(),
+                    )
                 status_icon = "[green]✓[/green]"
                 status_label = "complete"
             else:
