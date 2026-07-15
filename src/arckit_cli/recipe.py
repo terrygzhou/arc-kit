@@ -24,6 +24,7 @@ class Target:
     args: str
     output: dict
     deps: list[str]
+    optional_deps: list[str] = field(default_factory=list)
     is_optional: bool = False
 
 
@@ -85,6 +86,7 @@ def load_recipe(path: str) -> Recipe:
             args=t.get("args", ""),
             output=t.get("output", {}),
             deps=list(t.get("deps", [])),
+            optional_deps=list(t.get("optional_deps", [])),
             is_optional=False,
         )
         # Mark as optional if declared in optional_targets
@@ -135,9 +137,10 @@ def validate_recipe(recipe: Recipe) -> list[str]:
     # Build a set of all known IDs (including glob-expanded)
     known_ids = set(ids)
 
-    # Check dependencies exist and no self-deps
+    # Check dependencies exist, no self-deps, and no overlap between deps/optional_deps
     for t in recipe.targets:
-        for dep in t.deps:
+        all_deps = t.deps + t.optional_deps
+        for dep in all_deps:
             dep_matches = _resolve_glob_deps(dep, known_ids)
             if not dep_matches:
                 errors.append(
@@ -145,6 +148,12 @@ def validate_recipe(recipe: Recipe) -> list[str]:
                 )
             if _matches_id(dep, t.id):
                 errors.append(f"Target '{t.id}' depends on itself")
+        # Check for overlap between required and optional deps
+        overlap = set(t.deps) & set(t.optional_deps)
+        if overlap:
+            errors.append(
+                f"Target '{t.id}' lists {', '.join(overlap)} in both deps and optional_deps"
+            )
 
     # Check optional targets with default=true
     for tid, opt in recipe.optional_targets.items():
@@ -221,7 +230,8 @@ def compute_waves(
             changed = False
             for tid in list(filter_closure):
                 if tid in all_targets:
-                    for dep in all_targets[tid].deps:
+                    # Include both required and optional deps in closure
+                    for dep in all_targets[tid].deps + all_targets[tid].optional_deps:
                         resolved = _resolve_glob_deps(dep, set(all_targets.keys()))
                         for resolved_tid in resolved:
                             if resolved_tid not in filter_closure:
@@ -229,7 +239,8 @@ def compute_waves(
                                 changed = True
         active_ids &= filter_closure
 
-    # Cascade removal: remove targets whose deps are not in active set
+    # Cascade removal: remove targets whose REQUIRED deps are not in active set
+    # (optional_deps never trigger cascade removal)
     changed = True
     while changed:
         changed = False

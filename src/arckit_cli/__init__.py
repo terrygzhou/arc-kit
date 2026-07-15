@@ -1778,12 +1778,13 @@ def build(
         targets_to_execute: list[Target] = []
         targets_skipped: list[tuple[Target, str]] = []
         for t in active_targets:
+            # Only required deps block execution; optional_deps never block
             deps_complete = all(_dep_satisfied(dep_id) for dep_id in t.deps)
             if not deps_complete:
-                # Hard block: skip targets with unsatisfied dependencies
+                # Hard block: skip targets with unsatisfied required deps
                 missing = [d for d in t.deps if not _dep_satisfied(d)]
                 console.print(
-                    f"  [yellow]⏭ {t.id}: skipped (missing deps: {', '.join(missing)})[/yellow]"
+                    f"  [yellow]⏭ {t.id}: skipped (missing required deps: {', '.join(missing)})[/yellow]"
                 )
                 continue
             existing_path = _check_target_file_exists(t)
@@ -1873,7 +1874,9 @@ def build(
                 return None
 
             input_artifacts: dict[str, str] = {}
-            for dep_id in t.deps:
+            # Gather from required deps (always present) + optional deps (if available)
+            all_dep_ids = list(t.deps) + list(t.optional_deps)
+            for dep_id in all_dep_ids:
                 dep_path = _get_dep_file_path(dep_id)
                 if dep_path and Path(dep_path).is_file():
                     raw = Path(dep_path).read_text(encoding="utf-8", errors="replace")

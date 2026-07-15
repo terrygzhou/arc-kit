@@ -24,6 +24,10 @@ post_build_hooks:
   - skill: arckit:traceability
     args: ""
 
+# Schema: each target may declare:
+#   deps:          list of required dependencies (block execution if missing)
+#   optional_deps: list of soft dependencies (feed context if available, never block)
+
 targets:
   - id: PRIN
     skill: arckit:principles
@@ -47,19 +51,22 @@ targets:
     skill: arckit:strategy
     args: ""
     output: { project: "000-global", type: STRAT }
-    deps: [PRIN, STKE]
+    deps: [PRIN]
+    optional_deps: [STKE]
 
   - id: ADMP
     skill: arckit:adm-preliminary
     args: "{P}"
     output: { project: "{P}-{NAME}", type: ADMP }
-    deps: [PRIN, STKE, STRATEGY]
+    deps: [PRIN, STRATEGY]
+    optional_deps: [STKE]
 
   - id: BPCM
     skill: arckit:business-capability-map
     args: "{P}"
     output: { project: "{P}-{NAME}", type: BPCM }
-    deps: [ADMP, REQ, STKE, PRIN]
+    deps: [ADMP, PRIN]
+    optional_deps: [REQ, STKE]
 
   - id: APP
     skill: arckit:application-inventory
@@ -71,25 +78,29 @@ targets:
     skill: arckit:data-architecture
     args: "{P}"
     output: { project: "{P}-{NAME}", type: DATA }
-    deps: [BPCM, APP]
+    deps: [BPCM]
+    optional_deps: [APP]
 
   - id: TECH
     skill: arckit:technology-architecture
     args: "{P}"
     output: { project: "{P}-{NAME}", type: TECH }
-    deps: [APP, DATA]
+    deps: []
+    optional_deps: [APP, DATA]
 
   - id: APPR
     skill: arckit:application-rationalization
     args: "{P}"
     output: { project: "{P}-{NAME}", type: APPR }
-    deps: [APP, BPCM, DATA]
+    deps: [APP]
+    optional_deps: [BPCM, DATA]
 
   - id: GAPA
     skill: arckit:gap-analysis
     args: "{P}"
     output: { project: "{P}-{NAME}", type: GAPA }
-    deps: [BPCM, APP, APPR, STRATEGY, TECH]
+    deps: [STRATEGY]
+    optional_deps: [BPCM, APP, APPR, TECH]
 
   - id: TRANS
     skill: arckit:transition-architecture
@@ -113,4 +124,5 @@ targets:
     skill: arckit:architecture-repository
     args: "000"
     output: { project: "000-global", type: REPO }
-    deps: [PRIN, STRATEGY, ADMP, BPCM, APP, APPR, DATA, TECH, GAPA, TRANS, BORD]
+    deps: []
+    optional_deps: [PRIN, STRATEGY, ADMP, BPCM, APP, APPR, DATA, TECH, GAPA, TRANS, BORD]
