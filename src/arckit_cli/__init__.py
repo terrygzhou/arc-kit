@@ -1596,10 +1596,14 @@ def build(
         "ACHG": "Phase H: Change Management",
         "REPO": "Phase G: Repository Synthesis",
     }
+    # Persistent placeholder values — load from state, seed with project defaults
     wave_values: dict[str, str] = {
         "P": project_root.name,
         "NAME": project_root.name,
     }
+    # Merge with previously collected values from state
+    if state.wave_values:
+        wave_values.update(state.wave_values)
 
     for wave in waves:
         wave_number = wave.number
@@ -1968,6 +1972,7 @@ def build(
 
         wave_duration = time.monotonic() - wave_start
         state.completed_waves.append(wave_number)
+        state.wave_values = wave_values
         save_state(str(project_root), state)
 
         console.print(

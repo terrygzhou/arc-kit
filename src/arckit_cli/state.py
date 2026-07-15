@@ -41,6 +41,7 @@ class State:
     current_wave: int = 0
     completed_waves: list[int] = field(default_factory=list)
     targets: dict[str, TargetState] = field(default_factory=dict)
+    wave_values: dict[str, str] = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -90,6 +91,7 @@ def load_state(project_path: str) -> State | None:
         current_wave=data.get("current_wave", 0),
         completed_waves=data.get("completed_waves", []),
         targets=targets,
+        wave_values=data.get("wave_values", {}),
     )
 
 
@@ -271,6 +273,7 @@ def _state_to_dict(state: State) -> dict:
         "project": state.project,
         "current_wave": state.current_wave,
         "completed_waves": state.completed_waves,
+        "wave_values": state.wave_values,
         "targets": {
             tid: {
                 "status": ts.status,
