@@ -1573,10 +1573,10 @@ def build(
     # Persistent placeholder values — collected once, reused across all waves
     # Map: placeholder → (base_label, default)
     _PLACEHOLDER_BASES: dict[str, tuple[str, str]] = {
-        "NAME": ("Project name", "myproject"),
-        "P": ("Project prefix", "001"),
-        "REQ_SCOPE": ("Scope", "cloud migration, PCI-DSS compliance"),
-        "STKE_SCOPE": ("Stakeholder focus", "CFO cost savings, CTO innovation"),
+        "NAME": ("Project display name (e.g. Enterprise Modernization)", "myproject"),
+        "P": ("Project short ID for artifact naming (e.g. ent-mod)", "001"),
+        "REQ_SCOPE": ("Requirements focus areas (comma-separated topics)", "cloud migration, PCI-DSS compliance"),
+        "STKE_SCOPE": ("Stakeholder priorities to capture (comma-separated)", "CFO cost savings, CTO innovation"),
     }
     # Phase context per target (target_id → ADM phase description)
     _TARGET_PHASES: dict[str, str] = {
@@ -1667,8 +1667,7 @@ def build(
                     else:
                         label = base_label
                     result = typer.prompt(f"  {label}", default=default)
-                    if result.strip():
-                        wave_values[placeholder] = result.strip()
+                    wave_values[placeholder] = result if result.strip() else default
             except (EOFError, KeyboardInterrupt):
                 console.print("[yellow]  (Aborted — using defaults)[/yellow]")
 
