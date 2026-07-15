@@ -1678,8 +1678,12 @@ def build(
                             for pid in (wave_values.get('P', ''), project_root.name):
                                 if pid:
                                     paths_to_check.append(f"projects/{pid}/{dep_artifact}")
-                            # Fallback: fixture path (e.g., autoresearch fixtures)
-                            paths_to_check.append(f".arckit/scripts/autoresearch/fixtures/{project_root.name}/{dep_artifact}")
+                            # Fallback: autoresearch fixtures — search all subdirectories
+                            fixture_dir = project_root / ".arckit" / "scripts" / "autoresearch" / "fixtures"
+                            if fixture_dir.is_dir():
+                                for subdir in sorted(fixture_dir.iterdir()):
+                                    if subdir.is_dir():
+                                        paths_to_check.append(str(subdir / dep_artifact))
                         for p in paths_to_check:
                             for k, v in wave_values.items():
                                 p = p.replace("{" + k + "}", v)
@@ -1704,6 +1708,12 @@ def build(
                     for proj_id in (wave_values.get('P', ''), project_root.name):
                         if proj_id:
                             candidate_paths.append(f"projects/{proj_id}/{artifact}")
+                    # Fallback: autoresearch fixtures — search all subdirectories
+                    fixture_dir = project_root / ".arckit" / "scripts" / "autoresearch" / "fixtures"
+                    if fixture_dir.is_dir():
+                        for subdir in sorted(fixture_dir.iterdir()):
+                            if subdir.is_dir():
+                                candidate_paths.append(str(subdir / artifact))
             
             # Resolve placeholders and find first matching file
             check_path = None
@@ -1724,7 +1734,7 @@ def build(
             
             targets_to_execute.append(t)
         
-        # Mark skipped targets complete in state and add to results
+        # Mark skipped targets in state and add to results
         for t in targets_skipped:
             # Find the actual file path (same multi-path search)
             output_path = None
@@ -1738,6 +1748,12 @@ def build(
                     for pid in (wave_values.get('P', ''), project_root.name):
                         if pid:
                             possible_paths.append(f"projects/{pid}/{artifact}")
+                    # Fallback: autoresearch fixtures — search all subdirectories
+                    fixture_dir = project_root / ".arckit" / "scripts" / "autoresearch" / "fixtures"
+                    if fixture_dir.is_dir():
+                        for subdir in sorted(fixture_dir.iterdir()):
+                            if subdir.is_dir():
+                                possible_paths.append(str(subdir / artifact))
             
             for p in possible_paths:
                 resolved = p
