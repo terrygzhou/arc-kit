@@ -1779,14 +1779,20 @@ def build(
         targets_skipped: list[tuple[Target, str]] = []
         for t in active_targets:
             deps_complete = all(_dep_satisfied(dep_id) for dep_id in t.deps)
-            if deps_complete:
-                existing_path = _check_target_file_exists(t)
-                if existing_path:
-                    console.print(
-                        f"  [dim]⏭ {t.id}: skipped (file exists: {Path(existing_path).name})[/dim]"
-                    )
-                    targets_skipped.append((t, existing_path))
-                    continue
+            if not deps_complete:
+                # Hard block: skip targets with unsatisfied dependencies
+                missing = [d for d in t.deps if not _dep_satisfied(d)]
+                console.print(
+                    f"  [yellow]⏭ {t.id}: skipped (missing deps: {', '.join(missing)})[/yellow]"
+                )
+                continue
+            existing_path = _check_target_file_exists(t)
+            if existing_path:
+                console.print(
+                    f"  [dim]⏭ {t.id}: skipped (file exists: {Path(existing_path).name})[/dim]"
+                )
+                targets_skipped.append((t, existing_path))
+                continue
             targets_to_execute.append(t)
 
         # Mark skipped targets in state
