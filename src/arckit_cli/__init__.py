@@ -1571,17 +1571,36 @@ def build(
     all_results: list[dict] = []  # Per-target build results for summary
 
     # Persistent placeholder values — collected once, reused across all waves
-    _PLACEHOLDER_LABELS: dict[str, tuple[str, str]] = {
+    # Map: placeholder → (base_label, default)
+    _PLACEHOLDER_BASES: dict[str, tuple[str, str]] = {
         "NAME": ("Project name", "myproject"),
-        "P": ("Project prefix (e.g. 001, proj)", "001"),
-        "REQ_SCOPE": ("Requirements scope (functional areas, priorities)", "cloud migration, PCI-DSS compliance"),
-        "STKE_SCOPE": ("Stakeholder focus (key drivers, conflicts)", "CFO cost savings, CTO innovation"),
+        "P": ("Project prefix", "001"),
+        "REQ_SCOPE": ("Scope", "cloud migration, PCI-DSS compliance"),
+        "STKE_SCOPE": ("Stakeholder focus", "CFO cost savings, CTO innovation"),
+    }
+    # Phase context per target (target_id → ADM phase description)
+    _TARGET_PHASES: dict[str, str] = {
+        "PRIN": "Preliminary: Foundations",
+        "REQ": "Phase A: Requirements Vision",
+        "STKE": "Phase A: Stakeholder Alignment",
+        "STRATEGY": "Phase A: Strategic Positioning",
+        "ADMP": "Preliminary Phase",
+        "BPCM": "Phase B: Business Capability",
+        "APP": "Phase C: Application Inventory",
+        "DATA": "Phase C: Data Architecture",
+        "TECH": "Phase D: Technology Architecture",
+        "APPR": "Phase C/D: Rationalization",
+        "GAPA": "Phase E: Gap Analysis",
+        "TRANS": "Phase F: Transition Planning",
+        "BORD": "Governance: Architecture Board",
+        "ACHG": "Phase H: Change Management",
+        "REPO": "Phase G: Repository Synthesis",
     }
     wave_values: dict[str, str] = {
         "P": project_root.name,
         "NAME": project_root.name,
     }
-    for placeholder, (label, default) in _PLACEHOLDER_LABELS.items():
+    for placeholder, (label, default) in _PLACEHOLDER_BASES.items():
         wave_values[placeholder] = default
 
     for wave in waves:
@@ -1638,14 +1657,15 @@ def build(
             console.print("[yellow]Wave requires placeholder values:[/yellow]")
             try:
                 for placeholder in sorted(uncollected):
-                    base_label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
+                    base_label, default = _PLACEHOLDER_BASES.get(placeholder, (placeholder, ""))
                     # Compose phase-aware label: collect target IDs that need this placeholder
                     target_ids = []
                     for t in active_targets:
                         if re.search(r"\{" + placeholder + r"\}", str(t.args or "") + str(t.output or {})):
                             target_ids.append(t.id)
                     if target_ids:
-                        label = f"[{', '.join(target_ids)}] {base_label}"
+                        phases = [_TARGET_PHASES.get(tid) or tid for tid in target_ids]
+                        label = f"[{', '.join(phases)}] {base_label}"
                     else:
                         label = base_label
                     result = typer.prompt(f"  {label}", default=default)
