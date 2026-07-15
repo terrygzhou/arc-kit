@@ -1649,16 +1649,19 @@ def build(
                         needs_prompt = True
                         break
 
-        # Prompt user for placeholder values when needed
-        if needs_prompt and needed_placeholders:
+        # Prompt user for placeholder values when needed (only if interactive)
+        if needs_prompt and needed_placeholders and sys.stdin.isatty():
             console.print()
             console.print("[yellow]Wave requires placeholder values:[/yellow]")
-            for placeholder in sorted(needed_placeholders):
-                label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
-                current = wave_values.get(placeholder, default)
-                result = typer.prompt(f"  {label}", default=current)
-                if result.strip():
-                    wave_values[placeholder] = result.strip()
+            try:
+                for placeholder in sorted(needed_placeholders):
+                    label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
+                    current = wave_values.get(placeholder, default)
+                    result = typer.prompt(f"  {label}", default=current)
+                    if result.strip():
+                        wave_values[placeholder] = result.strip()
+            except (EOFError, KeyboardInterrupt):
+                console.print("[yellow]  (Aborted — using defaults)[/yellow]")
 
         # Substitute collected values into target args/output
         import dataclasses
