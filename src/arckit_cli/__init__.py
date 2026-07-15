@@ -1634,14 +1634,81 @@ def build(
             save_state(str(project_root), state)
             continue
 
+        # ── Check file existence BEFORE prompting (deduplicated helper) ──
+        def _check_target_file_exists(target: Target) -> str | None:
+            """Resolve candidate paths and return existing file path, or None."""
+            if not target.output:
+                return None
+            possible_paths: list[str] = []
+            if "path" in target.output:
+                possible_paths.append(target.output["path"])
+            elif "project" in target.output:
+                artifact = f"ARC-001-{target.output.get('type', 'OUT')}-v1.0.md"
+                possible_paths.append(f"projects/{target.output['project']}/{artifact}")
+                for pid in (wave_values.get('P', ''), project_root.name):
+                    if pid:
+                        possible_paths.append(f"projects/{pid}/{artifact}")
+                fixture_dir = project_root / ".arckit" / "scripts" / "autoresearch" / "fixtures"
+                if fixture_dir.is_dir():
+                    for sd in sorted(fixture_dir.iterdir()):
+                        if sd.is_dir():
+                            possible_paths.append(str(sd / artifact))
+            for raw in possible_paths:
+                resolved = raw
+                for k, v in wave_values.items():
+                    resolved = resolved.replace("{" + k + "}", v)
+                if not Path(resolved).is_absolute():
+                    resolved = str(project_root / resolved)
+                if Path(resolved).is_file():
+                    return resolved
+            return None
+
+        # Filter active_targets by file existence BEFORE prompting
+        still_active: list[Target] = []
+        early_skipped: list[Target] = []
+        for t in active_targets:
+            existing_path = _check_target_file_exists(t)
+            if existing_path:
+                console.print(
+                    f"  [dim]⏭ {t.id}: skipped (file exists: {Path(existing_path).name})[/dim]"
+                )
+                early_skipped.append(t)
+            else:
+                still_active.append(t)
+
+        # Replace active_targets with non-file-satisfied targets
+        active_targets = still_active
+
+        # Mark early-skipped targets in state
+        for t in early_skipped:
+            existing_path = _check_target_file_exists(t)
+            if existing_path:
+                mark_target_skipped(state, t.id, existing_path)
+                all_results.append({
+                    "target_id": t.id,
+                    "status": "skipped",
+                    "status_icon": "[dim]⏭[/dim]",
+                    "duration": 0,
+                    "tokens": 0,
+                    "output_path": existing_path,
+                })
+
+        if not active_targets:
+            console.print(
+                f"  [dim]Skipping wave (all targets have valid outputs)[/dim]"
+            )
+            state.completed_waves.append(wave_number)
+            save_state(str(project_root), state)
+            continue
+
         target_ids = [t.id for t in active_targets]
         console.print(
             f"  [bold]Wave {wave_number}[/bold]: "
             f"[magenta]{', '.join(target_ids)}[/magenta]"
-            + (f" (skipped {skip_count})" if skip_count else "")
+            + (f" (skipped {skip_count + len(early_skipped)})" if skip_count + len(early_skipped) else "")
         )
 
-        # Determine which placeholders are needed by active targets
+        # Determine which placeholders are needed by remaining active targets
         needed_placeholders: set[str] = set()
         for t in active_targets:
             if t.args:
@@ -1652,7 +1719,7 @@ def build(
                     for m in re.finditer(r"\{(\w+)\}", str(v)):
                         needed_placeholders.add(m.group(1))
 
-        # Prompt only for placeholders we haven't collected yet (persistent across waves)
+        # Prompt only for uncollected placeholders needed by remaining targets
         uncollected = needed_placeholders - set(wave_values.keys())
         if uncollected and sys.stdin.isatty():
             console.print()
@@ -1660,7 +1727,6 @@ def build(
             try:
                 for placeholder in sorted(uncollected):
                     base_label, default = _PLACEHOLDER_BASES.get(placeholder, (placeholder, ""))
-                    # Compose phase-aware label: collect target IDs that need this placeholder
                     target_ids = []
                     for t in active_targets:
                         if re.search(r"\{" + placeholder + r"\}", str(t.args or "") + str(t.output or {})):
@@ -1675,16 +1741,13 @@ def build(
             except (EOFError, KeyboardInterrupt):
                 console.print("[yellow]  (Aborted — using defaults)[/yellow]")
 
-        # Substitute collected values into target args/output
+        # Resolve targets
         import dataclasses
         resolved_targets: list[Target] = []
         for t in active_targets:
-            # Resolve args
             resolved_args = str(t.args) if t.args else ""
             for k, v in wave_values.items():
                 resolved_args = resolved_args.replace("{" + k + "}", v)
-
-            # Resolve output dict values
             resolved_output = None
             if t.output:
                 resolved_output = {}
@@ -1692,8 +1755,6 @@ def build(
                     resolved_output[out_k] = str(out_v)
                     for k, v in wave_values.items():
                         resolved_output[out_k] = resolved_output[out_k].replace("{" + k + "}", v)
-
-            # Create resolved Target via dataclasses.replace
             new_t = t
             if t.args:
                 new_t = dataclasses.replace(new_t, args=resolved_args)
@@ -1701,136 +1762,49 @@ def build(
                 new_t = dataclasses.replace(new_t, output=resolved_output)
             resolved_targets.append(new_t)
 
-        # Replace active_targets with resolved versions
         active_targets = resolved_targets
 
-        # Search for existing artifacts — skip targets that already have valid files
+        # ── Check dependencies for remaining targets ──
+        def _dep_satisfied(dep_id: str) -> bool:
+            ts = state.targets.get(dep_id)
+            if ts and ts.status in ("complete", "skipped"):
+                return True
+            # Check dep file exists on disk
+            for cand in recipe_obj.targets:
+                if cand.id == dep_id:
+                    return _check_target_file_exists(cand) is not None
+            return False
+
         targets_to_execute: list[Target] = []
-        targets_skipped: list[Target] = []
+        targets_skipped: list[tuple[Target, str]] = []
         for t in active_targets:
-            # Check if all dependencies are complete
-            # A dependency is satisfied if:
-            # 1. It's marked complete in state, OR
-            # 2. Its artifact file exists on disk (even if not yet in state)
-            def _dep_satisfied(dep_id):
-                ts = state.targets.get(dep_id)
-                if ts and ts.status in ("complete", "skipped"):
-                    return True
-                # Check if dep file exists on disk (search ALL targets in recipe)
-                for cand_target in recipe_obj.targets:
-                    if cand_target.id == dep_id and cand_target.output:
-                        dep_artifact = f"ARC-001-{cand_target.output.get('type', 'OUT')}-v1.0.md"
-                        paths_to_check: list[str] = []
-                        if "path" in cand_target.output:
-                            paths_to_check.append(cand_target.output["path"])
-                        elif "project" in cand_target.output:
-                            paths_to_check.append(f"projects/{cand_target.output['project']}/{dep_artifact}")
-                            # Fallback: project ID only (e.g., projects/001/)
-                            for pid in (wave_values.get('P', ''), project_root.name):
-                                if pid:
-                                    paths_to_check.append(f"projects/{pid}/{dep_artifact}")
-                            # Fallback: autoresearch fixtures — search all subdirectories
-                            fixture_dir = project_root / ".arckit" / "scripts" / "autoresearch" / "fixtures"
-                            if fixture_dir.is_dir():
-                                for subdir in sorted(fixture_dir.iterdir()):
-                                    if subdir.is_dir():
-                                        paths_to_check.append(str(subdir / dep_artifact))
-                        for p in paths_to_check:
-                            for k, v in wave_values.items():
-                                p = p.replace("{" + k + "}", v)
-                            if not Path(p).is_absolute():
-                                p = str(project_root / p)
-                            if Path(p).is_file():
-                                return True
-                return False
-
             deps_complete = all(_dep_satisfied(dep_id) for dep_id in t.deps)
-
-            # Build candidate paths to search (recipe path + all known fallbacks)
-            candidate_paths: list[str] = []
-            if t.output:
-                if "path" in t.output:
-                    candidate_paths.append(t.output["path"])
-                elif "project" in t.output:
-                    artifact = f"ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
-                    # Primary: recipe output path (e.g., projects/001-MyProject/ARC-001-REQ-v1.0.md)
-                    candidate_paths.append(f"projects/{t.output['project']}/{artifact}")
-                    # Fallbacks: project ID only (e.g., projects/001/ARC-001-REQ-v1.0.md)
-                    for proj_id in (wave_values.get('P', ''), project_root.name):
-                        if proj_id:
-                            candidate_paths.append(f"projects/{proj_id}/{artifact}")
-                    # Fallback: autoresearch fixtures — search all subdirectories
-                    fixture_dir = project_root / ".arckit" / "scripts" / "autoresearch" / "fixtures"
-                    if fixture_dir.is_dir():
-                        for subdir in sorted(fixture_dir.iterdir()):
-                            if subdir.is_dir():
-                                candidate_paths.append(str(subdir / artifact))
-            
-            # Resolve placeholders and find first matching file
-            check_path = None
-            for raw in candidate_paths:
-                resolved = raw
-                for k, v in wave_values.items():
-                    resolved = resolved.replace("{" + k + "}", v)
-                if not Path(resolved).is_absolute():
-                    resolved = str(project_root / resolved)
-                if Path(resolved).is_file():
-                    check_path = resolved
-                    break
-            
-            if check_path and deps_complete:
-                console.print(f"  [dim]⏭ {t.id}: skipped (file exists: {Path(check_path).name})[/dim]")
-                targets_skipped.append(t)
-                continue
-            
+            if deps_complete:
+                existing_path = _check_target_file_exists(t)
+                if existing_path:
+                    console.print(
+                        f"  [dim]⏭ {t.id}: skipped (file exists: {Path(existing_path).name})[/dim]"
+                    )
+                    targets_skipped.append((t, existing_path))
+                    continue
             targets_to_execute.append(t)
-        
-        # Mark skipped targets in state and add to results
-        for t in targets_skipped:
-            # Find the actual file path (same multi-path search)
-            output_path = None
-            possible_paths: list[str] = []
-            if t.output:
-                if "path" in t.output:
-                    possible_paths.append(t.output["path"])
-                elif "project" in t.output:
-                    artifact = f"ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
-                    possible_paths.append(f"projects/{t.output['project']}/{artifact}")
-                    for pid in (wave_values.get('P', ''), project_root.name):
-                        if pid:
-                            possible_paths.append(f"projects/{pid}/{artifact}")
-                    # Fallback: autoresearch fixtures — search all subdirectories
-                    fixture_dir = project_root / ".arckit" / "scripts" / "autoresearch" / "fixtures"
-                    if fixture_dir.is_dir():
-                        for subdir in sorted(fixture_dir.iterdir()):
-                            if subdir.is_dir():
-                                possible_paths.append(str(subdir / artifact))
-            
-            for p in possible_paths:
-                resolved = p
-                for k, v in wave_values.items():
-                    resolved = resolved.replace("{" + k + "}", v)
-                if not Path(resolved).is_absolute():
-                    resolved = str(project_root / resolved)
-                if Path(resolved).is_file():
-                    output_path = resolved
-                    break
-            
-            if output_path:
-                mark_target_skipped(state, t.id, output_path)
-                all_results.append({
-                    "target_id": t.id,
-                    "status": "skipped",
-                    "status_icon": "[dim]⏭[/dim]",
-                    "duration": 0,
-                    "tokens": 0,
-                    "output_path": output_path,
-                })
+
+        # Mark skipped targets in state
+        for t, existing_path in targets_skipped:
+            mark_target_skipped(state, t.id, existing_path)
+            all_results.append({
+                "target_id": t.id,
+                "status": "skipped",
+                "status_icon": "[dim]⏭[/dim]",
+                "duration": 0,
+                "tokens": 0,
+                "output_path": existing_path,
+            })
 
         active_targets = targets_to_execute
-        
+
         if not active_targets:
-            console.print(f"  [dim]Skipping wave (all targets have valid outputs)[/dim]")
+            console.print("  [dim]Skipping wave (all targets have valid outputs)[/dim]")
             save_state(str(project_root), state)
             continue
 
