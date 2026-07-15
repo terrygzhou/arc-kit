@@ -1614,8 +1614,18 @@ def build(
             "STKE_SCOPE": ("Stakeholder focus (key drivers, conflicts)", "CFO cost savings, CTO innovation"),
         }
 
-        # Pre-populate wave_values with defaults to check for existing files BEFORE prompting
-        # If all targets can be skipped using default paths, we never prompt
+        # Determine which placeholders are needed by active targets
+        needed_placeholders: set[str] = set()
+        for t in active_targets:
+            if t.args:
+                for m in re.finditer(r"\{(\w+)\}", str(t.args)):
+                    needed_placeholders.add(m.group(1))
+            if t.output:
+                for v in t.output.values():
+                    for m in re.finditer(r"\{(\w+)\}", str(v)):
+                        needed_placeholders.add(m.group(1))
+
+        # Pre-populate wave_values with sensible defaults
         wave_values: dict[str, str] = {
             "P": project_root.name,
             "NAME": project_root.name,
@@ -1623,6 +1633,32 @@ def build(
         for placeholder, (label, default) in _PLACEHOLDER_LABELS.items():
             if placeholder not in wave_values:
                 wave_values[placeholder] = default
+
+        # Check if we need to prompt: any placeholder not covered by defaults?
+        needs_prompt = len(needed_placeholders - set(wave_values.keys())) > 0
+        if not needs_prompt:
+            # Also prompt if output files don't already exist at default paths
+            for t in active_targets:
+                if t.output and "project" in t.output:
+                    artifact = f"ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
+                    proj = t.output["project"]
+                    for k, v in wave_values.items():
+                        proj = proj.replace("{" + k + "}", v)
+                    check_path = f"projects/{proj}/{artifact}"
+                    if not Path(check_path).is_file() and not (project_root / check_path).is_file():
+                        needs_prompt = True
+                        break
+
+        # Prompt user for placeholder values when needed
+        if needs_prompt and needed_placeholders:
+            console.print()
+            console.print("[yellow]Wave requires placeholder values:[/yellow]")
+            for placeholder in sorted(needed_placeholders):
+                label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
+                current = wave_values.get(placeholder, default)
+                result = typer.prompt(f"  {label}", default=current)
+                if result.strip():
+                    wave_values[placeholder] = result.strip()
 
         # Substitute collected values into target args/output
         import dataclasses
