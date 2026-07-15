@@ -1842,17 +1842,36 @@ def build(
                         if section_count <= max_sections:
                             result_lines.append(line)
                 if len(result_lines) < len(lines):
-                    result_lines.append(f"\n[Truncated: full artifact at {dep_file}]")
+                    result_lines.append(f"\n[Truncated: full artifact not shown]")
                 return "\n".join(result_lines)
+
+            # ── Gather input artifacts from deps (state + disk) ──
+            def _get_dep_file_path(dep_id: str) -> str | None:
+                # Check state first
+                dep_state = state.targets.get(dep_id)
+                if dep_state and dep_state.output_path:
+                    p = Path(dep_state.output_path)
+                    for k, v in wave_values.items():
+                        ps = str(p)
+                        ps = ps.replace("{" + k + "}", v)
+                        if not Path(ps).is_absolute():
+                            ps = str(project_root / ps)
+                        if Path(ps).is_file():
+                            return ps
+                # Fallback: search disk via recipe
+                for cand in recipe_obj.targets:
+                    if cand.id == dep_id:
+                        path = _check_target_file_exists(cand)
+                        if path:
+                            return path
+                return None
 
             input_artifacts: dict[str, str] = {}
             for dep_id in t.deps:
-                dep_state = state.targets.get(dep_id)
-                if dep_state and dep_state.output_path:
-                    dep_file = Path(dep_state.output_path)
-                    if dep_file.is_file():
-                        raw = dep_file.read_text(encoding="utf-8", errors="replace")
-                        input_artifacts[dep_id] = _summarize_artifact(raw)
+                dep_path = _get_dep_file_path(dep_id)
+                if dep_path and Path(dep_path).is_file():
+                    raw = Path(dep_path).read_text(encoding="utf-8", errors="replace")
+                    input_artifacts[dep_id] = _summarize_artifact(raw)
 
             tasks_for_wave.append((t, skill_path, input_artifacts))
 
