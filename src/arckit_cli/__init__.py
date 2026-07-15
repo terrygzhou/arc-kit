@@ -1570,6 +1570,20 @@ def build(
     build_start = time.monotonic()
     all_results: list[dict] = []  # Per-target build results for summary
 
+    # Persistent placeholder values — collected once, reused across all waves
+    _PLACEHOLDER_LABELS: dict[str, tuple[str, str]] = {
+        "NAME": ("Project name", "myproject"),
+        "P": ("Project prefix (e.g. 001, proj)", "001"),
+        "REQ_SCOPE": ("Requirements scope (functional areas, priorities)", "cloud migration, PCI-DSS compliance"),
+        "STKE_SCOPE": ("Stakeholder focus (key drivers, conflicts)", "CFO cost savings, CTO innovation"),
+    }
+    wave_values: dict[str, str] = {
+        "P": project_root.name,
+        "NAME": project_root.name,
+    }
+    for placeholder, (label, default) in _PLACEHOLDER_LABELS.items():
+        wave_values[placeholder] = default
+
     for wave in waves:
         wave_number = wave.number
         wave_start = time.monotonic()
@@ -1606,14 +1620,6 @@ def build(
             + (f" (skipped {skip_count})" if skip_count else "")
         )
 
-        # Human-readable labels and defaults for common placeholders
-        _PLACEHOLDER_LABELS = {
-            "NAME": ("Project name", "myproject"),
-            "P": ("Project prefix (e.g. 001, proj)", "001"),
-            "REQ_SCOPE": ("Requirements scope (functional areas, priorities)", "cloud migration, PCI-DSS compliance"),
-            "STKE_SCOPE": ("Stakeholder focus (key drivers, conflicts)", "CFO cost savings, CTO innovation"),
-        }
-
         # Determine which placeholders are needed by active targets
         needed_placeholders: set[str] = set()
         for t in active_targets:
@@ -1625,14 +1631,8 @@ def build(
                     for m in re.finditer(r"\{(\w+)\}", str(v)):
                         needed_placeholders.add(m.group(1))
 
-        # Pre-populate wave_values with sensible defaults
-        wave_values: dict[str, str] = {
-            "P": project_root.name,
-            "NAME": project_root.name,
-        }
-        for placeholder, (label, default) in _PLACEHOLDER_LABELS.items():
-            if placeholder not in wave_values:
-                wave_values[placeholder] = default
+        # Reuse values from previous waves (only prompt for new placeholders)
+        # wave_values is persistent across waves — use it directly
 
         # Check if we need to prompt: any placeholder not covered by defaults?
         needs_prompt = len(needed_placeholders - set(wave_values.keys())) > 0
@@ -1650,11 +1650,13 @@ def build(
                         break
 
         # Prompt user for placeholder values when needed (only if interactive)
-        if needs_prompt and needed_placeholders and sys.stdin.isatty():
+        # Only prompt for placeholders we haven't already collected
+        uncollected = needed_placeholders - set(wave_values.keys())
+        if needs_prompt and uncollected and sys.stdin.isatty():
             console.print()
             console.print("[yellow]Wave requires placeholder values:[/yellow]")
             try:
-                for placeholder in sorted(needed_placeholders):
+                for placeholder in sorted(uncollected):
                     label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
                     current = wave_values.get(placeholder, default)
                     result = typer.prompt(f"  {label}", default=current)
