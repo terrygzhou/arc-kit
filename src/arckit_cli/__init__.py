@@ -1638,7 +1638,16 @@ def build(
             console.print("[yellow]Wave requires placeholder values:[/yellow]")
             try:
                 for placeholder in sorted(uncollected):
-                    label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
+                    base_label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
+                    # Compose phase-aware label: collect target IDs that need this placeholder
+                    target_ids = []
+                    for t in active_targets:
+                        if re.search(r"\{" + placeholder + r"\}", str(t.args or "") + str(t.output or {})):
+                            target_ids.append(t.id)
+                    if target_ids:
+                        label = f"[{', '.join(target_ids)}] {base_label}"
+                    else:
+                        label = base_label
                     result = typer.prompt(f"  {label}", default=default)
                     if result.strip():
                         wave_values[placeholder] = result.strip()
