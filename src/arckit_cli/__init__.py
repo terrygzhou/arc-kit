@@ -1600,8 +1600,6 @@ def build(
         "P": project_root.name,
         "NAME": project_root.name,
     }
-    for placeholder, (label, default) in _PLACEHOLDER_BASES.items():
-        wave_values[placeholder] = default
 
     for wave in waves:
         wave_number = wave.number
