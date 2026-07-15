@@ -1442,7 +1442,7 @@ def build(
     )
     from arckit_cli.state import (
         State, load_state, save_state, mark_target_complete,
-        mark_target_failed, is_target_stale,
+        mark_target_failed, is_target_stale, mark_target_skipped,
     )
     from arckit_cli.llm import (
         LLMConfig, resolve_config, execute_wave,
@@ -1614,34 +1614,15 @@ def build(
             "STKE_SCOPE": ("Stakeholder focus (key drivers, conflicts)", "CFO cost savings, CTO innovation"),
         }
 
-        # Collect template placeholders ({NAME}, {P}, etc.) before wave execution
-        # Scan args and output dict values individually (not str(output) which garbles)
-        wave_values: dict[str, str] = {}
-        for t in active_targets:
-            # Scan args
-            if t.args:
-                for m in re.finditer(r"\{([^}]+)\}", str(t.args)):
-                    placeholder = m.group(1)
-                    if placeholder not in wave_values:
-                        label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, placeholder.lower()[:20]))
-                        wave_values[placeholder] = typer.prompt(
-                            f"  {label}",
-                            default=default,
-                        )
-            # Scan output dict values
-            if t.output:
-                for out_val in t.output.values():
-                    if isinstance(out_val, str):
-                        for m in re.finditer(r"\{([^}]+)\}", out_val):
-                            placeholder = m.group(1)
-                            if placeholder not in wave_values:
-                                label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, placeholder.lower()[:20]))
-                                wave_values[placeholder] = typer.prompt(
-                                    f"  {label}",
-                                    default=default,
-                                )
-        if wave_values:
-            console.print(f"  [dim]Template values: {wave_values}[/dim]")
+        # Pre-populate wave_values with defaults to check for existing files BEFORE prompting
+        # If all targets can be skipped using default paths, we never prompt
+        wave_values: dict[str, str] = {
+            "P": project_root.name,
+            "NAME": project_root.name,
+        }
+        for placeholder, (label, default) in _PLACEHOLDER_LABELS.items():
+            if placeholder not in wave_values:
+                wave_values[placeholder] = default
 
         # Substitute collected values into target args/output
         import dataclasses
@@ -1682,7 +1663,7 @@ def build(
             # 2. Its artifact file exists on disk (even if not yet in state)
             def _dep_satisfied(dep_id):
                 ts = state.targets.get(dep_id)
-                if ts and ts.status == "complete":
+                if ts and ts.status in ("complete", "skipped"):
                     return True
                 # Check if dep file exists on disk (search ALL targets in recipe)
                 for cand_target in recipe_obj.targets:
@@ -1697,6 +1678,8 @@ def build(
                             for pid in (wave_values.get('P', ''), project_root.name):
                                 if pid:
                                     paths_to_check.append(f"projects/{pid}/{dep_artifact}")
+                            # Fallback: fixture path (e.g., autoresearch fixtures)
+                            paths_to_check.append(f".arckit/scripts/autoresearch/fixtures/{project_root.name}/{dep_artifact}")
                         for p in paths_to_check:
                             for k, v in wave_values.items():
                                 p = p.replace("{" + k + "}", v)
@@ -1767,7 +1750,7 @@ def build(
                     break
             
             if output_path:
-                mark_target_complete(state, t.id, output_path, [])
+                mark_target_skipped(state, t.id, output_path)
                 all_results.append({
                     "target_id": t.id,
                     "status": "skipped",
@@ -1781,6 +1764,7 @@ def build(
         
         if not active_targets:
             console.print(f"  [dim]Skipping wave (all targets have valid outputs)[/dim]")
+            save_state(str(project_root), state)
             continue
 
         # NOW build tasks_for_wave from resolved targets
@@ -2148,7 +2132,12 @@ def _print_summary(
         for tid, ts in state.targets.items():
             out = ts.output_path or ""
             file_str = Path(out).name if out else "—"
-            icon = "✓" if ts.status == "complete" else "✗"
+            if ts.status == "complete":
+                icon = "✓"
+            elif ts.status == "skipped":
+                icon = "⏭"
+            else:
+                icon = "✗"
             table.add_row(
                 tid,
                 f"{icon} {ts.status}",
@@ -2165,7 +2154,13 @@ def _print_summary(
     ) if all_results else sum(
         1 for ts in state.targets.values() if ts.status == "complete"
     )
-    failed = total_targets - complete
+    skipped = sum(
+        1 for r in (all_results or [{"status": ts.status} for ts in state.targets.values()])
+        if r.get("status") == "skipped"
+    ) if all_results else sum(
+        1 for ts in state.targets.values() if ts.status == "skipped"
+    )
+    failed = total_targets - complete - skipped
     total_tokens = sum(
         r.get("tokens", 0) or 0 for r in (all_results or [])
     )
@@ -2178,6 +2173,7 @@ def _print_summary(
     summary_text = (
         f"Total: {total_targets} targets, "
         f"[green]{complete} complete[/green], "
+        f"[dim]{skipped} skipped[/dim], "
         f"{'[red]' if failed else ''}{failed} failed{'[/red]' if failed else ''}, "
         f"{duration_str}"
         + (f", {total_tokens:,} tokens" if total_tokens else "")

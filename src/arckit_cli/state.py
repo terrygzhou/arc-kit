@@ -131,7 +131,12 @@ def is_target_stale(
         ``True`` if the target needs rebuilding.
     """
     ts = state.targets.get(target_id)
-    if ts is None or ts.status != "complete":
+    if ts is None:
+        return True
+    if ts.status == "skipped":
+        # Skipped targets have valid files — treat as not stale
+        return False
+    if ts.status != "complete":
         return True
 
     # Check output file integrity
@@ -173,6 +178,25 @@ def mark_target_complete(
         output_path=output_path,
         output_sha256=out_sha,
         input_hashes=input_hashes,
+        completed_at=now,
+    )
+
+
+def mark_target_skipped(state: State, target_id: str, output_path: str) -> None:
+    """Mark a target as skipped (file already exists).
+
+    Args:
+        state: Current build state.
+        target_id: ID of the skipped target.
+        output_path: Absolute path to the existing output file.
+    """
+    out_sha = _file_sha256(Path(output_path))
+    now = datetime.now(timezone.utc).isoformat()
+
+    state.targets[target_id] = TargetState(
+        status="skipped",
+        output_path=output_path,
+        output_sha256=out_sha,
         completed_at=now,
     )
 
