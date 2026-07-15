@@ -1631,35 +1631,15 @@ def build(
                     for m in re.finditer(r"\{(\w+)\}", str(v)):
                         needed_placeholders.add(m.group(1))
 
-        # Reuse values from previous waves (only prompt for new placeholders)
-        # wave_values is persistent across waves — use it directly
-
-        # Check if we need to prompt: any placeholder not covered by defaults?
-        needs_prompt = len(needed_placeholders - set(wave_values.keys())) > 0
-        if not needs_prompt:
-            # Also prompt if output files don't already exist at default paths
-            for t in active_targets:
-                if t.output and "project" in t.output:
-                    artifact = f"ARC-001-{t.output.get('type', 'OUT')}-v1.0.md"
-                    proj = t.output["project"]
-                    for k, v in wave_values.items():
-                        proj = proj.replace("{" + k + "}", v)
-                    check_path = f"projects/{proj}/{artifact}"
-                    if not Path(check_path).is_file() and not (project_root / check_path).is_file():
-                        needs_prompt = True
-                        break
-
-        # Prompt user for placeholder values when needed (only if interactive)
-        # Only prompt for placeholders we haven't already collected
+        # Prompt only for placeholders we haven't collected yet (persistent across waves)
         uncollected = needed_placeholders - set(wave_values.keys())
-        if needs_prompt and uncollected and sys.stdin.isatty():
+        if uncollected and sys.stdin.isatty():
             console.print()
             console.print("[yellow]Wave requires placeholder values:[/yellow]")
             try:
                 for placeholder in sorted(uncollected):
                     label, default = _PLACEHOLDER_LABELS.get(placeholder, (placeholder, ""))
-                    current = wave_values.get(placeholder, default)
-                    result = typer.prompt(f"  {label}", default=current)
+                    result = typer.prompt(f"  {label}", default=default)
                     if result.strip():
                         wave_values[placeholder] = result.strip()
             except (EOFError, KeyboardInterrupt):
