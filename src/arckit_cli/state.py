@@ -250,7 +250,12 @@ def compute_input_hashes(glob_patterns: list[str]) -> dict[str, str]:
 
 
 def _file_sha256(filepath: Path) -> str:
-    """Compute SHA-256 hex digest of a file."""
+    """Compute SHA-256 hex digest of a file.
+
+    Raises ValueError if filepath is not a regular file (e.g. a directory).
+    """
+    if not filepath.is_file():
+        raise ValueError(f"Not a file: {filepath}")
     h = hashlib.sha256()
     for chunk in filepath.open("rb"):
         h.update(chunk)
