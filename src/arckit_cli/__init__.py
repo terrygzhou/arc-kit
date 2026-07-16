@@ -1573,11 +1573,26 @@ def build(
     # Persistent placeholder values — collected once, reused across all waves
     # Map: placeholder → (base_label, default)
     _PLACEHOLDER_BASES: dict[str, tuple[str, str]] = {
-        "NAME": ("Project display name (e.g. Enterprise Modernization)", "myproject"),
         "P": ("Project short ID for artifact naming (e.g. ent-mod)", "001"),
+        "NAME": ("Project display name (e.g. Enterprise Modernization)", "myproject"),
         "DISC_SCOPE": ("Discovery scope for current-state capture (e.g. enterprise applications, data platforms)", "all enterprise systems"),
         "REQ_SCOPE": ("Requirements focus areas (comma-separated topics)", "cloud migration, PCI-DSS compliance"),
         "STKE_SCOPE": ("Stakeholder priorities to capture (comma-separated)", "CFO cost savings, CTO innovation"),
+        # Phase-specific derived placeholders — auto-derived from {P} with inheritance.
+        # Labels used only when the user explicitly overrides the default.
+        "P_DISC": ("Discovery phase project ID", None),
+        "P_REQ": ("Requirements phase project ID", None),
+        "P_STKE": ("Stakeholder phase project ID", None),
+        "P_ADMP": ("Preliminary phase project ID", None),
+        "P_BPCM": ("Business capability phase project ID", None),
+        "P_APP": ("Application inventory phase project ID", None),
+        "P_DATA": ("Data architecture phase project ID", None),
+        "P_TECH": ("Technology architecture phase project ID", None),
+        "P_APPR": ("Application rationalization phase project ID", None),
+        "P_GAPA": ("Gap analysis phase project ID", None),
+        "P_TRANS": ("Transition planning phase project ID", None),
+        "P_BORD": ("Architecture board phase project ID", None),
+        "P_ACHG": ("Change management phase project ID", None),
     }
     # Phase context per target (target_id → ADM phase description)
     _TARGET_PHASES: dict[str, str] = {
@@ -1607,7 +1622,26 @@ def build(
     if state.wave_values:
         wave_values.update(state.wave_values)
 
+    # Phase IDs that get {P_<ID>} derived from {P}
+    _PHASE_IDS = ["DISC", "REQ", "STKE", "ADMP", "BPCM", "APP", "DATA", "TECH",
+                  "APPR", "GAPA", "TRANS", "BORD", "ACHG"]
+    # Track user overrides — overridden keys never re-derived
+    _user_overrides: set[str] = set()
+
+    def _derive_p_placeholders():
+        """Auto-derive {P_<ID>} from {P}. Re-derives each wave unless user explicitly overrode."""
+        base_p = wave_values.get("P") or project_root.name
+        for phase_id in _PHASE_IDS:
+            key = f"P_{phase_id}"
+            if key not in _user_overrides:
+                wave_values[key] = f"{base_p}-{phase_id}"
+
+    # Initial derivation (from seed or state)
+    _derive_p_placeholders()
+
     for wave in waves:
+        # Re-derive each wave — picks up any newly captured {P} or {NAME}
+        _derive_p_placeholders()
         wave_number = wave.number
         wave_start = time.monotonic()
 
@@ -1739,7 +1773,12 @@ def build(
                     else:
                         label = base_label
                     result = typer.prompt(f"  {label}", default=default)
-                    wave_values[placeholder] = result if result.strip() else default
+                    value = result if result.strip() else default
+                    wave_values[placeholder] = value
+                    # Track override: if user typed something different from the default,
+                    # mark as user-overridden so _derive_p_placeholders won't clobber it
+                    if placeholder.startswith("P_") and result.strip() != default:
+                        _user_overrides.add(placeholder)
             except (EOFError, KeyboardInterrupt):
                 console.print("[yellow]  (Aborted — using defaults)[/yellow]")
 

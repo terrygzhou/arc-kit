@@ -27,6 +27,16 @@ post_build_hooks:
 # Schema: each target may declare:
 #   deps:          list of required dependencies (block execution if missing)
 #   optional_deps: list of soft dependencies (feed context if available, never block)
+#
+# Placeholders:
+#   {P}            — base project short ID, captured once at Wave 3 (ADMP)
+#   {P_<ID>}       — phase-specific derived from {P}-{ID}, overrideable per phase
+#   {NAME}        — project display name, captured at Wave 2 (REQ)
+#   {REQ_SCOPE}   — requirements focus areas
+#   {STKE_SCOPE}  — stakeholder priorities
+#   {DISC_SCOPE}  — discovery scope for current-state capture
+#
+# Inheritance: {P_<ID>} auto-defaults to "{P}-{ID}" — user can override independently.
 
 targets:
   - id: PRIN
@@ -38,19 +48,19 @@ targets:
   - id: DISC
     skill: arckit:discovery
     args: "Discovery scope: {DISC_SCOPE}"
-    output: { project: "{P}-{NAME}", type: DISC }
+    output: { project: "{P_DISC}-{NAME}", type: DISC }
     deps: [PRIN]
 
   - id: REQ
     skill: arckit:requirements
     args: "Project: {NAME}. Requirements scope: {REQ_SCOPE}"
-    output: { project: "{P}-{NAME}", type: REQ }
+    output: { project: "{P_REQ}-{NAME}", type: REQ }
     deps: [PRIN, DISC]
 
   - id: STKE
     skill: arckit:stakeholders
     args: "Project: {NAME}. Stakeholder focus: {STKE_SCOPE}"
-    output: { project: "{P}-{NAME}", type: STKE }
+    output: { project: "{P_STKE}-{NAME}", type: STKE }
     deps: [PRIN, DISC]
 
   - id: STRATEGY
@@ -62,68 +72,68 @@ targets:
 
   - id: ADMP
     skill: arckit:adm-preliminary
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: ADMP }
+    args: "{P_ADMP}"
+    output: { project: "{P_ADMP}-{NAME}", type: ADMP }
     deps: [PRIN, STRATEGY, DISC]
     optional_deps: [STKE]
 
   - id: BPCM
     skill: arckit:business-capability-map
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: BPCM }
+    args: "{P_BPCM}"
+    output: { project: "{P_BPCM}-{NAME}", type: BPCM }
     deps: [ADMP, PRIN, DISC]
     optional_deps: [REQ, STKE]
 
   - id: APP
     skill: arckit:application-inventory
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: APP }
+    args: "{P_APP}"
+    output: { project: "{P_APP}-{NAME}", type: APP }
     deps: [ADMP, BPCM, DISC]
 
   - id: DATA
     skill: arckit:data-architecture
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: DATA }
+    args: "{P_DATA}"
+    output: { project: "{P_DATA}-{NAME}", type: DATA }
     deps: [BPCM, DISC]
     optional_deps: [APP]
 
   - id: TECH
     skill: arckit:technology-architecture
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: TECH }
+    args: "{P_TECH}"
+    output: { project: "{P_TECH}-{NAME}", type: TECH }
     deps: [BPCM, DISC]
     optional_deps: [APP]
 
   - id: APPR
     skill: arckit:application-rationalization
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: APPR }
+    args: "{P_APPR}"
+    output: { project: "{P_APPR}-{NAME}", type: APPR }
     deps: [APP, DISC]
     optional_deps: [BPCM, DATA]
 
   - id: GAPA
     skill: arckit:gap-analysis
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: GAPA }
+    args: "{P_GAPA}"
+    output: { project: "{P_GAPA}-{NAME}", type: GAPA }
     deps: [DISC, BPCM, APPR, STRATEGY]
     optional_deps: [TECH, DATA]
 
   - id: TRANS
     skill: arckit:transition-architecture
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: TRANS }
+    args: "{P_TRANS}"
+    output: { project: "{P_TRANS}-{NAME}", type: TRANS }
     deps: [GAPA]
 
   - id: BORD
     skill: arckit:architecture-board
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: BORD }
+    args: "{P_BORD}"
+    output: { project: "{P_BORD}-{NAME}", type: BORD }
     deps: [PRIN, ADMP]
 
   - id: ACHG
     skill: arckit:architecture-change
-    args: "{P}"
-    output: { project: "{P}-{NAME}", type: ACHG }
+    args: "{P_ACHG}"
+    output: { project: "{P_ACHG}-{NAME}", type: ACHG }
     deps: [BORD, TRANS]
 
   - id: REPO
