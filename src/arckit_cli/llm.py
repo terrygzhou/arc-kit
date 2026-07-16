@@ -347,6 +347,8 @@ async def dispatch_tool(tool_call: dict, project_path: Path) -> str:
 
 def _tool_read(args: dict, project_path: Path) -> str:
     """Read a file and return its content."""
+    if "path" not in args:
+        return "Error: missing required argument 'path'"
     filepath = Path(args["path"])
     if not filepath.is_absolute():
         filepath = project_path / filepath
@@ -360,6 +362,10 @@ def _tool_read(args: dict, project_path: Path) -> str:
 
 def _tool_write(args: dict, project_path: Path) -> str:
     """Write content to a file, creating parent directories as needed."""
+    if "path" not in args:
+        return "Error: missing required argument 'path'"
+    if "content" not in args:
+        return "Error: missing required argument 'content'"
     filepath = Path(args["path"])
     if not filepath.is_absolute():
         filepath = project_path / filepath
@@ -375,6 +381,8 @@ def _tool_glob(args: dict, project_path: Path) -> str:
     """Find files matching a glob pattern."""
     from glob import glob as glob_fn
 
+    if "pattern" not in args:
+        return "Error: missing required argument 'pattern'"
     pattern = args["pattern"]
     root = args.get("root", str(project_path))
     matches = glob_fn(pattern, root_dir=root, recursive=True)
