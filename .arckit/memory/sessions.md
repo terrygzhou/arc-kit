@@ -10,6 +10,15 @@ Automated session summaries captured by the ArcKit session-learner hook.
   - chore: bump version to 4.6.1
   - fix: trim skill descriptions to fit 250-char context cap (#215) (#266)
 
+### 2026-07-01 12:13 — general
+
+- **Effort:** max
+- **Commits:** 1 | **Files changed:** 541
+- **Artifacts:** none detected
+- **Summary:**
+  - feat: add Hermes Agent extension and fix plugin manifest validation
+- **Telemetry:** 10 tool calls (p50=1ms, p95=18ms)
+
 ### 2026-06-15 17:48 — failure (oauth_org_not_allowed)
 
 - **Status:** session interrupted by API error
@@ -281,13 +290,4 @@ Automated session summaries captured by the ArcKit session-learner hook.
 - **Summary:**
   - refactor: move the 11 Claude Code plugins under plugins/ (#585)
 - **Telemetry:** 3 tool calls (p50=8254ms, p95=8880ms)
-
-### 2026-06-07 10:04 — general
-
-- **Effort:** high
-- **Commits:** 1 | **Files changed:** 777
-- **Artifacts:** none detected
-- **Summary:**
-  - refactor: move the 11 Claude Code plugins under plugins/
-- **Telemetry:** 150 tool calls (p50=1684ms, p95=14008ms) | by agent: main(103 calls, p95=18361ms), Explore(37 calls, p95=5767ms), claude-code-guide(10 calls, p95=3302ms)
 
