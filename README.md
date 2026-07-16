@@ -186,8 +186,8 @@ Enterprise Architecture Development Method — 12 commands (10 required + 2 opti
 | `/arckit:discovery` | DISC | Current-state baseline (business context, capabilities, applications, data, technology, constraints) |
 | `/arckit:adm-preliminary` | Preliminary | Architecture vision, scope, drivers |
 | `/arckit:business-capability-map` | Phase A | Business capability hierarchy |
-| `/arckit:application-inventory` | Phase B | Application catalog with strategic fit |
-| `/arckit:data-architecture` | Phase C.2 | Data entities, governance, reference/master data |
+| `/arckit:application-inventory` | Phase C.2 | Application catalog with strategic fit |
+| `/arckit:data-architecture` | Phase C.1 | Data entities, governance, reference/master data |
 | `/arckit:technology-architecture` | Phase D | Technology stack, platforms, infrastructure |
 | `/arckit:application-rationalization` | Phase C | Keep/merge/replace/retire decisions |
 | `/arckit:gap-analysis` | Phase E | Current vs target gap matrix |
@@ -311,9 +311,9 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Support & License
 
-- **Issues**: [GitHub Issues](https://github.com/tractorjuice/arc-kit/issues)
-- **Releases**: [GitHub Releases](https://github.com/tractorjuice/arc-kit/releases)
-- **Latest**: [v6.2.1](https://github.com/tractorjuice/arc-kit/releases/tag/v6.2.1)
+- **Issues**: [GitHub Issues](https://github.com/terrygzhou/arc-kit/issues)
+- **Releases**: [GitHub Releases](https://github.com/terrygzhou/arc-kit/releases)
+- **Latest**: [v6.2.1](https://github.com/terrygzhou/arc-kit/releases/tag/v6.2.1)
 
 MIT License — see [LICENSE](LICENSE).
 > **Exception:** `plugins/arckit-uk-gcloud/` is proprietary (not MIT).
