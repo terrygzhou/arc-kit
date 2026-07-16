@@ -2,7 +2,7 @@
 
 [![GitHub Stars](https://img.shields.io/github/stars/tractorjuice/arc-kit?style=flat&logo=github)](https://github.com/tractorjuice/arc-kit/stargazers)
 [![License: MIT](https://img.shields.io/github/license/tractorjuice/arc-kit)](LICENSE)
-[![Latest Release](https://img.shields.io/github/v/release/tractorjuice/arc-kit)](https://github.com/tractorjuice/arc-kit/releases)
+[![Latest Release](https://img.shields.io/github/v/release/terrygzhou/arc-kit)](https://github.com/terrygzhou/arc-kit/releases)
 
 **Build better enterprise architecture through structured strategy, design, delivery, and assurance workflows.**
 
@@ -46,7 +46,7 @@ gemini extensions install https://github.com/tractorjuice/arckit-gemini
 curl -fsSL https://raw.githubusercontent.com/terrygzhou/arc-kit/main/install.sh | bash
 ```
 
-**Latest Release**: [v6.2.1](https://github.com/tractorjuice/arc-kit/releases/tag/v6.2.1)
+**Latest Release**: [v6.2.1](https://github.com/terrygzhou/arc-kit/releases/tag/v6.2.1)
 
 ### Initialize a Project
 
@@ -65,6 +65,36 @@ cd /path/to/project && arckit init --here --ai copilot
 # Claude Code: automatic via marketplace
 # Gemini: gemini extensions update arckit
 ```
+
+### CLI Build
+
+Run a full recipe-driven ADM cycle from the terminal:
+
+```bash
+arckit build my-project --recipe togaf-adm-full
+```
+
+Interactive wave prompts will capture `{P}`, `{NAME}`, `{DISC_SCOPE}`, and per-phase overrides. Subsequent runs resume from the last wave:
+
+```bash
+arckit build my-project --recipe togaf-adm-full --resume
+```
+
+Key flags:
+
+| Flag | Purpose |
+|------|---------|
+| `--recipe <name>` | Recipe name or YAML path (default: `togaf-adm-full`) |
+| `--plan` | Dry run — print wave plan, do not execute |
+| `--resume` | Resume from last incomplete wave |
+| `--target <ID>` | Build only this target and its dependencies |
+| `--refresh <ID>` | Force-rebuild this target and downstream |
+| `--parallel N` | Max concurrent LLM calls per wave (default: 4) |
+| `--no-commit` | Skip per-wave git commits |
+| `--base-url URL` | Override LLM base URL |
+| `--model NAME` | Override LLM model |
+
+Placeholder inheritance: `{P}` is captured once at the ADMP wave; each phase gets `{P_<ID>}` auto-derived (e.g. `{P_BPCM}` → `"{P}-BPCM"`) and can be overridden independently.
 
 ---
 
@@ -149,22 +179,22 @@ ArcKit guides you through the enterprise architecture lifecycle:
 
 ### TOGAF ADM (`arckit-togaf-adm`) [COMMUNITY]
 
-Enterprise Architecture Development Method — 9 commands covering the full ADM cycle:
+Enterprise Architecture Development Method — 12 commands (10 required + 2 optional) covering the full ADM cycle:
 
 | Command | Phase | Description |
 |---------|-------|-------------|
 | `/arckit:discovery` | DISC | Current-state baseline (business context, capabilities, applications, data, technology, constraints) |
 | `/arckit:adm-preliminary` | Preliminary | Architecture vision, scope, drivers |
 | `/arckit:business-capability-map` | Phase A | Business capability hierarchy |
-| `/arckit:application-inventory` | Phase B/C | Application catalog with strategic fit |
+| `/arckit:application-inventory` | Phase B | Application catalog with strategic fit |
 | `/arckit:data-architecture` | Phase C.2 | Data entities, governance, reference/master data |
 | `/arckit:technology-architecture` | Phase D | Technology stack, platforms, infrastructure |
 | `/arckit:application-rationalization` | Phase C | Keep/merge/replace/retire decisions |
 | `/arckit:gap-analysis` | Phase E | Current vs target gap matrix |
 | `/arckit:transition-architecture` | Phase F | Work packages, migration waves |
 | `/arckit:architecture-board` | Phase G | Board charter, compliance scorecard |
-| `/arckit:architecture-change` | Phase H | Change requests, ADM re-entry |
-| `/arckit:architecture-repository` | Repository | Patterns, standards, reference architectures |
+| `/arckit:architecture-change` | Phase H | Change requests, ADM re-entry _(optional)_ |
+| `/arckit:architecture-repository` | Repository | Patterns, standards, reference architectures _(optional)_ |
 
 Install: `claude plugin install arckit arckit-togaf-adm`
 
