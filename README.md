@@ -153,11 +153,14 @@ Enterprise Architecture Development Method — 9 commands covering the full ADM 
 
 | Command | Phase | Description |
 |---------|-------|-------------|
+| `/arckit:discovery` | DISC | Current-state baseline (business context, capabilities, applications, data, technology, constraints) |
 | `/arckit:adm-preliminary` | Preliminary | Architecture vision, scope, drivers |
 | `/arckit:business-capability-map` | Phase A | Business capability hierarchy |
-| `/arckit:application-inventory` | Phase C | Application catalog with strategic fit |
+| `/arckit:application-inventory` | Phase B/C | Application catalog with strategic fit |
+| `/arckit:data-architecture` | Phase C.2 | Data entities, governance, reference/master data |
+| `/arckit:technology-architecture` | Phase D | Technology stack, platforms, infrastructure |
 | `/arckit:application-rationalization` | Phase C | Keep/merge/replace/retire decisions |
-| `/arckit:gap-analysis` | Phase E | Capability gap matrix |
+| `/arckit:gap-analysis` | Phase E | Current vs target gap matrix |
 | `/arckit:transition-architecture` | Phase F | Work packages, migration waves |
 | `/arckit:architecture-board` | Phase G | Board charter, compliance scorecard |
 | `/arckit:architecture-change` | Phase H | Change requests, ADM re-entry |
