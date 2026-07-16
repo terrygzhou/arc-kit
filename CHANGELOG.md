@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.2.1] — 2026-07-16
+
+### Added
+
+- **DISC discovery phase.** Brownfield current-state baseline covering business context, capability assessment, application landscape, data inventory, technology stack, and known constraints. Feeds gap analysis and all downstream ADM phases.
+- **Optional dependencies.** Soft `optional_deps` feed context when available but never block target execution.
+- **Phase-aware placeholder prompts.** CLI wave prompts show ADM phase context per placeholder; values persist across waves so each placeholder is only prompted once.
+- **CLI recipe execution.** `arckit build --recipe` runs the full ADM cycle as a parallel DAG with file-based state (`.arckit/state.json`), resume support, and auto-derivation of `{P_<ID>}` from base `{P}`.
+
+### Fixed
+
+- **Tool handler KeyError.** `_tool_read`, `_tool_write`, `_tool_glob` now guard against missing `path`/`pattern` arguments when the LLM omits required keys.
+- **`{P}` placeholder seeding.** `{P}` defaults to `"001"` instead of duplicating `project_root.name` (fixed `my-project-APP-my-project` naming).
+- **Dependency gates.** Skip targets with missing hard deps instead of executing blindly.
+- **Artifact skip resolution.** Search disk for existing artifacts before regeneration; skipped targets persist correctly in state.
+- **Wave persistence.** Placeholder values persist across CLI runs even on empty input.
+- **Skill resolution.** Robust resolver with pipx `share` path fallback for `git+https` installs.
+- **Hatch build hook.** Proper `BuildHook` class regenerates extensions from plugins on build.
+- **`install.sh` PEP 668.** Added `--break-system-packages` flag for PEP 668-compliant distros.
+- **Release workflow.** Made `release.yml` resilient to force-pushed tags.
+
+### Changed
+
+- **README.md condensation.** Reduced from 1,793 to 289 lines (~84% reduction) — removed example link columns, merged duplicate sections, condensed phase descriptions to one-liners.
+- **DISC scope expansion.** Expanded `DISC_SCOPE` to explicitly capture 6 dimensions (business context, capability assessment, application landscape, data inventory, technology stack, known constraints) with focus on facts and evidence.
+
 ## [6.1.0] — 2026-06-30
 
 ### Added
