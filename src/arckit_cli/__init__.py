@@ -1615,7 +1615,7 @@ def build(
     }
     # Persistent placeholder values — load from state, seed with project defaults
     wave_values: dict[str, str] = {
-        "P": project_root.name,
+        "P": "001",
         "NAME": project_root.name,
     }
     # Merge with previously collected values from state
