@@ -1575,7 +1575,7 @@ def build(
     _PLACEHOLDER_BASES: dict[str, tuple[str, str]] = {
         "P": ("Project short ID for artifact naming (e.g. ent-mod)", "001"),
         "NAME": ("Project display name (e.g. Enterprise Modernization)", "myproject"),
-        "DISC_SCOPE": ("Discovery scope for current-state capture (e.g. enterprise applications, data platforms)", "all enterprise systems"),
+        "DISC_SCOPE": ("Discovery scope for current-state capture. Include:\n- Current enterprise systems (applications, platforms, infrastructure)\n- Current business capabilities (and optionally business processes, customer journeys)\n- Business/technology pain points or improvement opportunities", "all enterprise systems"),
         "REQ_SCOPE": ("Requirements focus areas (comma-separated topics)", "cloud migration, PCI-DSS compliance"),
         "STKE_SCOPE": ("Stakeholder priorities to capture (comma-separated)", "CFO cost savings, CTO innovation"),
         # Phase-specific derived placeholders — auto-derived from {P} with inheritance.

@@ -1,8 +1,8 @@
 # Discovery: Current State Assessment
 
-Capture the existing enterprise state — applications, data systems, technology
-platforms, and business capabilities — to establish a baseline for gap analysis
-and rationalization.
+Capture the existing enterprise state — business strategy, capabilities, operations,
+applications, data systems, and technology platforms — to establish a baseline for gap
+analysis and rationalization.
 
 ## Inputs
 
@@ -14,15 +14,25 @@ and rationalization.
 
 `DISC.md` — Current state inventory covering:
 
-1. **Application Landscape** — Existing applications, ownership, lifecycle status
-2. **Data Inventory** — Databases, data flows, data ownership
-3. **Technology Stack** — Infrastructure, platforms, hosting environments
-4. **Business Capabilities** — Current capability map with coverage gaps
+1. **Business Context** — Strategy, vision, key initiatives, organizational structure
+2. **Capability Assessment** — Current business capabilities, maturity levels, gaps vs strategy
+3. **Application Landscape** — Existing applications, ownership, lifecycle status
+4. **Data Inventory** — Databases, data flows, data ownership
+5. **Technology Stack** — Infrastructure, platforms, hosting environments
+6. **Known Constraints** — Legacy dependencies, compliance requirements, budget limits
 
 ## Structure
 
 ```
 ## Current State Assessment
+
+### Business Context
+- [Strategic direction, key drivers, organizational model]
+- [Current operating model: processes, decision rights, governance]
+
+### Capability Assessment
+- [Current capability map with maturity ratings]
+- [Capabilities aligned to strategic goals vs legacy/obsolete]
 
 ### Application Landscape
 - [List existing applications with status: active, deprecated, planned]
@@ -33,9 +43,6 @@ and rationalization.
 ### Technology Stack
 - [List infrastructure, platforms, hosting]
 
-### Business Capabilities
-- [Map current capabilities to applications/systems]
-
 ### Known Constraints
 - [Legacy dependencies, compliance requirements, budget limits]
 ```
@@ -43,5 +50,6 @@ and rationalization.
 ## Dependencies
 
 - Requires `PRIN` — discovery is scoped by architectural principles
-- Feeds into: `APP` (current vs target inventory), `DATA` (current data state),
-  `TECH` (current technology baseline), `GAPA` (current vs target gap)
+- Feeds into: `BPCM` (target capability design), `APP` (current vs target inventory),
+  `DATA` (current data state), `TECH` (current technology baseline),
+  `GAPA` (current vs target gap)
