@@ -1575,12 +1575,14 @@ def build(
     _PLACEHOLDER_BASES: dict[str, tuple[str, str]] = {
         "NAME": ("Project display name (e.g. Enterprise Modernization)", "myproject"),
         "P": ("Project short ID for artifact naming (e.g. ent-mod)", "001"),
+        "DISC_SCOPE": ("Discovery scope for current-state capture (e.g. enterprise applications, data platforms)", "all enterprise systems"),
         "REQ_SCOPE": ("Requirements focus areas (comma-separated topics)", "cloud migration, PCI-DSS compliance"),
         "STKE_SCOPE": ("Stakeholder priorities to capture (comma-separated)", "CFO cost savings, CTO innovation"),
     }
     # Phase context per target (target_id → ADM phase description)
     _TARGET_PHASES: dict[str, str] = {
         "PRIN": "Preliminary: Foundations",
+        "DISC": "Preliminary: Current State Discovery",
         "REQ": "Phase A: Requirements Vision",
         "STKE": "Phase A: Stakeholder Alignment",
         "STRATEGY": "Phase A: Strategic Positioning",

@@ -1,11 +1,11 @@
 recipe: togaf-adm-full
 schema_version: 1
 description: >
-  Full TOGAF ADM cycle: foundation artefacts, ADM Preliminary / Architecture
-  Vision, business capability mapping, application inventory and rationalisation,
-  data architecture (Phase C.2), technology architecture (Phase D), gap analysis,
-  transition architecture, governance, optional change management,
-  and optional architecture repository synthesis.
+  Full TOGAF ADM cycle: discovery, foundation artefacts, ADM Preliminary /
+  Architecture Vision, business capability mapping, application inventory
+  and rationalisation, data architecture (Phase C.2), technology architecture
+  (Phase D), gap analysis, transition architecture, governance, optional
+  change management, and optional architecture repository synthesis.
 
 defaults:
   version: "1.0"
@@ -35,72 +35,78 @@ targets:
     output: { project: "000-global", type: PRIN }
     deps: []
 
+  - id: DISC
+    skill: arckit:discovery
+    args: "Discovery scope: {DISC_SCOPE}"
+    output: { project: "{P}-{NAME}", type: DISC }
+    deps: [PRIN]
+
   - id: REQ
     skill: arckit:requirements
     args: "Project: {NAME}. Requirements scope: {REQ_SCOPE}"
     output: { project: "{P}-{NAME}", type: REQ }
-    deps: [PRIN]
+    deps: [PRIN, DISC]
 
   - id: STKE
     skill: arckit:stakeholders
     args: "Project: {NAME}. Stakeholder focus: {STKE_SCOPE}"
     output: { project: "{P}-{NAME}", type: STKE }
-    deps: [PRIN]
+    deps: [PRIN, DISC]
 
   - id: STRATEGY
     skill: arckit:strategy
     args: ""
     output: { project: "000-global", type: STRAT }
-    deps: [PRIN]
+    deps: [PRIN, DISC]
     optional_deps: [STKE]
 
   - id: ADMP
     skill: arckit:adm-preliminary
     args: "{P}"
     output: { project: "{P}-{NAME}", type: ADMP }
-    deps: [PRIN, STRATEGY]
+    deps: [PRIN, STRATEGY, DISC]
     optional_deps: [STKE]
 
   - id: BPCM
     skill: arckit:business-capability-map
     args: "{P}"
     output: { project: "{P}-{NAME}", type: BPCM }
-    deps: [ADMP, PRIN]
+    deps: [ADMP, PRIN, DISC]
     optional_deps: [REQ, STKE]
 
   - id: APP
     skill: arckit:application-inventory
     args: "{P}"
     output: { project: "{P}-{NAME}", type: APP }
-    deps: [ADMP, BPCM]
+    deps: [ADMP, BPCM, DISC]
 
   - id: DATA
     skill: arckit:data-architecture
     args: "{P}"
     output: { project: "{P}-{NAME}", type: DATA }
-    deps: [BPCM]
+    deps: [BPCM, DISC]
     optional_deps: [APP]
 
   - id: TECH
     skill: arckit:technology-architecture
     args: "{P}"
     output: { project: "{P}-{NAME}", type: TECH }
-    deps: []
-    optional_deps: [APP, DATA]
+    deps: [BPCM, DISC]
+    optional_deps: [APP]
 
   - id: APPR
     skill: arckit:application-rationalization
     args: "{P}"
     output: { project: "{P}-{NAME}", type: APPR }
-    deps: [APP]
+    deps: [APP, DISC]
     optional_deps: [BPCM, DATA]
 
   - id: GAPA
     skill: arckit:gap-analysis
     args: "{P}"
     output: { project: "{P}-{NAME}", type: GAPA }
-    deps: [STRATEGY]
-    optional_deps: [BPCM, APP, APPR, TECH]
+    deps: [DISC, BPCM, APPR, STRATEGY]
+    optional_deps: [TECH, DATA]
 
   - id: TRANS
     skill: arckit:transition-architecture
@@ -125,4 +131,4 @@ targets:
     args: "000"
     output: { project: "000-global", type: REPO }
     deps: []
-    optional_deps: [PRIN, STRATEGY, ADMP, BPCM, APP, APPR, DATA, TECH, GAPA, TRANS, BORD]
+    optional_deps: [PRIN, DISC, STRATEGY, ADMP, BPCM, APP, APPR, DATA, TECH, GAPA, TRANS, BORD]
