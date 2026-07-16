@@ -47,7 +47,17 @@ targets:
 
   - id: DISC
     skill: arckit:discovery
-    args: "Discovery scope: {DISC_SCOPE}"
+    args: >-
+      Discovery scope: {DISC_SCOPE}.
+      Capture current-state baseline across these dimensions:
+      - Business Context: strategic direction, key initiatives, organizational model, operating model (processes, decision rights, governance)
+      - Capability Assessment: current capability map with maturity ratings, alignment to strategic goals vs legacy/obsolete
+      - Application Landscape: existing applications, ownership, lifecycle status (active/deprecated/planned)
+      - Data Inventory: data systems, databases, data flows, data ownership and classification
+      - Technology Stack: infrastructure, platforms, hosting environments, network architecture
+      - Known Constraints: legacy dependencies, compliance requirements, budget limits
+      Focus on facts and evidence — avoid aspirational or target-state content.
+      This baseline will feed gap analysis (GAPA) and all downstream phases.
     output: { project: "{P_DISC}-{NAME}", type: DISC }
     deps: [PRIN]
 
