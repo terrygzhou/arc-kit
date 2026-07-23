@@ -1202,7 +1202,17 @@ _CONFIG_KEYS = [
 # ---------------------------------------------------------------------------
 config_app = typer.Typer(help="Manage ArcKit configuration (YAML)")
 
+# Local LLM management (setup, status, models, test)
+from arckit_cli.local import local_app
+
+app.add_typer(local_app, name="local")
+
 app.add_typer(config_app, name="config")
+
+# Local LLM management
+from arckit_cli.local import local_app
+
+app.add_typer(local_app, name="local")
 
 
 @config_app.command(name="set")
