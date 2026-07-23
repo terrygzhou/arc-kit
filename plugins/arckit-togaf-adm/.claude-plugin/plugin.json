@@ -1,6 +1,6 @@
 {
   "name": "arckit-togaf-adm",
-  "version": "6.3.1",
+  "version": "6.4.0",
   "description": "TOGAF ADM — Enterprise Architecture Development Method for AI-assisted governance. 9 commands covering all ADM phases (Preliminary through H) plus Architecture Repository.",
   "author": {
     "name": "ArcKit Contributors",
