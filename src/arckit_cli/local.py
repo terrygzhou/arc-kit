@@ -106,18 +106,18 @@ local_app = typer.Typer(
 
 @local_app.command()
 def setup(
-    base_url: Optional[str] = typer.Option(None, "--base-url", help="API base URL (e.g. http://127.0.0.1:8000)"),
-    model: Optional[str] = typer.Option(None, "--model", help="Model name (e.g. Qwen3.6-27B)"),
-    api_key: Optional[str] = typer.Option(None, "--api-key", help="API key (empty for local)"),
-    max_tokens: Optional[int] = typer.Option(None, "--max-tokens", help="Max tokens per response"),
-    temperature: Optional[float] = typer.Option(None, "--temperature", help="Sampling temperature"),
+    base_url: Optional[str] = typer.Option(None, "--base-url", help="API base URL"),
+    model: Optional[str] = typer.Option(None, "--model", help="Model name"),
+    api_key: Optional[str] = typer.Option(None, "--api-key", help="API key"),
+    max_tokens: Optional[int] = typer.Option(None, "--max-tokens", help="Max tokens"),
+    temperature: Optional[float] = typer.Option(None, "--temperature", help="Temperature"),
 ):
     """Interactive wizard to configure an OpenAI-compatible LLM endpoint."""
 
     cfg = _load_config()
     llm = cfg.get(CONFIG_KEY, {})
 
-    # Pre-fill with existing values where available
+    # Pre-fill with existing values
     existing_base = llm.get("base_url", "")
     existing_model = llm.get("model", "")
     existing_key = llm.get("api_key", "")
@@ -134,78 +134,108 @@ def setup(
         border_style="bright_blue",
     ))
 
-    # ── base_url ──
-    if base_url is None:
+    # ── 1. Base URL ──
+    console.print("\n[cyan]1. API Base URL[/cyan]")
+    console.print("   The address of your LLM server's OpenAI-compatible endpoint.\n")
+
+    console.print("   [bold]Common presets:[/bold]")
+    console.print("     [magenta]1[/magenta].  http://127.0.0.1:11434      — Ollama (default port)")
+    console.print("     [magenta]2[/magenta].  http://127.0.0.1:8000       — SGLang / vLLM (default port)")
+    console.print("     [magenta]3[/magenta].  https://api.openai.com/v1  — OpenAI cloud API")
+    console.print("     [magenta]4[/magenta].  Enter a custom URL\n")
+
+    choice = typer.prompt("Select a preset (1-4)", default="1")
+    if choice in ("1",):
+        base_url = "http://127.0.0.1:11434"
+    elif choice in ("2",):
+        base_url = "http://127.0.0.1:8000"
+    elif choice in ("3",):
+        base_url = "https://api.openai.com/v1"
+    else:
         base_url = typer.prompt(
-            "Base URL",
-            default=existing_base,
-            show_default=True,
-        )
-    if not base_url:
-        console.print("[red]Error:[/red] base_url is required.")
-        raise typer.Exit(1)
-
-    # Strip trailing slash for consistency
-    base_url = base_url.rstrip("/")
-
-    # ── model ──
-    if model is None:
-        model = typer.prompt(
-            "Model name",
-            default=existing_model,
-            show_default=True,
-        )
-    if not model:
-        console.print("[red]Error:[/red] model name is required.")
-        raise typer.Exit(1)
-
-    # ── api_key ──
-    if api_key is None:
-        # Use password-style prompt (hidden input) — empty is OK for local
-        hint = "(leave empty for local endpoints)"
-        api_key = typer.prompt(
-            "API key",
-            default=existing_key,
+            "Custom base URL  (e.g. http://192.168.1.50:8080)",
+            default=existing_base if existing_base else "",
             show_default=False,
         )
 
-    # ── max_tokens ──
-    if max_tokens is None:
-        max_tokens_str = typer.prompt(
-            "Max tokens per response",
-            default=existing_max,
-            type=int,
-            show_default=True,
-        )
-        max_tokens = int(max_tokens_str)
+    if base_url:
+        base_url = base_url.rstrip("/")
 
-    # ── temperature ──
-    if temperature is None:
-        temp_str = typer.prompt(
-            "Temperature",
-            default=existing_temp,
-            type=float,
-            show_default=True,
-        )
-        temperature = float(temp_str)
+    # ── 2. Model Name ──
+    console.print("\n[cyan]2. Model Name[/cyan]")
+    console.print("   The model identifier your server expects.\n")
+
+    console.print("   [bold]Examples:[/bold]")
+    console.print("     Ollama:    qwen2.5:32b   |   qwen3:32b   |   llama3.3:8b")
+    console.print("     SGLang:    Qwen/Qwen3.6-27B-NVFP4  |  Qwen2.5-14B-Instruct-AWQ")
+    console.print("     OpenAI:    gpt-4o  |  gpt-4o-mini\n")
+
+    model_input = typer.prompt(
+        "Model name",
+        default=existing_model or "Qwen3.6-27B",
+        show_default=True,
+    )
+
+    # ── 3. API Key ──
+    console.print("\n[cyan]3. API Key[/cyan]")
+    console.print("   Leave empty for local endpoints (Ollama, SGLang, vLLM).")
+    console.print("   Required for cloud APIs (OpenAI, Azure, etc.).\n")
+
+    api_key = typer.prompt(
+        "API key  (press Enter to leave empty for local)",
+        default=existing_key,
+        show_default=False,
+    )
+
+    # ── 4. Max Tokens ──
+    console.print("\n[cyan]4. Max Tokens per Response[/cyan]")
+    console.print("   Controls the maximum output length.\n")
+    console.print("   [bold]Examples:[/bold]")
+    console.print("     4096    — short responses (chat, code snippets)")
+    console.print("     32768   — medium (reports, design docs)")
+    console.print("     128000  — large (full architecture documents)\n")
+
+    max_tokens_str = typer.prompt(
+        "Max tokens",
+        default=str(existing_max),
+        show_default=True,
+    )
+
+    # ── 5. Temperature ──
+    console.print("\n[cyan]5. Temperature[/cyan]")
+    console.print("   Controls randomness. Lower = more deterministic.\n")
+    console.print("   [bold]Examples:[/bold]")
+    console.print("     0.0  — deterministic (recommended for architecture docs)")
+    console.print("     0.3  — slight variation (creative tasks)")
+    console.print("     1.0  — maximum variation (brainstorming)\n")
+
+    temp_str = typer.prompt(
+        "Temperature",
+        default=str(existing_temp),
+        show_default=True,
+    )
 
     # ── Save ──
     cfg[CONFIG_KEY] = {
         "provider": "openai-compatible",
         "base_url": base_url,
-        "model": model,
+        "model": model_input,
         "api_key": api_key,
-        "max_tokens": max_tokens,
-        "temperature": temperature,
+        "max_tokens": int(max_tokens_str),
+        "temperature": float(temp_str),
     }
 
     config_path = _save_config(cfg)
     console.print(f"\n[green]✓[/green] Saved config → {config_path}")
+    console.print(f"  Endpoint: {base_url}")
+    console.print(f"  Model:    {model_input}")
+    console.print(f"  API Key:  {'*' * 8 + '...' if api_key else '(empty)'}")
+    console.print(f"  Tokens:   {cfg[CONFIG_KEY]['max_tokens']}  |  Temp: {cfg[CONFIG_KEY]['temperature']}")
 
     # ── Test connection ──
-    console.print(f"\n[cyan]Testing {model} @ {base_url}...[/cyan]")
+    console.print(f"\n[cyan]Testing {model_input} @ {base_url}...[/cyan]")
     try:
-        result = _ping_endpoint(base_url, model, timeout=30)
+        result = _ping_endpoint(base_url if base_url else "", model_input, timeout=30)
         if result["connected"]:
             console.print(f"[bold green]✓ Connected[/bold green]  ({result['latency_ms']}ms)")
             console.print(f"  Tokens: {result['prompt_tokens']} in / {result['completion_tokens']} out")
