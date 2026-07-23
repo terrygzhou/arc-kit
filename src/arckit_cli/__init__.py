@@ -1398,6 +1398,160 @@ def _git_commit(project_path: Path, message: str) -> bool:
 
 
 # ---------------------------------------------------------------------------
+# Build configuration loader
+# ---------------------------------------------------------------------------
+
+
+def _serialize_discovery(discovery_cfg: dict) -> str:
+    """Serialize discovery config to structured text for LLM injection."""
+    lines = ["---"]
+    if not discovery_cfg:
+        lines.append("discovery_scope: {}")
+        lines.append("---")
+        return "\n".join(lines)
+
+    # Systems
+    systems = discovery_cfg.get("systems", [])
+    if systems:
+        lines.append("discovery_scope:")
+        lines.append("  systems:")
+        for s in systems:
+            lines.append(f"    - {s}")
+    # Capabilities
+    capabilities = discovery_cfg.get("capabilities", [])
+    if capabilities:
+        lines.append("  capabilities:")
+        for cap in capabilities:
+            maturity = cap.get("maturity", "?")
+            notes = cap.get("notes", "")
+            domain = cap.get("domain", "unknown")
+            lines.append(f"    - domain: {domain} (maturity: {maturity})")
+            if notes:
+                lines.append(f"      notes: {notes}")
+    # Pain points
+    pain_points = discovery_cfg.get("pain_points", [])
+    if pain_points:
+        lines.append("  pain_points:")
+        for pp in pain_points:
+            ptype = pp.get("type", "unknown")
+            desc = pp.get("description", "")
+            impact = pp.get("impact", "")
+            impact_tag = f" ({impact} impact)" if impact else ""
+            lines.append(f"    - {ptype}: {desc}{impact_tag}")
+    # Constraints
+    constraints = discovery_cfg.get("constraints", [])
+    if constraints:
+        lines.append("  constraints:")
+        for c in constraints:
+            lines.append(f"    - {c}")
+    lines.append("---")
+    return "\n".join(lines)
+
+
+def _serialize_requirements(req_cfg: dict) -> str:
+    """Serialize requirements config to comma-separated focus areas."""
+    focus = req_cfg.get("focus_areas", [])
+    return ", ".join(focus) if focus else ""
+
+
+def _serialize_stakeholders(stake_cfg: dict) -> str:
+    """Serialize stakeholder config to structured text for LLM injection."""
+    lines = ["---"]
+    if not stake_cfg:
+        lines.append("stakeholder_priorities: {}")
+        lines.append("---")
+        return "\n".join(lines)
+
+    priorities = stake_cfg.get("priorities", [])
+    if priorities:
+        lines.append("stakeholder_priorities:")
+        for p in priorities:
+            role = p.get("role", "unknown")
+            weight = p.get("weight", "")
+            weight_tag = f" ({weight})" if weight else ""
+            priority = p.get("priority", "")
+            lines.append(f"  {role}{weight_tag}: {priority}")
+
+    groups = stake_cfg.get("groups", [])
+    if groups:
+        lines.append("stakeholder_groups:")
+        for g in groups:
+            name = g.get("name", "unknown")
+            members = g.get("members", [])
+            lines.append(f"  {name}: [{', '.join(members)}]")
+    lines.append("---")
+    return "\n".join(lines)
+
+
+def _load_build_config(config_path: Path) -> dict[str, str]:
+    """Load build-config.yaml and produce placeholder key-value pairs.
+
+    Returns a dict suitable for updating wave_values. Missing sections
+    are silently skipped (interactive prompts fill gaps).
+    """
+    values: dict[str, str] = {}
+
+    try:
+        raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    except Exception:
+        return values
+
+    if not isinstance(raw, dict):
+        return values
+
+    # ── project: {P}, {NAME} ──────────────────────────────────────────
+    project = raw.get("project") or {}
+    if project.get("id"):
+        values["P"] = str(project["id"])
+    if project.get("name"):
+        values["NAME"] = str(project["name"])
+
+    # ── discovery: {DISC_SCOPE} ───────────────────────────────────────
+    discovery = raw.get("discovery")
+    if discovery:
+        values["DISC_SCOPE"] = _serialize_discovery(discovery)
+
+    # ── requirements: {REQ_SCOPE} ─────────────────────────────────────
+    requirements = raw.get("requirements")
+    if requirements:
+        val = _serialize_requirements(requirements)
+        if val:
+            values["REQ_SCOPE"] = val
+
+    # ── stakeholders: {STKE_SCOPE} ──────────────────────────────────
+    stakeholders = raw.get("stakeholders")
+    if stakeholders:
+        values["STKE_SCOPE"] = _serialize_stakeholders(stakeholders)
+
+    # ── phase_ids: {P_<ID>} overrides ───────────────────────────────
+    phase_ids = raw.get("phase_ids") or {}
+    for phase_id, phase_val in phase_ids.items():
+        key = f"P_{phase_id}"
+        if phase_val:
+            values[key] = str(phase_val)
+
+    return values
+
+
+def _resolve_config_path(project_root: Path, config_flag: str | None) -> Path | None:
+    """Resolve build-config.yaml via flag > project override > project root."""
+    if config_flag:
+        return Path(config_flag).resolve()
+
+    # Project-level override
+    override = project_root / ".arckit" / "build-config.yaml"
+    if override.exists():
+        return override
+
+    # Project root
+    root_config = project_root / "build-config.yaml"
+    if root_config.exists():
+        return root_config
+
+    return None
+
+
+# ---------------------------------------------------------------------------
 # arckit build command
 # ---------------------------------------------------------------------------
 
@@ -1433,6 +1587,9 @@ def build(
     ),
     model: str = typer.Option(
         None, "--model", help="Override LLM model"
+    ),
+    config: str = typer.Option(
+        None, "--config", help="Path to build-config.yaml with structured placeholder values"
     ),
 ):
     """Execute an ArcKit recipe against a project (DAG → waves → LLM execution)."""
@@ -1536,6 +1693,20 @@ def build(
     console.print(f"  LLM: [cyan]{llm_config.model}[/cyan] @ {llm_config.base_url}")
     console.print()
 
+    # ── 6b. Load build config (structured placeholders) ───────────────
+    config_path = _resolve_config_path(project_root, config)
+    if config_path and config_path.exists():
+        config_values = _load_build_config(config_path)
+        console.print(f"  Build config: [cyan]{config_path}[/cyan]")
+        if config_values:
+            cfg_keys = [k for k in config_values if k not in ("P_DISC", "P_REQ", "P_STKE", "P_ADMP", "P_BPCM", "P_APP", "P_DATA", "P_TECH", "P_APPR", "P_GAPA", "P_TRANS", "P_BORD", "P_ACHG")]
+            if cfg_keys:
+                console.print(f"  Placeholders from config: {', '.join(cfg_keys)}")
+    else:
+        config_values = {}
+        if config:
+            console.print(f"  [yellow]Config not found: {config}[/yellow]")
+
     # ── 7. Load or create state ─────────────────────────────────────────
     state = load_state(str(project_root))
     if state is None or resume:
@@ -1621,6 +1792,24 @@ def build(
     # Merge with previously collected values from state
     if state.wave_values:
         wave_values.update(state.wave_values)
+
+    # ── Load build config (if available) ──────────────────────────────
+    # Config values override seeds but NOT --resume state values.
+    # On fresh builds, config takes full precedence.
+    if not resume:
+        config_path = _resolve_config_path(project_root, config)
+        if config_path and config_path.exists():
+            config_values = _load_build_config(config_path)
+            console.print(f"  Build config: [cyan]{config_path}[/cyan]")
+            cfg_main = [k for k in config_values
+                        if k not in ("P_DISC", "P_REQ", "P_STKE", "P_ADMP", "P_BPCM",
+                                     "P_APP", "P_DATA", "P_TECH", "P_APPR", "P_GAPA",
+                                     "P_TRANS", "P_BORD", "P_ACHG")]
+            if cfg_main:
+                console.print(f"  Placeholders from config: {', '.join(cfg_main)}")
+            wave_values.update(config_values)
+        elif config:
+            console.print(f"  [yellow]Config not found: {config}[/yellow]")
 
     # Phase IDs that get {P_<ID>} derived from {P}
     _PHASE_IDS = ["DISC", "REQ", "STKE", "ADMP", "BPCM", "APP", "DATA", "TECH",

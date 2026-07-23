@@ -74,7 +74,69 @@ Run a full recipe-driven ADM cycle from the terminal:
 arckit build my-project --recipe togaf-adm-full
 ```
 
-Interactive wave prompts will capture `{P}`, `{NAME}`, `{DISC_SCOPE}`, and per-phase overrides. Subsequent runs resume from the last wave:
+#### Build Configuration
+
+Provide structured input via `build-config.yaml` for deterministic, repeatable builds:
+
+```bash
+# Explicit path
+arckit build my-project --config .arckit/build-config.yaml
+
+# Auto-discovered (tries .arckit/build-config.yaml, then build-config.yaml)
+arckit build my-project
+```
+
+Example `build-config.yaml` (full template at `scripts/build-config.example.yaml`):
+
+```yaml
+project:
+  id: "ent-mod"          # {P} — short ID for artifact naming
+  name: "Enterprise Modernization"  # {NAME} — display name
+
+discovery:
+  systems:
+    - "CRM: Salesforce org, 12 integrations"
+    - "ERP: SAP S/4HANA, 8 custom modules"
+  capabilities:
+    - domain: "Customer Engagement"
+      maturity: 3
+      notes: "Fragmented across 3 teams"
+  pain_points:
+    - type: "operational"
+      description: "Monthly reconciliation takes 3 weeks"
+      impact: "financial"
+  constraints:
+    - "Budget cap: $2.5M Phase 1"
+    - "SOX compliance mandatory"
+
+requirements:
+  focus_areas:
+    - "cloud migration"
+    - "PCI-DSS compliance"
+    - "data platform modernization"
+
+stakeholders:
+  priorities:
+    - role: "CFO"
+      priority: "Reduce OpEx by 25% within 18 months"
+      weight: high
+    - role: "CTO"
+      priority: "Eliminate COBOL dependency"
+      weight: high
+  groups:
+    - name: "Business"
+      members: ["CFO", "VP Sales", "Head of Marketing"]
+    - name: "Technology"
+      members: ["CTO", "CISO", "VP Engineering"]
+
+# Optional: override per-phase project IDs (default: auto-derives from {P})
+phase_ids:
+  DISC: "ent-mod-disc"
+```
+
+**Sections** — `project` (always set), `discovery` (`{DISC_SCOPE}`), `requirements` (`{REQ_SCOPE}`), `stakeholders` (`{STKE_SCOPE}`), `phase_ids` (per-phase `{P_<ID>}` overrides). All sections optional; missing sections fall back to interactive wave prompts. Config is persisted in build state for `--resume`.
+
+Subsequent runs resume from the last wave:
 
 ```bash
 arckit build my-project --recipe togaf-adm-full --resume
@@ -85,6 +147,7 @@ Key flags:
 | Flag | Purpose |
 |------|---------|
 | `--recipe <name>` | Recipe name or YAML path (default: `togaf-adm-full`) |
+| `--config <path>` | Build config YAML with structured placeholder values |
 | `--plan` | Dry run — print wave plan, do not execute |
 | `--resume` | Resume from last incomplete wave |
 | `--target <ID>` | Build only this target and its dependencies |
@@ -94,7 +157,7 @@ Key flags:
 | `--base-url URL` | Override LLM base URL |
 | `--model NAME` | Override LLM model |
 
-Placeholder inheritance: `{P}` is captured once at the ADMP wave; each phase gets `{P_<ID>}` auto-derived (e.g. `{P_BPCM}` → `"{P}-BPCM"`) and can be overridden independently.
+Placeholder inheritance: `{P}` is captured once at the ADMP wave; each phase gets `{P_<ID>}` auto-derived (e.g. `{P_BPCM}` → `"{P}-BPCM"`) and can be overridden independently via config `phase_ids`.
 
 ---
 

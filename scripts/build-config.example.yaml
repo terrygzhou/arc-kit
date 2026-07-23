@@ -1,0 +1,84 @@
+# ArcKit Build Configuration
+# Place in `.arckit/build-config.yaml` (project-local) or pass via `--config`.
+#
+# All sections are optional. Missing sections fall back to interactive prompts.
+#
+# Example:
+#   arckit build . --config .arckit/build-config.yaml
+
+# ── Project identity (always required) ──────────────────────────────
+# {P}     — Short ID for artifact naming (kebab-case, 1-3 words)
+# {NAME}  — Human-readable display name
+project:
+  id: "ent-mod"
+  name: "Enterprise Modernization"
+
+# ── Discovery scope ({DISC_SCOPE}) ─────────────────────────────────
+# Structured current-state baseline. The CLI serializes this into
+# a well-formatted block for the LLM — no more free-text guessing.
+discovery:
+  # Current systems to inventory
+  systems:
+    - "CRM: Salesforce org, 12 integrations"
+    - "ERP: SAP S/4HANA, 8 custom modules"
+    - "Data platform: Snowflake + Databricks, 45 tables"
+
+  # Capability domains + maturity (1–5)
+  capabilities:
+    - domain: "Customer Engagement"
+      maturity: 3
+      notes: "Fragmented across 3 teams, no shared data model"
+    - domain: "Order Processing"
+      maturity: 2
+      notes: "Manual handoffs, paper-based exceptions"
+
+  # Pain points driving the architecture effort
+  pain_points:
+    - type: "operational"
+      description: "Monthly reconciliation takes 3 weeks"
+      impact: "financial"
+    - type: "technical"
+      description: "Legacy COBOL mainframe, no documentation"
+      impact: "risk"
+
+  # Hard constraints
+  constraints:
+    - "Budget cap: $2.5M Phase 1"
+    - "SOX compliance mandatory"
+
+# ── Requirements scope ({REQ_SCOPE}) ──────────────────────────────
+# Comma-separated focus areas → injected as-is into REQ args.
+requirements:
+  focus_areas:
+    - "cloud migration"
+    - "PCI-DSS compliance"
+    - "data platform modernization"
+
+# ── Stakeholder scope ({STKE_SCOPE}) ─────────────────────────────
+# Stakeholder priorities with weight + grouping. Serialized as
+# structured text for the LLM (role: priority, weight: high).
+stakeholders:
+  priorities:
+    - role: "CFO"
+      priority: "Reduce OpEx by 25% within 18 months"
+      weight: high
+    - role: "CTO"
+      priority: "Eliminate COBOL dependency, modernize data stack"
+      weight: high
+    - role: "Head of Compliance"
+      priority: "Achieve SOC 2 Type II, maintain SOX"
+      weight: medium
+
+  # Optional: grouping for cross-functional mapping
+  groups:
+    - name: "Business"
+      members: ["CFO", "VP Sales", "Head of Marketing"]
+    - name: "Technology"
+      members: ["CTO", "CISO", "VP Engineering"]
+
+# ── Phase-specific ID overrides (optional) ────────────────────────
+# By default {P_<ID>} auto-derives from {P} (e.g. "ent-mod-DISC").
+# Override here if a phase needs a distinct project ID.
+phase_ids:
+  DISC: "ent-mod-disc"
+  # ADMP: "ent-mod-adm"
