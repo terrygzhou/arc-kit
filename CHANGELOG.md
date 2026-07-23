@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [6.2.1] — 2026-07-16
+## [6.3.0] — 2026-07-23
+
+### Added
+
+- **`--config` flag for builds.** Provide `build-config.yaml` with structured placeholder values (`{P}`, `{NAME}`, `{DISC_SCOPE}`, `{STKE_SCOPE}`, `{REQ_SCOPE}`, `{P_<ID>}`) to reduce interactive prompts and enable deterministic, repeatable builds.
+- **`scripts/build-config.example.yaml`.** Full template with all supported sections (project, discovery, requirements, stakeholders, phase_ids).
+- **Auto-discovery of build config.** CLI checks `--config` flag, then `.arckit/build-config.yaml`, then project root `build-config.yaml`.
+
+### Changed
+
+- **Placeholder resolution order.** Config values override seeds but not `--resume` state values, ensuring user corrections persist across resumed runs.
 
 ### Added
 
