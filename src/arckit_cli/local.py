@@ -165,11 +165,11 @@ def setup(
     console.print("\n[cyan]2. Model Name[/cyan]")
     console.print("   The model identifier your server expects.\n")
 
-    console.print("   [bold]Examples:[/bold]")
+    console.print("   [bold]Examples by server type:[/bold]")
     console.print("     Ollama:    qwen2.5:32b   |   qwen3:32b   |   llama3.3:8b")
     console.print("     SGLang:    Qwen/Qwen3.6-27B-NVFP4  |  Qwen2.5-14B-Instruct-AWQ")
     console.print("     OpenAI:    gpt-4o  |  gpt-4o-mini\n")
-
+    
     model_input = typer.prompt(
         "Model name",
         default=existing_model or "Qwen3.6-27B",
@@ -180,7 +180,7 @@ def setup(
     console.print("\n[cyan]3. API Key[/cyan]")
     console.print("   Leave empty for local endpoints (Ollama, SGLang, vLLM).")
     console.print("   Required for cloud APIs (OpenAI, Azure, etc.).\n")
-
+    
     api_key = typer.prompt(
         "API key  (press Enter to leave empty for local)",
         default=existing_key,
