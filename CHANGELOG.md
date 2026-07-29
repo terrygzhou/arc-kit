@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.4.2] — 2026-07-29
+
+### Added
+
+- **SGLang preset in local config wizard.** The `arckit config` wizard now includes SGLang on port 8080 (`http://127.0.0.1:8080`) as a built-in preset alongside Ollama, LM Studio, and vLLM.
+- **BYO LLM CLI documentation.** README now documents `--base-url` / `--model` flags, `arckit config` persistence, and retry behaviour for local LLM builds.
+- **BYO LLM test suite.** `tests/plugin/test_byo_llm.py` covers endpoint ping, config resolution, retry backoff, and build command flags (18 tests).
+
 ## [6.3.0] — 2026-07-23
 
 ### Added
