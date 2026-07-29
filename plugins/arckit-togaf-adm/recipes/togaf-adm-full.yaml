@@ -1,11 +1,10 @@
 recipe: togaf-adm-full
 schema_version: 1
 description: >
-  Full TOGAF ADM cycle: discovery, foundation artefacts, ADM Preliminary /
-  Architecture Vision, business capability mapping, application inventory
-  and rationalisation, data architecture (Phase C.2), technology architecture
-  (Phase D), gap analysis, transition architecture, governance, optional
-  change management, and optional architecture repository synthesis.
+  Full TOGAF ADM cycle: foundation artefacts, ADM Preliminary / Architecture
+  Vision, capability mapping, application inventory and rationalisation, gap
+  analysis, transition architecture, governance, optional change management,
+  and optional architecture repository synthesis.
 
 defaults:
   version: "1.0"
@@ -24,20 +23,6 @@ post_build_hooks:
   - skill: arckit:traceability
     args: ""
 
-# Schema: each target may declare:
-#   deps:          list of required dependencies (block execution if missing)
-#   optional_deps: list of soft dependencies (feed context if available, never block)
-#
-# Placeholders:
-#   {P}            — base project short ID, captured once at Wave 3 (ADMP)
-#   {P_<ID>}       — phase-specific derived from {P}-{ID}, overrideable per phase
-#   {NAME}        — project display name, captured at Wave 2 (REQ)
-#   {REQ_SCOPE}   — requirements focus areas
-#   {STKE_SCOPE}  — stakeholder priorities
-#   {DISC_SCOPE}  — discovery scope for current-state capture
-#
-# Inheritance: {P_<ID>} auto-defaults to "{P}-{ID}" — user can override independently.
-
 targets:
   - id: PRIN
     skill: arckit:principles
@@ -45,110 +30,74 @@ targets:
     output: { project: "000-global", type: PRIN }
     deps: []
 
-  - id: DISC
-    skill: arckit:discovery
-    args: >-
-      Discovery scope: {DISC_SCOPE}.
-      Capture current-state baseline across these dimensions:
-      - Business Context: strategic direction, key initiatives, organizational model, operating model (processes, decision rights, governance)
-      - Capability Assessment: current capability map with maturity ratings, alignment to strategic goals vs legacy/obsolete
-      - Application Landscape: existing applications, ownership, lifecycle status (active/deprecated/planned)
-      - Data Inventory: data systems, databases, data flows, data ownership and classification
-      - Technology Stack: infrastructure, platforms, hosting environments, network architecture
-      - Known Constraints: legacy dependencies, compliance requirements, budget limits
-      Focus on facts and evidence — avoid aspirational or target-state content.
-      This baseline will feed gap analysis (GAPA) and all downstream phases.
-    output: { project: "{P_DISC}-{NAME}", type: DISC }
-    deps: [PRIN]
-
   - id: REQ
     skill: arckit:requirements
-    args: "Project: {NAME}. Requirements scope: {REQ_SCOPE}"
-    output: { project: "{P_REQ}-{NAME}", type: REQ }
-    deps: [PRIN, DISC]
+    args: "{NAME}"
+    output: { project: "{P}-{NAME}", type: REQ }
+    deps: [PRIN]
 
   - id: STKE
     skill: arckit:stakeholders
-    args: "Project: {NAME}. Stakeholder focus: {STKE_SCOPE}"
-    output: { project: "{P_STKE}-{NAME}", type: STKE }
-    deps: [PRIN, DISC]
+    args: "{NAME}"
+    output: { project: "{P}-{NAME}", type: STKE }
+    deps: [PRIN]
 
   - id: STRATEGY
     skill: arckit:strategy
     args: ""
     output: { project: "000-global", type: STRAT }
-    deps: [PRIN, DISC]
-    optional_deps: [STKE]
+    deps: [PRIN, STKE]
 
   - id: ADMP
     skill: arckit:adm-preliminary
-    args: "{P_ADMP}"
-    output: { project: "{P_ADMP}-{NAME}", type: ADMP }
-    deps: [PRIN, STRATEGY, DISC]
-    optional_deps: [STKE]
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: ADMP }
+    deps: [PRIN, STKE, STRATEGY]
 
   - id: BPCM
     skill: arckit:business-capability-map
-    args: "{P_BPCM}"
-    output: { project: "{P_BPCM}-{NAME}", type: BPCM }
-    deps: [ADMP, PRIN, DISC]
-    optional_deps: [REQ, STKE]
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: BPCM }
+    deps: [ADMP, REQ, STKE, PRIN]
 
   - id: APP
     skill: arckit:application-inventory
-    args: "{P_APP}"
-    output: { project: "{P_APP}-{NAME}", type: APP }
-    deps: [ADMP, BPCM, DISC]
-
-  - id: DATA
-    skill: arckit:data-architecture
-    args: "{P_DATA}"
-    output: { project: "{P_DATA}-{NAME}", type: DATA }
-    deps: [BPCM, DISC]
-    optional_deps: [APP]
-
-  - id: TECH
-    skill: arckit:technology-architecture
-    args: "{P_TECH}"
-    output: { project: "{P_TECH}-{NAME}", type: TECH }
-    deps: [BPCM, DISC]
-    optional_deps: [APP]
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: APP }
+    deps: [ADMP, BPCM]
 
   - id: APPR
     skill: arckit:application-rationalization
-    args: "{P_APPR}"
-    output: { project: "{P_APPR}-{NAME}", type: APPR }
-    deps: [APP, DISC]
-    optional_deps: [BPCM, DATA]
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: APPR }
+    deps: [APP, BPCM]
 
   - id: GAPA
     skill: arckit:gap-analysis
-    args: "{P_GAPA}"
-    output: { project: "{P_GAPA}-{NAME}", type: GAPA }
-    deps: [DISC, BPCM, APPR, STRATEGY]
-    optional_deps: [TECH, DATA]
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: GAPA }
+    deps: [BPCM, APP, APPR, STRATEGY]
 
   - id: TRANS
     skill: arckit:transition-architecture
-    args: "{P_TRANS}"
-    output: { project: "{P_TRANS}-{NAME}", type: TRANS }
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: TRANS }
     deps: [GAPA]
 
   - id: BORD
     skill: arckit:architecture-board
-    args: "{P_BORD}"
-    output: { project: "{P_BORD}-{NAME}", type: BORD }
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: BORD }
     deps: [PRIN, ADMP]
 
   - id: ACHG
     skill: arckit:architecture-change
-    args: "{P_ACHG}"
-    output: { project: "{P_ACHG}-{NAME}", type: ACHG }
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: ACHG }
     deps: [BORD, TRANS]
 
   - id: REPO
     skill: arckit:architecture-repository
     args: "000"
     output: { project: "000-global", type: REPO }
-    deps: []
-    optional_deps: [PRIN, DISC, STRATEGY, ADMP, BPCM, APP, APPR, DATA, TECH, GAPA, TRANS, BORD]
+    deps: [PRIN, STRATEGY, ADMP, BPCM, APP, APPR, GAPA, TRANS, BORD]
