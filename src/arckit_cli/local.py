@@ -141,15 +141,18 @@ def setup(
     console.print("   [bold]Common presets:[/bold]")
     console.print("     [magenta]1[/magenta].  http://127.0.0.1:11434      — Ollama (default port)")
     console.print("     [magenta]2[/magenta].  http://127.0.0.1:8000       — SGLang / vLLM (default port)")
-    console.print("     [magenta]3[/magenta].  https://api.openai.com/v1  — OpenAI cloud API")
-    console.print("     [magenta]4[/magenta].  Enter a custom URL\n")
+    console.print("     [magenta]3[/magenta].  http://127.0.0.1:8080       — SGLang custom port")
+    console.print("     [magenta]4[/magenta].  https://api.openai.com/v1  — OpenAI cloud API")
+    console.print("     [magenta]5[/magenta].  Enter a custom URL\n")
 
-    choice = typer.prompt("Select a preset (1-4)", default="1")
+    choice = typer.prompt("Select a preset (1-5)", default="1")
     if choice in ("1",):
         base_url = "http://127.0.0.1:11434"
     elif choice in ("2",):
         base_url = "http://127.0.0.1:8000"
     elif choice in ("3",):
+        base_url = "http://127.0.0.1:8080"
+    elif choice in ("4",):
         base_url = "https://api.openai.com/v1"
     else:
         base_url = typer.prompt(

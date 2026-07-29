@@ -159,6 +159,23 @@ Key flags:
 
 Placeholder inheritance: `{P}` is captured once at the ADMP wave; each phase gets `{P_<ID>}` auto-derived (e.g. `{P_BPCM}` → `"{P}-BPCM"`) and can be overridden independently via config `phase_ids`.
 
+### Bring Your Own LLM
+
+Run `arckit build` against any local or remote OpenAI-compatible endpoint:
+
+```bash
+# One-shot via flags
+arckit build my-project --base-url http://127.0.0.1:8080/v1 --model Qwen3.6-27B
+
+# Persistent config (arckit config)
+arckit config set base_url http://127.0.0.1:8080/v1
+arckit config set model Qwen3.6-27B
+```
+
+**Presets** — `arckit config` includes a wizard with common local endpoints (Ollama, SGLang, LM Studio, vLLM). SGLang on port 8080 is now a built-in preset.
+
+**Retry behaviour** — failed LLM calls retry with exponential backoff (2s → 4s → 8s) before failing the wave. Configure via `--base-url` and `--model` per-build, or persist via `arckit config`.
+
 ---
 
 ## Platform Support
