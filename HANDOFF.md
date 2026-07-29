@@ -1,8 +1,8 @@
-# Session Handoff — 2026-07-29 07:00 UTC
+# Session Handoff — 2026-07-29 08:00 UTC
 
 **Project**: `arc-kit` | `/home/terry/workspace/projects/arc-kit`
-**Branch**: `main`
-**Last commit**: `c46d362c auto: handoff`
+**Branch**: `feature/byo-llm-clean`
+**Last commit**: `afcace7d feat: bring your own LLM — SGLang preset, BYO tests, README docs`
 **Uncommitted**: 1 files: `?? .arckit/state.json`
 
 ## Recent Goals
