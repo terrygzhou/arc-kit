@@ -1,0 +1,76 @@
+{
+  "entries": [
+    {
+      "id": "BK-001.1",
+      "title": "arckit config CLI command",
+      "priority": "critical",
+      "status": "completed",
+      "deps": [],
+      "description": "Persistent YAML-based configuration: set/get/list/show/unset with dot-notation keys (llm.base_url, project.default_recipe, etc.). Config file at ~/.arckit/config.yaml."
+    },
+    {
+      "id": "BK-001.2",
+      "title": "LLM execution layer",
+      "priority": "critical",
+      "status": "completed",
+      "deps": ["BK-001.1"],
+      "description": "OpenAI-compatible chat completions, tool-calling loop (Read/Write/Edit/Glob), retry policy, parallelism"
+    },
+    {
+      "id": "BK-001.3",
+      "title": "Recipe parser + DAG computation",
+      "priority": "critical",
+      "status": "completed",
+      "deps": [],
+      "description": "Parse recipe YAML, topological sort for wave decomposition, validate deps"
+    },
+    {
+      "id": "BK-001.4",
+      "title": "State persistence",
+      "priority": "critical",
+      "status": "completed",
+      "deps": [],
+      "description": "state.json per project, input-hash staleness detection (SHA-256), resumability"
+    },
+    {
+      "id": "BK-001.5",
+      "title": "arckit build CLI command",
+      "priority": "critical",
+      "status": "completed",
+      "deps": ["BK-001.2", "BK-001.3", "BK-001.4"],
+      "description": "Recipe -> DAG -> waves -> parallel LLM dispatch. Flags: --plan, --resume, --target, --refresh, --no-commit, --parallel N"
+    },
+    {
+      "id": "BK-001.6",
+      "title": "arckit-data-architecture skill + command + template",
+      "priority": "high",
+      "status": "completed",
+      "deps": [],
+      "description": "Phase C.2 — data entities, governance, management strategy, reference/master data"
+    },
+    {
+      "id": "BK-001.7",
+      "title": "arckit-technology-architecture skill + command + template",
+      "priority": "high",
+      "status": "completed",
+      "deps": [],
+      "description": "Phase D — infrastructure, platform, network, deployment, integration architecture"
+    },
+    {
+      "id": "BK-001.8",
+      "title": "Recipe integration (DATA + TECH targets)",
+      "priority": "high",
+      "status": "completed",
+      "deps": ["BK-001.6"],
+      "description": "Add DATA and TECH targets to togaf-adm-full.yaml with correct deps"
+    },
+    {
+      "id": "BK-001.9",
+      "title": "Run scripts/converter.py",
+      "priority": "medium",
+      "status": "completed",
+      "deps": ["BK-001.7"],
+      "description": "Regenerate Codex skills from updated plugin commands"
+    }
+  ]
+}

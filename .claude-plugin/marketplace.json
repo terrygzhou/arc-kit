@@ -1,0 +1,384 @@
+{
+  "name": "arc-kit",
+  "owner": {
+    "name": "TerryZhou",
+    "email": "terrygzhou@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "The Enterprise Architecture Governance Harness for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "arckit",
+      "source": "./plugins/arckit-claude",
+      "description": "73 slash commands across strategy, architecture, delivery, and assurance \u2014 including UK Government compliance",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "enterprise",
+        "procurement",
+        "vendor-evaluation",
+        "uk-government"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-uae",
+      "source": "./plugins/arckit-uae",
+      "description": "UAE Federal Overlay \u2014 12 commands for PDPL, IAS, AI Charter, autonomy, sovereign cloud, UAE Pass",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "uae",
+        "compliance"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-fr",
+      "source": "./plugins/arckit-fr",
+      "description": "French Public Sector Overlay \u2014 12 commands for DINUM, ANSSI, RGPD/CNIL, EBIOS, PSSI, SecNumCloud",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "france",
+        "anssi",
+        "compliance"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-ca",
+      "source": "./plugins/arckit-ca",
+      "description": "Canadian Federal Overlay \u2014 12 commands for AIA, ATIP, ITSG-33, GC Digital Standards, OCAP, OLA",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "canada",
+        "federal",
+        "compliance"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-eu",
+      "source": "./plugins/arckit-eu",
+      "description": "EU Overlay \u2014 7 commands for GDPR, AI Act, DSA, DORA, Data Act, NIS2, and CRA",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "eu",
+        "compliance",
+        "gdpr"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-at",
+      "source": "./plugins/arckit-at",
+      "description": "Austrian Overlay \u2014 3 commands for DSG/DSGVO, NISG, and Bundesvergabegesetz public procurement",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "austria",
+        "compliance"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-au",
+      "source": "./plugins/arckit-au",
+      "description": "Australian Federal Overlay \u2014 10 commands for ASD Essential Eight, ISM, DTA DSS, Privacy Act 1988, OAIC NDB, PSPF, AI Assurance, DISP attestation, OT security, and SOCI/CIRMP",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "australia",
+        "compliance",
+        "disp"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-au-energy",
+      "source": "./plugins/arckit-au-energy",
+      "description": "Australian Energy Sector Overlay \u2014 2 commands for AESCSF maturity assessment and energy-sector compliance (AER ring-fencing, AEMC NER/NGR, AEMO interfaces, DERMS/DOE, CSIP-AUS, SOCI escalation). Recipe: au-energy. First Australian sector overlay; composes the arckit-au federal baseline. Requires arckit and arckit-au.",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "australia",
+        "energy",
+        "aescsf",
+        "critical-infrastructure",
+        "aemo",
+        "soci"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-us",
+      "source": "./plugins/arckit-us",
+      "description": "USA Federal Civilian Overlay \u2014 10 commands for FedRAMP, FISMA/NIST 800-53, CISA Zero Trust, OMB M-19-17 ICAM, NIST AI RMF, OMB M-24-10/M-25-21 AI assurance, E-Gov \u00a7208 PIA, EO 14028 SBOM",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "usa",
+        "federal",
+        "fedramp",
+        "compliance"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-uk-finance",
+      "source": "./plugins/arckit-uk-finance",
+      "description": "UK Financial Services Payments Overlay \u2014 4 commands for established UK PSPs / EMIs / PIs: PSD2 SCA-RTS exemption design, EMI/PI safeguarding, FCA Consumer Duty board report, Critical Third Parties dependency assessment. Recipe: uk-fs-payments. First sector-specific overlay.",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "uk",
+        "finance",
+        "fca",
+        "pra",
+        "psd2",
+        "sca-rts",
+        "emi",
+        "safeguarding",
+        "consumer-duty",
+        "ctp",
+        "payments"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-uk-nhs",
+      "source": "./plugins/arckit-uk-nhs",
+      "description": "UK NHS Clinical Safety Overlay \u2014 4 commands for NHS DCB0129 (manufacturer), DCB0160 (deployer), DTAC v3, and UK/EU MDR SaMD/AIaMD classification. Adopts Marcus Baw SAFETY.md spec. Second sector-specific overlay.",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "uk",
+        "nhs",
+        "clinical-safety",
+        "dcb0129",
+        "dtac",
+        "mdr",
+        "samd",
+        "healthcare"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-fde",
+      "source": "./plugins/arckit-fde",
+      "description": "ArcKit FDE Site Generator \u2014 /arckit-fde:create interviews you and renders a brandable, GitHub-Pages-ready Forward Deploy Engineering consulting website to docs/. White-label brand, colour, pricing and contact; UK public sector or generic market preset. Claude Code only.",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "arckit",
+        "fde",
+        "forward-deploy-engineering",
+        "website",
+        "site-generator",
+        "consulting",
+        "white-label",
+        "github-pages",
+        "marketing-site"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-repo",
+      "source": "./plugins/arckit-repo",
+      "description": "Repository tooling plugin for ArcKit. /arckit:repo-docs generates source-grounded, agent-readable repository documentation; /arckit:repo-audit audits a codebase (local or public GitHub/GitLab) against architecture principles and requirements. Requires arckit core. [COMMUNITY]",
+      "version": "6.7.5",
+      "author": {
+        "name": "ArcKit Contributors"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "repository",
+        "git",
+        "documentation",
+        "agents",
+        "openwiki",
+        "audit",
+        "codebase"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-uk-gcloud",
+      "source": "./plugins/arckit-uk-gcloud",
+      "description": "UK G-Cloud Supplier Bid-Authoring Overlay \u2014 11 supplier-side commands driving a G-Cloud 14 Digital Marketplace submission end to end: supplier profile, service design, Service Definition Documents (Lots 1/2/3), supplier declaration, pricing, NCSC Cloud Security Principles assertions, competitor benchmark, submission review, and CCS submission packaging. Recipe: uk-gcloud-submission. Requires arckit core. Proprietary, experimental.",
+      "version": "6.7.5",
+      "author": {
+        "name": "TerryZhou"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "Proprietary",
+      "keywords": [
+        "architecture",
+        "governance",
+        "uk",
+        "gcloud",
+        "g-cloud",
+        "digital-marketplace",
+        "ccs",
+        "crown-commercial-service",
+        "procurement",
+        "supplier",
+        "sdd",
+        "bid"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-togaf-adm",
+      "source": "./plugins/arckit-togaf-adm",
+      "description": "TOGAF ADM \u2014 Enterprise Architecture Development Method. 9 commands covering all ADM phases (Preliminary through H) plus Architecture Repository. [COMMUNITY]",
+      "version": "6.7.5",
+      "author": {
+        "name": "ArcKit Contributors"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "togaf",
+        "adm",
+        "enterprise-architecture"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-oaa",
+      "source": "./plugins/arckit-oaa",
+      "description": "Open Agile Architecture (O-AA C208) \u2014 agile enterprise architecture for product-driven, sprint-based delivery. 5 commands: ADM Lite, Product Architecture, Agile Strategy, Agile Security, Agile Governance. [COMMUNITY]",
+      "version": "6.7.5",
+      "author": {
+        "name": "ArcKit Contributors"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "agile",
+        "oaa",
+        "enterprise-architecture"
+      ],
+      "category": "productivity"
+    },
+    {
+      "name": "arckit-agent-architecture",
+      "source": "./plugins/arckit-agent-architecture",
+      "description": "AI Agent Architecture \u2014 Governance, design, and security for autonomous AI agent programs. 6 commands. [COMMUNITY]",
+      "version": "6.7.5",
+      "author": {
+        "name": "ArcKit Contributors"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "governance",
+        "ai",
+        "agents",
+        "agent-architecture"
+      ],
+      "category": "productivity"
+    }
+  ]
+}
