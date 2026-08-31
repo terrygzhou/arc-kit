@@ -1,14 +1,5 @@
 # ArcKit: The Enterprise Architecture Governance Harness
 
-[![GitHub Stars](https://img.shields.io/github/stars/terrygzhou/arc-kit?style=flat&logo=github)](https://github.com/terrygzhou/arc-kit/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/terrygzhou/arc-kit?style=flat&logo=github)](https://github.com/terrygzhou/arc-kit/network/members)
-[![License: MIT](https://img.shields.io/github/license/terrygzhou/arc-kit)](LICENSE)
-[![Latest Release](https://img.shields.io/github/v/release/terrygzhou/arc-kit)](https://github.com/terrygzhou/arc-kit/releases)
-[![GitHub Issues](https://img.shields.io/github/issues/terrygzhou/arc-kit)](https://github.com/terrygzhou/arc-kit/issues)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/terrygzhou/arc-kit)
-
-![ArcKit: The Enterprise Architecture Governance Harness](docs/assets/arckit-banner-light.svg)
-
 **Build better enterprise architecture through structured strategy, design, delivery, and assurance workflows.**
 
 ArcKit is a toolkit for enterprise architects that transforms architecture governance from scattered documents into a systematic, AI-assisted workflow for:
@@ -29,21 +20,10 @@ ArcKit is a toolkit for enterprise architects that transforms architecture gover
 - 🔗 Maintaining requirements traceability
 - 📎 Citation traceability for external documents (inline `[DOC-CN]` markers with source quotes)
 
-## Star History
-
-<a href="https://www.star-history.com/?repos=terrygzhou%2Farc-kit&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=terrygzhou/arc-kit&type=date&theme=dark&legend=top-left&v=20260420" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=terrygzhou/arc-kit&type=date&legend=top-left&v=20260420" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=terrygzhou/arc-kit&type=date&legend=top-left&v=20260420" />
- </picture>
-</a>
-
 ---
 
 ## Quick Start
 
-**Latest release**: [v6.7.5](https://github.com/terrygzhou/arc-kit/releases/tag/v6.7.5)
 
 Three ways to run ArcKit - pick the one that fits your workflow:
 
@@ -897,110 +877,6 @@ Data sharing obligations for connected products and cloud providers:
 - International data transfer restrictions (Article 27)
 - Application date: 12 September 2025
 
-#### French Public Sector Governance
-
-**`/arckit:fr-rgpd`** → French GDPR compliance with CNIL-specific requirements
-
-Extends EU GDPR with French context:
-
-- CNIL enforcement priorities and sector-specific guidelines
-- French DPO registration and CNIL prior consultation obligations
-- Biometric data processing under French law (CNIL authorisation required)
-
-**`/arckit:fr-ebios`** → EBIOS Risk Manager methodology (ANSSI 2018)
-
-French standard risk analysis for IS homologation:
-
-- 5-workshop structure (Framework, Risk Sources, Strategic Scenarios, Operational Scenarios, Risk Treatment)
-- OIV/OSE/public sector IS homologation evidence
-- Attack path modelling and feared events
-- Integration with PSSI and SecNumCloud qualification
-
-**`/arckit:fr-anssi`** → ANSSI 42 Cybersecurity Hygiene Measures assessment
-
-Assess compliance with ANSSI's foundational hygiene guide:
-
-- 7 themes: administration, authentication, updates, monitoring, backups, network, workstations
-- Cloud security recommendations (ANSSI cloud qualification matrix)
-- Gap analysis with prioritised remediation (P1–P3)
-- Integration with EBIOS and PSSI
-
-**`/arckit:fr-anssi-carto`** → ANSSI SI Cartography (4-level IS mapping)
-
-Generate structured IS cartography following ANSSI's 4-level methodology:
-
-- Level 1: Business processes and core missions
-- Level 2: Application and data mapping
-- Level 3: Server, database, and system inventory
-- Level 4: Network topology, firewall rules, interconnections
-- Attack surface summary and sensitive flow identification
-
-**`/arckit:fr-secnumcloud`** → SecNumCloud qualification assessment
-
-Assess cloud provider and customer obligations under ANSSI's SecNumCloud referential:
-
-- Visa vs qualification distinction (only full qualification satisfies OIV/ministerial use)
-- IS homologation prerequisites for SecNumCloud deployment
-- SecNumCloud-compatible architecture requirements
-- Procurement clauses for public-cloud contracts
-
-**`/arckit:fr-dinum`** → DINUM digital doctrine assessment
-
-Assess compliance with French digital government doctrine:
-
-- RGI (Référentiel Général d'Interopérabilité) — interoperability standards
-- RGAA (Référentiel Général d'Amélioration de l'Accessibilité) — accessibility
-- Doctrine cloud (cloud native, cloud first, SecNumCloud for sensitive data)
-- SILL (Socle Interministériel de Logiciels Libres) — recommended open source stack
-
-**`/arckit:fr-marche-public`** → French public procurement (Code de la Commande Publique)
-
-Generate procurement documentation compliant with French public contract law:
-
-- Marché public thresholds and procedures (below/above EU thresholds)
-- CCAP, CCTP, RC documentation templates
-- ANSSI-qualified provider requirements (PASSI, PRIS, PDIS)
-- Achat public durable obligations (environmental and social clauses)
-
-**`/arckit:fr-pssi`** → PSSI (Politique de Sécurité des Systèmes d'Information)
-
-Generate IS security policy for French public sector entities:
-
-- 9-section structure approved by the Highest Authority (AA)
-- 7 security domains (network, workstations, applications, IS management, physical, personnel, continuity)
-- RSSI, DPO, DSI, and FSSI roles
-- Review cycle and integration with EBIOS and homologation
-
-**`/arckit:fr-dr`** → Diffusion Restreinte (DR) handling compliance
-
-Assess document and IS handling requirements under the DR administrative classification:
-
-- II 901/SGDSN rules for DR document lifecycle
-- Electronic storage, transmission, and physical handling obligations
-- IS homologation for DR-processing systems
-- Scope explicitly bounded: DR only — IGI 1300 (Confidentiel Défense and above) is out of scope
-
-**`/arckit:fr-algorithme-public`** → French Public Algorithm Transparency Notice
-
-Generate mandatory transparency notice under CRPA Art. L311-3-1:
-
-- Scope determination: which automated decisions are covered
-- Plain-language description per algorithm, parameters, and weights
-- Human oversight mechanisms and appeal rights
-- GDPR Art. 22 intersection (automated individual decisions)
-- EU AI Act flagging for ML-based systems
-- More legally binding than the UK ATRS equivalent
-
-**`/arckit:fr-code-reuse`** → French Public Code Reuse Assessment (Circulaire 2021-1524)
-
-Assess code reuse obligations before building or procuring:
-
-- code.gouv.fr search (French public code catalogue)
-- SILL (Socle Interministériel de Logiciels Libres) — ministerially recommended open source
-- EU public code alternatives (Joinup, European Commission repositories)
-- Licence compatibility matrix (EUPL-1.2 recommended for public code publication)
-- Decision matrix: reuse / fork / SILL adoption / procure / build
-- Circulaire 2021 publication obligation: modified public code must be released back
 
 ---
 
@@ -1313,12 +1189,6 @@ These commands use the [govreposcrape MCP](https://github.com/MHCLG/govreposcrap
 |  `/arckit:maturity-model`  |  Generate capability maturity model with current-state assessment, target-state definition, and improvement roadmap  |  🔵 Beta  |
 |  `/arckit:template-builder`  |  Create new document templates through interactive interview — generates community-origin templates, guides, and optional shareable bundles  |  🟠 Alpha  |
 
-### UK MOD
-
-| Command | Description | Status |
-|---------|-------------|--------|
-|  `/arckit:mod-secure`  |  Generate a MOD Secure by Design assessment for UK Ministry of Defence projects using CAAT and continuous assurance  |  🟣 Experimental  |
-|  `/arckit:jsp-936`  |  Generate [MOD JSP 936](https://www.gov.uk/government/publications/jsp-936-dependable-artificial-intelligence-ai-in-defence-part-1-directive) AI assurance documentation for defence AI/ML systems  |  🟣 Experimental  |
 
 ### Documentation & Publishing
 
@@ -1480,78 +1350,6 @@ Use the `/loop` command to run health checks on a recurring interval during long
 ```
 
 This runs `/arckit:health` every 30 minutes, surfacing stale research, forgotten ADRs, and unresolved review conditions as they appear.
-
----
-
-## Troubleshooting
-
-### Token Limit Error
-
-If you see: `API Error: Claude's response exceeded the 32000 output token maximum`
-
-**The Problem**: ArcKit generates large documents that can exceed Claude's 32K token output limit.
-
-**⚠️ IMPORTANT**: Your Claude subscription plan determines the maximum tokens:
-
-- 🔴 Free/Pro plans: **32K max** (cannot be increased)
-- ✅ Team/Enterprise plans: Can increase to 64K via environment variable
-
-**Solutions**:
-
-1. **For Team/Enterprise plans** - Increase token limit:
-
-   ```bash
-   export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
-   ```
-
-2. **For ALL plans** (including Free/Pro) - Use **Write tool strategy**:
-
-   ```text
-   User: /arckit:requirements but write directly to file using Write tool, show me only a summary
-   ```
-
-   This tells Claude to use the Write tool to create the file (doesn't count toward output tokens) and only show you a summary.
-
-**Which commands are affected?**
-
-- 🔴 HIGH RISK: `/arckit:sobc`, `/arckit:requirements`, `/arckit:data-model`, `/arckit:sow`
-- 🟢 MITIGATED (agent): `/arckit:research`, `/arckit:datascout`, `/arckit:tenders`, `/arckit:competitors`, `/arckit:aws-research`, `/arckit:azure-research`, `/arckit:gcp-research`, `/arckit:gov-reuse`, `/arckit:gov-code-search`, `/arckit:gov-landscape`, `/arckit:grants` — run as autonomous agents in separate context windows
-- 🟡 MEDIUM RISK: `/arckit:risk`, `/arckit:evaluate`, `/arckit:principles`
-
-**See full guide**: [docs/TOKEN-LIMITS.md](docs/TOKEN-LIMITS.md)
-
-### Common Issues
-
-**Command not found**: Ensure commands are available
-
-```bash
-# For Codex, check if skills directory exists
-ls .agents/skills/arckit-principles/SKILL.md
-
-# For Claude Code, install the ArcKit core plugin:
-# /plugin marketplace add terrygzhou/arc-kit
-
-
-# For GitHub Copilot, check if prompt files exist
-ls .github/prompts/arckit-*.prompt.md
-
-# For OpenCode CLI, check if commands directory exists
-ls .opencode/commands/
-```
-
-**Template not found**: Ensure you've run `/arckit:principles` first
-
-```bash
-# Check if templates exist
-ls templates/
-```
-
-**Project creation fails**: Ensure you have an ArcKit repository initialized
-
-```bash
-# Initialize if needed
-arckit init .
-```
 
 ---
 
