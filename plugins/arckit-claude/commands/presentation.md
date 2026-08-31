@@ -100,6 +100,10 @@ Before generating the presentation, use the **AskUserQuestion** tool to gather p
 
 Apply the user's selections: the focus determines which artifacts are emphasised and the level of technical detail. The slide count constrains how much content is included per section.
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 ### Step 4: Read the template (with user override support)
 
 - **First**, check if `.arckit/templates/presentation-template.md` exists in the project root

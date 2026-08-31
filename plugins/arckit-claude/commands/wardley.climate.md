@@ -348,6 +348,10 @@ Create the climate assessment document using the template:
 - `ARC-001-WCLM-001-v1.0.md` — First climate assessment for project 001
 - `ARC-001-WCLM-002-v1.0.md` — Second assessment (e.g., after updated map)
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/wardley-climate-template.md` exists in the project root

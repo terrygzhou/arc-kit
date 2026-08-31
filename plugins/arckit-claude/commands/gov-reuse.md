@@ -233,6 +233,10 @@ Glob `projects/{project-dir}/research/ARC-{PROJECT_ID}-GOVR-*-v*.md`. If none, v
 - Minor (1.0 → 1.1) for refresh / additions within existing capabilities
 - Major (1.0 → 2.0) for capabilities added/removed or fundamentally different candidate mix
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 ### Step 10: Dispatch writer subagent
 
 Ensure the destination directories exist:

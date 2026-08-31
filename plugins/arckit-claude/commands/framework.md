@@ -47,6 +47,11 @@ If the Task tool is unavailable or the user prefers inline execution, fall back 
 1. Check prerequisites:
    - **MANDATORY**: Architecture Principles (`ARC-*-PRIN-*.md`) and Requirements (`ARC-*-REQ-*.md`) must exist
    - **RECOMMENDED**: Stakeholder analysis (`ARC-*-STKE-*.md`), Strategy (`ARC-*-STRAT-*.md`), Data model (`ARC-*-DATA-*.md`), Research findings (`ARC-*-RSCH-*.md`)
+
+   **Run the intake interview**:
+
+   - Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 2. **Read the template** (with user override support):
    - **First**, check if `.arckit/templates/framework-overview-template.md` exists in the project root
    - **If found**: Read the user's customized template (user override takes precedence)

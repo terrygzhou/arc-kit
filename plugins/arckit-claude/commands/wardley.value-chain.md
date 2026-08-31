@@ -236,6 +236,10 @@ Before generating output, validate the value chain against these criteria.
 - `ARC-001-WVCH-001-v1.0.md` — First value chain
 - `ARC-001-WVCH-002-v1.0.md` — Second value chain (different user need or domain)
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/wardley-value-chain-template.md` exists in the project root

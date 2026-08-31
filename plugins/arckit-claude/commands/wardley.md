@@ -421,6 +421,10 @@ Create the Wardley Map document using the template:
 - `ARC-001-WARD-002-v1.0.md` - Second map (e.g., future state)
 - `ARC-001-WARD-003-v1.0.md` - Third map (e.g., gap analysis)
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/wardley-map-template.md` exists in the project root

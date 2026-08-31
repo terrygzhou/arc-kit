@@ -55,6 +55,11 @@ Follow your full process: read requirements, identify categories, conduct web re
 If the Task tool is unavailable or the user prefers inline execution, fall back to the full research process:
 
 1. Check prerequisites (requirements document must exist)
+
+   **Run the intake interview**:
+
+   - Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 2. **Read the template** (with user override support):
    - **First**, check if `.arckit/templates/research-findings-template.md` exists in the project root
    - **If found**: Read the user's customized template (user override takes precedence)

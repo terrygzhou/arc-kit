@@ -110,6 +110,10 @@ Parse the user input for:
 
 ### Phase 3: Generate MLOps Strategy
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/mlops-template.md` exists in the project root

@@ -262,6 +262,10 @@ bash "${CLAUDE_PLUGIN_ROOT}/scripts/bash/generate-document-id.sh" \
 This returns the next sequenced ID, e.g. `ARC-{P}-TNDR-{NNN}-v1.0`. Use the
 returned value as `document_id` and take `version` (`1.0`) from it.
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 ### Step 7: Dispatch writer subagent
 
 Ensure the destination directory exists (the writer has only

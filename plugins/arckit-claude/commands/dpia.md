@@ -91,6 +91,10 @@ Read all documents listed in Step 0 above. Use the extracted information for aut
 
 Read the DPIA template:
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/dpia-template.md` exists in the project root

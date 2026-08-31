@@ -32,6 +32,11 @@ analysis and rationalization.
 5. **Technology Stack** — Infrastructure, platforms, hosting environments
 6. **Known Constraints** — Legacy dependencies, compliance requirements, budget limits
 
+## Process
+
+1. **Run the intake interview**: Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the structure below (the effective template) and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+2. **Render `DISC.md`** following the structure below; render any skipped MANDATORY input as a quoted `TBD` marker and list it under "Unresolved fields" in the summary.
+
 ## Structure
 
 ```markdown

@@ -60,6 +60,10 @@ $ARGUMENTS
    - If no external docs exist but they would improve the data model, ask: "Do you have any existing database schemas, ERD diagrams, or data dictionaries? I can read PDFs, images, and SQL files directly. Place them in `projects/{project-dir}/external/` and re-run, or skip."
    - **Citation traceability**: When referencing content from external documents, follow the citation instructions in `${CLAUDE_PLUGIN_ROOT}/references/citation-instructions.md`. Place inline citation markers (e.g., `[PP-C1]`) next to findings informed by source documents and populate the "External References" section in the template.
 
+   **Run the intake interview**:
+
+   - Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 4. **Read the template** (with user override support):
    - **First**, check if `.arckit/templates/data-model-template.md` exists in the project root
    - **If found**: Read the user's customized template (user override takes precedence)

@@ -88,6 +88,10 @@ Identify the target project from the hook context. If the user specifies a proje
 
 ### 2. Read Template
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates-custom/agile-governance-template.md` exists in the project root

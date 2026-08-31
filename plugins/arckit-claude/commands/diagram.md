@@ -766,6 +766,10 @@ Create the architecture diagram document using the template:
 - `ARC-001-DIAG-002-v1.0.md` - Second diagram (e.g., C4 container)
 - `ARC-001-DIAG-003-v1.0.md` - Third diagram (e.g., C4 component)
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/architecture-diagram-template.md` exists in the project root

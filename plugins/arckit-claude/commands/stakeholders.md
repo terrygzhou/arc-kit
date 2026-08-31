@@ -33,6 +33,10 @@ $ARGUMENTS
      5. Also create `projects/{NNN}-{slug}/external/README.md` with a note to place external reference documents here
      6. Set `PROJECT_ID` = the 3-digit number, `PROJECT_PATH` = the new directory path
 
+   **Run the intake interview**:
+
+   - Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 2. **Read the template** (with user override support):
    - **First**, check if `.arckit/templates/stakeholder-drivers-template.md` exists in the project root
    - **If found**: Read the user's customized template (user override takes precedence)

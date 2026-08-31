@@ -200,9 +200,27 @@ Phase 3: Design & Analysis
 [Estimated duration: X-Y months]
 
 Run commands in order. Each command will guide you through its process.
+Triage answers saved to .arckit/intake/shared.json - later commands prefill from them.
 ```
 
 After presenting the plan, ask if they want to adjust anything or if they're ready to begin.
+
+### Step 5: Persist Triage Answers to the Project Intake Store
+
+Before the user starts executing the plan, persist the completed triage answers so the recommended commands prefill from them:
+
+- Write the completed answers (sector, project type, current stage, primary goal, and any deep questions asked) to `projects/{NNN}-{slug}/.arckit/intake/shared.json`.
+- Create the `.arckit/intake/` path when missing; if `shared.json` already exists, merge into it **without clobbering keys the user has already set**.
+- This skill owns `shared.json`; do not write the per-command files (`.arckit/intake/{command-stem}.json`), which are owned by the commands themselves.
+- State the save in the plan message (see the plan output format above), e.g. "Triage answers saved to `.arckit/intake/shared.json` — the recommended commands will prefill from these."
+
+The file is hand-editable JSON in this shape:
+
+```json
+{ "answers": { "<question>": "<answer>" }, "updated": "<ISO-8601 timestamp>" }
+```
+
+This step writes state; it runs **no** `/arckit:*` command, so the HARD-GATE above remains fully in force.
 
 ## Key Principles
 

@@ -191,6 +191,10 @@ Glob `projects/{project-dir}/research/ARC-{PROJECT_ID}-DSCT-*-v*.md`. If none, v
 - Minor (1.0 → 1.1) if scope unchanged (refresh, additions within existing categories)
 - Major (1.0 → 2.0) if categories added/removed or fundamentally different sources
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 ### Step 9: Dispatch writer subagent
 
 Ensure the destination directories exist (the writer subagent has only `Read`/`Write`/`Edit` and cannot create directories):

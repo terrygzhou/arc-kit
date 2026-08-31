@@ -238,6 +238,15 @@ Steps:
    Document the choice you made in your final report so the orchestrator can record it.
    Never block waiting for an answer.
 
+   **Bulk-build intake (this target is non-interactive):**
+   This target runs under the arckit-build harness, so the invoked skill's
+   template-driven intake interview is **disabled** — do NOT ask the user anything.
+   Prefill from saved `.arckit/intake/` answers (`{command-stem}.json` first, then
+   `shared.json`) and from existing `projects/` artefacts; for any MANDATORY input that
+   is still unknown, render an explicit `TBD` marker that quotes the interview question
+   (per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md`, § Bulk builds). List
+   any unresolved fields in your report so the orchestrator can surface them.
+
 2. Capture the actual file path the skill wrote to. Inside the Write tool call,
    the ArcKit `validate-arc-filename.mjs` PreToolUse hook normalizes the path
    (allocates the next sequence number for multi-instance types like ADR/DIAG,

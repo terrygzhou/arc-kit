@@ -244,6 +244,10 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 
 **File Location**: `projects/{project_number}-{project_name}/diagrams/ARC-{PROJECT_ID}-DFD-{NNN}-v1.0.md`
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/dfd-template.md` exists in the project root

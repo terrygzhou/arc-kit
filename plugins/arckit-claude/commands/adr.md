@@ -100,6 +100,10 @@ Apply the user's selections: the escalation level determines the governance foru
 - If found, extract the highest ADR number and increment by 1 (e.g., `ADR-003` → `ADR-004`), zero-padded to 3 digits
 - The decisions directory will be created automatically when saving the file with the Write tool
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 ### 4. **Read the template** (with user override support)
 
 - **First**, check if `.arckit/templates/adr-template.md` exists in the project root

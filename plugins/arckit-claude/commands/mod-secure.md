@@ -43,6 +43,10 @@ Since August 2023, ALL Defence capabilities, technology infrastructure, and digi
 
 ## Read the Template
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 **Read the template** (with user override support):
 
 - **First**, check if `.arckit/templates/mod-secure-by-design-template.md` exists in the project root

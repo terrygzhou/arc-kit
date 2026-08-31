@@ -1268,6 +1268,10 @@ Every story must meet these criteria before marking "Done":
 **Note**: This DoD applies to all stories. Additional criteria may be added per story based on specific requirements.
 ```
 
+**Run the intake interview**:
+
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+
 ### Step 13: Generate Output Files
 
 #### 13.1: Primary Output - ARC-*-BKLG-*.md
