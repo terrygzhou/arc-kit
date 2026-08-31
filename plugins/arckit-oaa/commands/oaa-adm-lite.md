@@ -78,7 +78,11 @@ Identify the target project from the hook context. If the user specifies a proje
 5. Also create `projects/{NNN}-{slug}/external/README.md` with a note to place external reference documents here
 6. Set `PROJECT_ID` = the 3-digit number, `PROJECT_PATH` = the new directory path
 
-### 2. Read Template
+### 2. Load Mermaid Syntax References
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` for official Mermaid syntax — flowchart node shapes and edge labels, used for the data-flow-diagram.mmd deliverable. Diagrams in this artefact MUST follow the reference syntax.
+
+### 3. Read Template
 
 **Read the template** (with user override support):
 
@@ -90,7 +94,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 > **Tip**: Users can customise templates with `/arckit:customize oaa-adm-lite`
 
-### 3. Sprint Map
+### 4. Sprint Map
 
 The O-AA ADM Lite maps the TOGAF ADM cycle to agile sprints:
 
@@ -102,7 +106,7 @@ The O-AA ADM Lite maps the TOGAF ADM cycle to agile sprints:
 | Sprint 3 | ADM-E + F | Implementation Wave | 2 weeks | `implementation-strategy.yaml` |
 | Sprint 4+ | ADM-G + H | Governance + Change | Ongoing | `governance-report.yaml`, `change-request.yaml` |
 
-### 4. O-AA Axiom Alignment
+### 5. O-AA Axiom Alignment
 
 Every O-AA deliverable must reference the relevant O-AA axioms:
 
@@ -120,7 +124,7 @@ Every O-AA deliverable must reference the relevant O-AA axioms:
 
 - **Axiom 7:** "Architecture is the property of the whole organisation."
 
-### 5. Shared Schema Definitions
+### 6. Shared Schema Definitions
 
 O-AA commands reuse schema definitions across TOGAF and O-AA workflows:
 
@@ -136,7 +140,7 @@ Validate outputs against shared schemas:
 
 - `schemas/implementation-strategy.json` — Implementation strategy schema
 
-### 6. Generate O-AA ADM Lite Document
+### 7. Generate O-AA ADM Lite Document
 
 Create the O-AA ADM Lite document following the template structure.
 
@@ -192,11 +196,11 @@ Create the O-AA ADM Lite document following the template structure.
 
 - Architecture change requests via `/arckit:architecture-change`
 
-### 7. Quality Gate
+### 8. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** pass. Fix any failures before proceeding.
 
-### 8. Write the Document
+### 9. Write the Document
 
 **IMPORTANT**: The O-AA ADM Lite document will be a substantial document (typically 150-300 lines). You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -206,7 +210,7 @@ Create the file at:
 projects/{P}/ARC-{P}-OAAL-v1.0.md
 ```text
 
-### 9. Show Summary to User
+### 10. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

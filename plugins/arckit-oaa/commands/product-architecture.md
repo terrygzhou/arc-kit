@@ -78,7 +78,11 @@ Identify the target project from the hook context. If the user specifies a proje
 5. Also create `projects/{NNN}-{slug}/external/README.md` with a note to place external reference documents here
 6. Set `PROJECT_ID` = the 3-digit number, `PROJECT_PATH` = the new directory path
 
-### 2. Read Template
+### 2. Load Mermaid Syntax References
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/c4.md` for official Mermaid syntax — C4 component diagram syntax. Diagrams in this artefact MUST follow the reference syntax.
+
+### 3. Read Template
 
 **Read the template** (with user override support):
 
@@ -90,7 +94,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 > **Tip**: Users can customise templates with `/arckit:customize product-architecture`
 
-### 3. O-AA Product Architecture Framework
+### 4. O-AA Product Architecture Framework
 
 O-AA Learning Unit 7 (Product Architecture) establishes that:
 
@@ -102,7 +106,7 @@ O-AA Learning Unit 7 (Product Architecture) establishes that:
 
 - **Backlog-driven**: Architecture evolves through the product backlog, not separate architecture workstreams
 
-### 4. Shared Schema Definitions
+### 5. Shared Schema Definitions
 
 Product architecture commands reuse schema definitions:
 
@@ -112,7 +116,7 @@ Product architecture commands reuse schema definitions:
 
 - **`implementation-strategy.yaml`** — Implementation waves (shared with `/arckit:transition-architecture`)
 
-### 5. Generate Product Architecture Document
+### 6. Generate Product Architecture Document
 
 Create the Product Architecture document following the template structure.
 
@@ -164,11 +168,11 @@ Create the Product Architecture document following the template structure.
 
 - Data flow and API boundaries
 
-### 6. Quality Gate
+### 7. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** pass. Fix any failures before proceeding.
 
-### 7. Write the Document
+### 8. Write the Document
 
 **IMPORTANT**: The Product Architecture document will be a substantial document (typically 200-350 lines). You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -178,7 +182,7 @@ Create the file at:
 projects/{P}/ARC-{P}-OAPR-v1.0.md
 ```text
 
-### 8. Show Summary to User
+### 9. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

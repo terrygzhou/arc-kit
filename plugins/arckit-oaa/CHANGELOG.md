@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- `product-architecture` (C4) and `oaa-adm-lite` (flowchart) now load the Mermaid
+  syntax references before reading their templates, so generated diagrams follow
+  the reference syntax
+
 - `oaa-full` post-build hooks now also regenerate the documentation site (`arckit:pages`),
   matching the other overlay recipes
 

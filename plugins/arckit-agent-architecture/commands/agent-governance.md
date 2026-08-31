@@ -45,17 +45,21 @@ $ARGUMENTS
 
    > **Tip**: Users can customize templates with `/arckit:customize agent-governance`
 
-3. **Read external documents and policies**:
+3. **Load Mermaid Syntax References**:
+
+   Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` for official Mermaid syntax — flowchart node shapes and edge labels. Diagrams in this artefact MUST follow the reference syntax.
+
+4. **Read external documents and policies**:
    - Read any **regulatory requirements** in `projects/000-global/external/` — extract compliance frameworks, governance standards, audit mandates
    - Read any **existing governance policies** in `projects/{project-dir}/governance/` — extract current oversight models, approval hierarchies
    - If no governance context found, ask: "Please provide governance requirements or confirm this is a new governance framework. I can work with minimal context to generate a baseline framework."
 
-4. **Read agent inventory and design**:
+5. **Read agent inventory and design**:
    - From AAGI: Extract all agents, their risk classifications, capabilities, and operational domains
    - From AAGR: Extract decision-making patterns, autonomy levels, and integration architectures
    - If AAGI/AAGR not available: ask user for agent details and risk assessments
 
-5. **Generate governance framework**:
+6. **Generate governance framework**:
 
    ### A. Oversight Model Design
 
@@ -124,14 +128,14 @@ $ARGUMENTS
 
    For each framework, identify specific requirements, compliance status, and evidence sources.
 
-6. **Risk Assessment**:
+7. **Risk Assessment**:
 
    Identify governance risks:
    - **HIGH**: No human oversight for critical decisions, missing audit trails, regulatory non-compliance
    - **MEDIUM**: Inadequate escalation procedures, insufficient monitoring coverage, audit gaps
    - **LOW**: Documentation inconsistencies, minor process gaps, reporting delays
 
-7. **Generate Governance Document**:
+8. **Generate Governance Document**:
 
    Create comprehensive governance framework with:
    - Executive summary of oversight model and compliance status
@@ -204,7 +208,7 @@ The footer should be populated with:
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **AAOV** per-type checks pass. Fix any failures before proceeding.
 
-8. **Quality Checks**:
+9. **Quality Checks**:
 
    Verify the governance framework meets minimum standards:
    - ≥3 oversight tiers defined with clear criteria
@@ -216,12 +220,13 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
    - Compliance mapping covers ≥2 regulatory frameworks
    - Traceability links established to AAGI and AAGR documents
 
-9. **Write output**:
-   - `projects/{project-dir}/ARC-{PROJECT_ID}-AAOV-v1.0.md` - Full governance framework
-   - Update traceability matrix with governance references
+10. **Write output**:
 
-   **CRITICAL - Show Summary Only**:
-   After writing the file, show ONLY a brief summary with key governance metrics (oversight tiers assigned, compliance status, pending approvals). Do NOT output the full governance document content in your response.
+    - `projects/{project-dir}/ARC-{PROJECT_ID}-AAOV-v1.0.md` - Full governance framework
+    - Update traceability matrix with governance references
+
+    **CRITICAL - Show Summary Only**:
+    After writing the file, show ONLY a brief summary with key governance metrics (oversight tiers assigned, compliance status, pending approvals). Do NOT output the full governance document content in your response.
 
 ## Example Usage
 

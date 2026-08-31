@@ -58,7 +58,11 @@ $ARGUMENTS
   5. Also create `projects/{NNN}-{slug}/external/README.md` with a note to place external reference documents here
   6. Set `PROJECT_ID` = the 3-digit number, `PROJECT_PATH` = the new directory path
 
-### 3. Read the template
+### 3. Load Mermaid Syntax References
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/gantt.md` and `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/quadrantChart.md` for official Mermaid syntax — gantt timeline syntax and quadrant chart positioning. Diagrams in this artefact MUST follow the reference syntax.
+
+### 4. Read the template
 
 **Read the template** (with user override support):
 
@@ -68,7 +72,7 @@ $ARGUMENTS
 
 > **Tip**: Users can customize templates with `/arckit:customize agent-maturity`
 
-### 4. Assess Current State — 5×5 Maturity Framework
+### 5. Assess Current State — 5×5 Maturity Framework
 
 Evaluate the agent program across **five dimensions** at **five maturity levels**:
 
@@ -120,14 +124,14 @@ For each dimension, record:
 - **Evidence**: Concrete examples or artefacts supporting the rating
 - **Gaps**: What is missing to reach the next level
 
-### 5. Read External Documents and Policies
+### 6. Read External Documents and Policies
 
 - Read any **external documents** listed in the project context (`external/` files) — extract existing maturity assessments, capability frameworks, benchmark data
 - Read any **enterprise standards** in `projects/000-global/external/` — extract enterprise maturity frameworks, capability baselines, industry benchmarks
 - If no external maturity docs found but they would improve the output, ask: "Do you have any existing maturity assessments, capability frameworks, or industry benchmarks? I can read PDFs and images directly. Place them in `projects/{project-dir}/external/` and re-run, or skip."
 - **Citation traceability**: When referencing content from external documents, follow the citation instructions in `${CLAUDE_PLUGIN_ROOT}/references/citation-instructions.md`. Place inline citation markers (e.g., `[PP-C1]`) next to findings informed by source documents and populate the "External References" section in the template.
 
-### 6. Define Target State
+### 7. Define Target State
 
 For each dimension, determine a realistic target maturity level:
 
@@ -141,7 +145,7 @@ Target levels should be ambitious but achievable. Consider:
 - Investment commitments and resource availability
 - Risk appetite (higher risk = more maturity needed)
 
-### 7. Create Improvement Roadmap
+### 8. Create Improvement Roadmap
 
 For each gap identified (current → target), define improvement initiatives:
 
@@ -158,7 +162,7 @@ For each gap identified (current → target), define improvement initiatives:
 - **Dependencies**: Other initiatives or artefacts it depends on
 - **Owner**: Responsible team or role
 
-### 8. Establish Benchmarks
+### 9. Establish Benchmarks
 
 Compare the agent program against industry benchmarks:
 
@@ -173,7 +177,7 @@ For each benchmark:
 - **Our position**: Current maturity level
 - **Gap**: Difference from industry average
 
-### 9. Detect Version
+### 10. Detect Version
 
 Before generating the document ID, check if a previous version exists:
 
@@ -186,7 +190,7 @@ Before generating the document ID, check if a previous version exists:
    - **Major increment** (e.g., 1.0 → 2.0): New dimensions added, fundamentally different framework
 4. Use the determined version for document ID, filename, Document Control, and Revision History
 
-### 10. Construct Document Control Metadata
+### 11. Construct Document Control Metadata
 
 - **Document ID**: `ARC-{PROJECT_ID}-AAMT-v{VERSION}` (e.g., `ARC-001-AAMT-v1.0`)
 
@@ -195,14 +199,14 @@ Before generating the document ID, check if a previous version exists:
 - `document_id`: Constructed from format above
 - `project_id`: From Step 2
 - `project_name`: From Step 2
-- `version`: Determined version from Step 9
+- `version`: Determined version from Step 10
 - `author`: "ArcKit AI"
 - `date_created`: Current date (YYYY-MM-DD)
 - `date_updated`: Current date (YYYY-MM-DD)
 - `generation_date`: Current date and time
 - `ai_model`: Your model name
 
-### 11. Generate Agent Program Maturity Model
+### 12. Generate Agent Program Maturity Model
 
 **CRITICAL INSTRUCTIONS FOR QUALITY**:
 
@@ -246,7 +250,7 @@ Before generating the document ID, check if a previous version exists:
    - Use valid Mermaid syntax
    - Position dimensions correctly based on assessed maturity
 
-### 12. Quality Checks
+### 13. Quality Checks
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **AAMT** per-type checks pass. Fix any failures before proceeding.
 
@@ -263,7 +267,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 - **Traceability links**: AAGI and AAGR references present
 - **No placeholder text**: No remaining `[Dimension]`, `[Level]`, `[Evidence]`, or `[Gaps]` tokens
 
-### 13. Use Write tool to create the maturity model file
+### 14. Use Write tool to create the maturity model file
 
 - **CRITICAL**: Because maturity models are large documents (400-800+ lines), you MUST use the Write tool to create the file
 - Do NOT output the full content in your response (this will exceed token limits)
@@ -277,7 +281,7 @@ Before completing the document, populate ALL document control fields in the head
 *Auto-populated fields* (populate these automatically):
 
 - `[PROJECT_ID]` → Extract from project path (e.g., "001" from "projects/001-project-name")
-- `[VERSION]` → Determined from Step 9
+- `[VERSION]` → Determined from Step 10
 - `[DATE]` / `[YYYY-MM-DD]` → Current date in YYYY-MM-DD format
 - `[DOCUMENT_TYPE_NAME]` → "Agent Program Maturity Model"
 - `ARC-[PROJECT_ID]-AAMT-v[VERSION]` → Construct using format above
@@ -316,7 +320,7 @@ Before completing the document, populate ALL document control fields in the head
 **Generation Context**: [Brief note about source documents used]
 ```
 
-### 14. Show summary to user (NOT full document)
+### 15. Show summary to user (NOT full document)
 
 ```markdown
 ## Agent Program Maturity Model Created

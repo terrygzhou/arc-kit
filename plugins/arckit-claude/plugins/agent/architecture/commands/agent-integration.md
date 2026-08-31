@@ -64,7 +64,11 @@ $ARGUMENTS
      5. Also create `projects/{NNN}-{slug}/external/README.md` with a note to place external reference documents here
      6. Set `PROJECT_ID` = the 3-digit number, `PROJECT_PATH` = the new directory path
 
-4. **Read the template** (with user override support):
+4. **Load Mermaid Syntax References**:
+
+   Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/sequenceDiagram.md` for official Mermaid syntax — sequence diagram syntax — participants, messages, and alt/opt blocks. Diagrams in this artefact MUST follow the reference syntax.
+
+5. **Read the template** (with user override support):
 
    - **First**, check if `.arckit/templates-custom/agent-integration-template.md` exists in the project root
    - **If found**: Read the user's customized template (user override takes precedence)
@@ -72,7 +76,7 @@ $ARGUMENTS
 
    > **Tip**: Users can customize templates with `/arckit:customize agent-integration`
 
-5. **Analyze agent designs for integration points**:
+6. **Analyze agent designs for integration points**:
 
    Read all AAGR documents to identify:
    - Agent interfaces (input/output schemas, communication methods)
@@ -88,7 +92,7 @@ $ARGUMENTS
 
    > **If fewer than 3 agents are found**, ask the user: *"I've identified fewer than 3 agents for integration. Do you want to expand the scope, or proceed with what exists?"*
 
-6. **Build the integration architecture**:
+7. **Build the integration architecture**:
 
    **A. Integration Architecture Overview**:
    - Document the overall integration pattern for the multi-agent system
@@ -124,11 +128,11 @@ $ARGUMENTS
    - Cover: agent health, message queue status, error rates
    - Include threshold values and alert conditions
 
-7. **Read the quality checklist**:
+8. **Read the quality checklist**:
 
    Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **AAIN** per-type checks pass. Fix any failures before proceeding.
 
-8. **Write the output**:
+9. **Write the output**:
    - Write to `projects/{project-dir}/ARC-{PROJECT_ID}-AAIN-v1.0.md`
    - Use the exact template structure from `agent-integration-template.md`
    - Include all sections even if some areas need further refinement
@@ -170,7 +174,7 @@ Before completing the document, populate document information fields:
 **AI Model**: [Actual model name]
 ```
 
-9. **Summarize what you created**:
+10. **Summarize what you created**:
 
 - Number of integration points defined
 - Number of inter-agent contracts documented

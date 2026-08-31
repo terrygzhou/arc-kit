@@ -66,7 +66,11 @@ $ARGUMENTS
      5. Also create `projects/{NNN}-{slug}/external/README.md` with a note to place external reference documents here
      6. Set `PROJECT_ID` = the 3-digit number, `PROJECT_PATH` = the new directory path
 
-4. **Read the template** (with user override support):
+4. **Load Mermaid Syntax References**:
+
+   Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` for official Mermaid syntax — flowchart node shapes and edge labels. Diagrams in this artefact MUST follow the reference syntax.
+
+5. **Read the template** (with user override support):
 
    - **First**, check if `.arckit/templates-custom/agent-inventory-template.md` exists in the project root
    - **If found**: Read the user's customized template (user override takes precedence)
@@ -74,7 +78,7 @@ $ARGUMENTS
 
    > **Tip**: Users can customize templates with `/arckit:customize agent-inventory`
 
-5. **Catalog agents from all sources:**
+6. **Catalog agents from all sources:**
 
    Search for existing agent definitions across:
    - Agent design documents (`ARC-*-AAGR-*.md`)
@@ -96,7 +100,7 @@ $ARGUMENTS
 
    > **If fewer than 3 agents are found**, ask the user: *"I've identified fewer than 3 agents. Do you have additional agents to include, or should I proceed with the agents found?"*
 
-6. **Build the agent inventory:**
+7. **Build the agent inventory:**
 
    **A. Agent Register**:
    - Create a complete table of all agents with ID, name, purpose, model, deployment status, owner, risk level, and oversight level
@@ -124,11 +128,11 @@ $ARGUMENTS
      - **Autonomous with Audit**: Agent operates independently with comprehensive logging and periodic review
    - Link oversight level to risk classification
 
-7. **Read the quality checklist**:
+8. **Read the quality checklist**:
 
    Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **AAGI** per-type checks pass. Fix any failures before proceeding.
 
-8. **Write the output**:
+9. **Write the output**:
    - Write to `projects/{project-dir}/ARC-{PROJECT_ID}-AAGI-v1.0.md`
    - Use the exact template structure from `agent-inventory-template.md`
    - Include Mermaid dependency diagram
@@ -169,7 +173,7 @@ Before completing the document, populate document information fields:
 **AI Model**: [Actual model name]
 ```
 
-9. **Summarize what you created**:
+10. **Summarize what you created**:
 
 - Total number of agents inventoried (AGT-001, AGT-002, etc.)
 - Breakdown by deployment status (Prod, Staging, Dev, Planned)

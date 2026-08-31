@@ -50,7 +50,11 @@ The user should specify:
 - **DPIA** (Data Protection Impact Assessment) — Extract: Personal data processing, lawful basis
 - **AIPB** (AI Playbook) — Extract: AI ethics, model governance, bias considerations
 
-### 3. Read the template
+### 3. Load Mermaid Syntax References
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` and `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/mindmap.md` for official Mermaid syntax — flowchart node shapes, edge labels, and mindmap hierarchy syntax. Diagrams in this artefact MUST follow the reference syntax.
+
+### 4. Read the template
 
 **Read the template** (with user override support):
 
@@ -60,14 +64,14 @@ The user should specify:
 
 > **Tip**: Users can customize templates with `/arckit:customize agent-security`
 
-### 4. Read agent designs and security context
+### 5. Read agent designs and security context
 
 - From AAGI: Extract all agents, their risk classifications, capabilities, and operational domains
 - From AAGR: Extract tool contracts, memory architectures, guardrail configurations, and integration points
 - From SEC/SBD: Extract existing security controls, threat models, and compliance requirements
 - If AAGI/AAGR not available: ask user for agent details and risk assessments
 
-### 5. Generate security architecture
+### 6. Generate security architecture
 
 #### A. Threat Model (Mermaid mindmap with ≥12 threat categories)
 
@@ -144,7 +148,7 @@ Define severity-based response:
 - **Medium** (<24h): Team owner — patch, monitor
 - **Low** (<72h): Team owner — log, review, improve
 
-### 6. Risk Assessment
+### 7. Risk Assessment
 
 Identify security risks:
 
@@ -152,7 +156,7 @@ Identify security risks:
 - **MEDIUM**: Partial isolation, limited injection defences, weak secret rotation, incomplete audit logging
 - **LOW**: Documentation gaps, missing monitoring alerts, incomplete compliance mapping
 
-### 7. Generate Security Document
+### 8. Generate Security Document
 
 **CRITICAL INSTRUCTIONS FOR QUALITY**:
 
@@ -180,7 +184,7 @@ Identify security risks:
    - Flowchart for output validation pipeline (at least 5 stages)
    - All diagrams must use valid Mermaid syntax
 
-### 8. Auto-Populate Document Control Fields
+### 9. Auto-Populate Document Control Fields
 
 **CRITICAL - Auto-Populate Document Control Fields**:
 
@@ -240,7 +244,7 @@ The footer should be populated with:
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **AASE** per-type checks pass. Fix any failures before proceeding.
 
-### 9. Quality Checks
+### 10. Quality Checks
 
 Verify the security architecture meets minimum standards:
 
@@ -254,7 +258,7 @@ Verify the security architecture meets minimum standards:
 - **Incident response**: At least 3 severity levels with response times and owners
 - **Traceability links**: Established to AAGI, AAGR, and SEC/SBD documents
 
-### 10. Write output
+### 11. Write output
 
 - `projects/{project-dir}/ARC-{PROJECT_ID}-AASE-v1.0.md` — Full security architecture document
 - Update traceability matrix with security references
