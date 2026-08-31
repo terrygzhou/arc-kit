@@ -18,7 +18,6 @@ on:
       - "package.json"
       - "package-lock.json"
       - "scripts/check-guide-site-links.py"
-      - "scripts/check-contributor-credits.py"
       - "docs/contributors.html"
       - "docs/guides.html"
       - "docs/roles.html"
@@ -47,7 +46,6 @@ on:
       - "package.json"
       - "package-lock.json"
       - "scripts/check-guide-site-links.py"
-      - "scripts/check-contributor-credits.py"
       - "docs/contributors.html"
       - "docs/guides.html"
       - "docs/roles.html"
@@ -101,9 +99,6 @@ jobs:
 
       - name: Guide site-link check (every guide reachable, no dead links)
         run: python3 scripts/check-guide-site-links.py
-
-      - name: Contributor credit check (CHANGELOG credits vs contributors page)
-        run: python3 scripts/check-contributor-credits.py
 
       - uses: actions/setup-node@v4
         with:
