@@ -62,7 +62,6 @@ claude plugin install arckit arckit-{uae,fr,ca,eu,at,au,us,uk-nhs,uk-gcloud}
 claude plugin install arckit arckit-togaf-adm arckit-oaa arckit-agent-architecture
 ```
 
-The `terrygzhou/arc-kit` marketplace hosts all Claude Code plugins: the `arckit` core plugin, regional overlays, sector overlays, the TOGAF ADM, O-AA (Open Agile Architecture), and AI agent architecture overlays, the `arckit-fde` tooling plugin, and the public-but-proprietary `arckit-uk-gcloud` supplier overlay. The 14 community plugins (`arckit-uae`, `arckit-fr`, `arckit-ca`, `arckit-eu`, `arckit-at`, `arckit-au`, `arckit-au-energy`, `arckit-us`, `arckit-uk-finance`, `arckit-uk-nhs`, `arckit-uk-gcloud`, `arckit-togaf-adm`, `arckit-oaa`, `arckit-agent-architecture`) require the `arckit` core plugin. `arckit-au-energy` (sector) additionally requires `arckit-au` (jurisdiction), which it composes — install with `claude plugin install arckit arckit-au arckit-au-energy`. `arckit-uk-gcloud` is a **proprietary, Claude Code only** supplier-side G-Cloud bid-authoring overlay — it is public for installation and inspection, but not MIT licensed and not distributed to the non-Claude extension formats. One **tooling plugin** — `arckit-fde` — is a lean, Claude Code only plugin with one command, `/arckit-fde:create`, that generates a brandable (white-label) Forward Deploy Engineering consulting website into `docs/` (GitHub Pages ready), with UK Public Sector and Generic market presets; no dependencies, not converted to non-Claude formats, no governance doc-types.
 
 No project initialization is needed - the plugin provides everything. Use the commands directly:
 
@@ -74,7 +73,7 @@ No project initialization is needed - the plugin provides everything. Use the co
 
 Updates are automatic via the marketplace - no action needed.
 
-> **Why v2.1.219?** v2.1.219 adds **Claude Opus 5** (`claude-opus-5`), the current default Opus model, with 1M context and fast mode support — earlier clients cannot select it. The floor also carries v2.1.200's fix for project-scoped plugin loading from git worktrees and `claude agents --plugin-dir <dir>` visibility for plugin agents/skills, which makes ArcKit's branch and test-repo workflows reliable. It also carries the v2.1.198-v2.1.199 background-subagent reliability, parent error-propagation, and hook stderr-visibility fixes that matter to `/arckit:build`, reader/writer handoffs, and hook diagnosis. v2.1.197 makes Claude Sonnet 5 the default Claude Code model with native 1M context, while v2.1.172 fixed wildcard-domain `WebFetch` permission rules (`WebFetch(domain:*.gov.uk)`) that never matched subdomains on earlier clients — the exact shape ArcKit recommends for confining research-agent traffic in OFFICIAL-SENSITIVE deployments. The floor also carries forward the v2.1.156 Opus 4.8 thinking-block fix, v2.1.154 plugin `defaultEnabled: false`, v2.1.144 session-title and headless Skill tool fixes, v2.1.143 plugin dependency enforcement, v2.1.139 hook `args: string[]`, v2.1.129 monitor layout and prompt-cache fixes, v2.1.121 MCP/provenance hook unlocks, v2.1.118-v2.1.119 release/telemetry unlocks, and the earlier `/context`, Auto mode, plugin update, MCP leak, retry, and subagent working-directory fixes.
+
 
 ### Codex CLI
 
