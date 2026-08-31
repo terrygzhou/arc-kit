@@ -24,7 +24,6 @@ ArcKit is a toolkit for enterprise architects that transforms architecture gover
 
 ## Quick Start
 
-
 Three ways to run ArcKit - pick the one that fits your workflow:
 
 1. **Claude Code plugin** - the premier experience: 75 core commands, 16 marketplace plugins, autonomous research agents, automation hooks, bundled MCP servers, automatic updates.
@@ -62,7 +61,6 @@ claude plugin install arckit arckit-{uae,fr,ca,eu,at,au,us,uk-nhs,uk-gcloud}
 claude plugin install arckit arckit-togaf-adm arckit-oaa arckit-agent-architecture
 ```
 
-
 No project initialization is needed - the plugin provides everything. Use the commands directly:
 
 ```text
@@ -72,8 +70,6 @@ No project initialization is needed - the plugin provides everything. Use the co
 ```
 
 Updates are automatic via the marketplace - no action needed.
-
-
 
 ### Codex CLI
 
@@ -876,7 +872,6 @@ Data sharing obligations for connected products and cloud providers:
 - International data transfer restrictions (Article 27)
 - Application date: 12 September 2025
 
-
 ---
 
 ### Phase 15: Project Story & Reporting
@@ -1187,7 +1182,6 @@ These commands use the [govreposcrape MCP](https://github.com/MHCLG/govreposcrap
 |  `/arckit:customize`  |  Copy templates to `.arckit/templates-custom/` for customization (preserved across updates)  |  🟢 Live  |
 |  `/arckit:maturity-model`  |  Generate capability maturity model with current-state assessment, target-state definition, and improvement roadmap  |  🔵 Beta  |
 |  `/arckit:template-builder`  |  Create new document templates through interactive interview — generates community-origin templates, guides, and optional shareable bundles  |  🟠 Alpha  |
-
 
 ### Documentation & Publishing
 

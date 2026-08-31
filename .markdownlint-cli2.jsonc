@@ -101,6 +101,8 @@
     "tests/mermaid-wardley/output/**",
     "research/**",
     ".pytest_cache/**",
+    // OpenSpec-managed specs (spec-driven schema); OpenSpec tooling controls their formatting
+    "openspec/**",
     ".arckit/memory/**"
   ]
 }
