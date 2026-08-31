@@ -52,10 +52,19 @@ data/
 
 # Plugin runtime caches — ephemeral, project-scoped, regenerated each session
 # (see #494 close: these belong in .gitignore, not ${CLAUDE_PLUGIN_DATA})
-.arckit/memory/.last-session
-.arckit/memory/.telemetry.jsonl
-.arckit/memory/.cc-version
-.arckit/memory/handoff-p0-config-ssot.md
+.arckit/memory/
+
+# .arckit/ project-local state (memory logs, template copies, scripts,
+# references, schemas) is generated when ArcKit runs on its own repo; the
+# canonical sources live in plugins/ and src/arckit_cli/. Local overrides,
+# if ever needed here, belong in .arckit/templates-custom/.
+.arckit/templates/
+.arckit/scripts/
+.arckit/references/
+.arckit/schemas/
+
+# Devin tool state (auto-generated wiki queue)
+.state/
 
 # ArcKit project-level config (may contain API keys)
 .arckit/config.yaml
