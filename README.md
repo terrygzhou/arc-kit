@@ -522,6 +522,66 @@ Claude Code automatically exposes ArcKit commands as **skills** (they appear in 
 - **User input via `$ARGUMENTS`** — Most commands accept context from the user (project name, scope, constraints). The command system handles this with `$ARGUMENTS` substitution.
 - **Best of both worlds** — Since Claude Code exposes commands as skills automatically, users get explicit `/arckit:requirements` invocation AND natural language matching when Claude recognises intent — no restructuring needed.
 
+The diagram below traces a command's full lifecycle — from invocation through governance checks, generation, machine-stamped output, and distribution to other AI assistants:
+
+```mermaid
+flowchart TD
+    %% Command anatomy
+    subgraph FILE["Command anatomy — plugins/arckit-claude/commands/plan.md"]
+        FM["YAML frontmatter (metadata source of truth)<br/>description · doc-type · effort · keep-coding-instructions · handoffs"]
+        BODY["Markdown body (the prompt)<br/>persona, step-by-step procedure, $ARGUMENTS slot"]
+    end
+
+    USER(["User types /arckit:plan 001"]) --> INJECT
+
+    %% Execution lifecycle
+    subgraph RUN["Execution — the model follows the body step by step"]
+        INJECT["Claude Code injects the body into the conversation<br/>frontmatter governs; $ARGUMENTS becomes 001"]
+        CTX["Project Context hook has already run:<br/>projects, artifacts, external docs, global policies<br/>pre-injected — no manual directory scanning"]
+        PREREQ{"Mandatory inputs present?"}
+        STOP["Stop with guidance:<br/>run /arckit:stakeholders first"]
+        PROJ["Resolve target project<br/>via hook context or create-project.sh"]
+        TPL{"Override in .arckit/templates-custom/?"}
+        TPLC["User's custom template"]
+        TPLD["Built-in template<br/>CLAUDE_PLUGIN_ROOT/templates/"]
+        DELEGATE{"Heavy web or MCP research required?"}
+        AGENTS["Subagent pipeline — main thread stays clean:<br/>reader agents fetch evidence · JSON validated against schema ·<br/>deterministic scoring · writer agent renders"]
+        WRITE["Write tool creates the document<br/>bypasses the 32K output-token limit"]
+        SUMM["User sees a summary only:<br/>artifact path · key stats · suggested next steps"]
+    end
+
+    INJECT --> CTX --> PREREQ
+    PREREQ -- no --> STOP
+    PREREQ -- yes --> PROJ --> TPL
+    TPL -- yes --> TPLC --> DELEGATE
+    TPL -- no --> TPLD --> DELEGATE
+    DELEGATE -- yes --> AGENTS --> WRITE
+    DELEGATE -- no --> WRITE
+    WRITE --> SUMM
+
+    %% Governed output
+    subgraph OUT["Governed output"]
+        ART["projects/001-*/ARC-001-PLAN-v1.0.md<br/>Document Control + Revision History header ·<br/>citation markers · standard footer"]
+        STAMP["provenance-stamp.mjs PostToolUse hook<br/>appends machine-stamped Build Provenance block"]
+    end
+    WRITE --> ART
+    WRITE -. "PostToolUse hook" .-> STAMP
+
+    %% Multi-target distribution
+    subgraph DIST["Distribution — python scripts/converter.py"]
+        CONV["Reads each command once, rewrites per target:<br/>strips Claude-only fields · renders handoffs as Suggested Next Steps ·<br/>inlines agent prompts · user_config placeholders to env vars"]
+        T1["Claude Code — /arckit:plan (source)"]
+        T2["Codex — $arckit-plan (skills/)"]
+        T3["Gemini CLI — /arckit:plan (.toml)"]
+        T4["OpenCode — /arckit:plan"]
+        T5["Copilot — /arckit-plan"]
+        T6["Kimi · Paperclip · Vibe"]
+    end
+    FM --> CONV
+    BODY --> CONV
+    CONV --> T1 & T2 & T3 & T4 & T5 & T6
+```
+
 ### Using with GitHub Copilot
 
 For GitHub Copilot users in VS Code, ArcKit commands are delivered as prompt files and custom agents:
