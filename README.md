@@ -73,6 +73,34 @@ Updates are automatic via the marketplace - no action needed.
 
 ### Codex CLI
 
+Two ways to install - pick the one that fits:
+
+**Option 1: Codex plugin (simplest)** - no Python, no project scaffolding. One-time setup, works in any project:
+
+```bash
+# Prereq: Node.js for the lifecycle hooks (on macOS: brew install node)
+codex plugin marketplace add terrygzhou/arckit-codex
+codex features enable hooks
+codex features enable plugin_hooks
+```
+
+Restart Codex, open `/plugins`, choose **ArcKit Plugins**, then install and enable **ArcKit**. For each project:
+
+```bash
+mkdir my-arch && cd my-arch && git init
+codex
+```
+
+```text
+$arckit-init        Create the projects/ structure (once per repo)
+$arckit-start       Guided onboarding - tells you what comes next
+$arckit-principles  Create principles for a financial services company
+```
+
+All artifacts land as versioned Markdown (`ARC-NNN-TYPE-vN.N.md`) under `projects/` - just commit regularly. To upgrade later: `codex plugin marketplace upgrade arckit`.
+
+**Option 2: ArcKit CLI** - scaffold a full project workspace with templates, schemas, and helper scripts:
+
 Install the ArcKit CLI:
 
 ```bash
@@ -112,7 +140,7 @@ codex
 /arckit:sow Generate RFP for vendor selection
 ```
 
-**Upgrading** - upgrade the CLI, then re-run `init` in place:
+**Upgrading** (Option 2) - upgrade the CLI, then re-run `init` in place:
 
 ```bash
 # Step 1: Upgrade the CLI tool
