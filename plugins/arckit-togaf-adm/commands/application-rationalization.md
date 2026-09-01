@@ -61,7 +61,7 @@ Identify the target project from the hook context or user input. Extract the pro
 
 **Run the intake interview**:
 
-- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, put **every** intake question to the user for their input one at a time (each question is optional and may be skipped; a skipped question renders as a `TBD` marker), and persist the answers.
 
 **Read the template** (with user override support):
 

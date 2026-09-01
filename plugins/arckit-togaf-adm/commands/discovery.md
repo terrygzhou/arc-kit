@@ -34,7 +34,7 @@ analysis and rationalization.
 
 ## Process
 
-1. **Run the intake interview**: Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the structure below (the effective template) and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+1. **Run the intake interview**: Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the structure below (the effective template) and MANDATORY prerequisites, prefill from existing sources, put **every** intake question to the user for their input one at a time (each question is optional and may be skipped; a skipped question renders as a `TBD` marker), and persist the answers.
 2. **Render `DISC.md`** following the structure below; render any skipped MANDATORY input as a quoted `TBD` marker and list it under "Unresolved fields" in the summary.
 
 ## Structure
@@ -66,9 +66,11 @@ analysis and rationalization.
 ## Interview Questions (TOGAF 10 — current-state discovery)
 
 The intake interview for this command asks the questions below before rendering
-`DISC.md`. Questions already answerable from existing artefacts, saved intake,
-onboarding data, or organisation config are **not** asked; a skipped question
-renders as a `TBD` marker in the artefact.
+`DISC.md`. Every question below is always put to the user for their input, one
+question at a time, and is prefilled where answerable from existing artefacts,
+saved intake, onboarding data, or organisation config so the user can confirm or
+override it. Each question is **optional**: a skipped question renders as a
+`TBD` marker in the artefact.
 
 - **Business context:** What is the strategic direction, and what are the key drivers and the current operating model?
 - **Capability state:** Which capabilities exist today, at what maturity, and which are obsolete or legacy?
