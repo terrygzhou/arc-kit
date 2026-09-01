@@ -5,9 +5,9 @@
   "description": "TOGAF Architecture Development Method — Enterprise architecture planning and governance. 12 commands covering discovery, ADM phases Preliminary through H, data and technology architecture, plus the Architecture Repository.",
   "author": {
     "name": "ArcKit Contributors",
-    "url": "https://github.com/tractorjuice/arckit-claude"
+    "url": "https://github.com/terrygzhou/arc-kit"
   },
-  "repository": "https://github.com/tractorjuice/arckit-claude",
+  "repository": "https://github.com/terrygzhou/arc-kit",
   "license": "MIT",
   "defaultEnabled": false,
   "userConfig": {

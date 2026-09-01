@@ -5,9 +5,9 @@
   "description": "AI Agent Architecture — Governance, design, and security for autonomous AI agent programs. 6 commands covering agent inventory, design, governance, integration, security, and maturity.",
   "author": {
     "name": "ArcKit Contributors",
-    "url": "https://github.com/tractorjuice/arckit-claude"
+    "url": "https://github.com/terrygzhou/arc-kit"
   },
-  "repository": "https://github.com/tractorjuice/arckit-claude",
+  "repository": "https://github.com/terrygzhou/arc-kit",
   "license": "MIT",
   "defaultEnabled": false,
   "userConfig": {

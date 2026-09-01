@@ -74,7 +74,7 @@ users are prompted to add the ArcKit marketplace when they trust the repo:
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude"
+        "repo": "terrygzhou/arc-kit"
       },
       "autoUpdate": true
     }
@@ -97,7 +97,7 @@ range:
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude"
+        "repo": "terrygzhou/arc-kit"
       },
       "autoUpdate": true
     }
@@ -108,7 +108,7 @@ range:
   "strictKnownMarketplaces": [
     {
       "source": "github",
-      "repo": "tractorjuice/arckit-claude"
+      "repo": "terrygzhou/arc-kit"
     }
   ],
   "pluginSuggestionMarketplaces": ["arckit-claude"],
@@ -255,7 +255,7 @@ Use a narrow pilot before broad installation:
 |--------------|-------------------|
 | Unreleased #580 | Reactive `FileChanged` context for `projects/*/external/` means newly added evidence can enter Claude Code context without restart or `/compact` |
 | Unreleased #580 | Claude Code floor raised to v2.1.219 for Claude Opus 5 support, and docs refreshed for managed model governance, OTEL response logging, MCP auth, safe-mode troubleshooting, and plugin branch testing |
-| v6.0.0 | `tractorjuice/arckit-claude` became the preferred single Claude Code marketplace repo for the core plugin plus overlays |
+| v6.0.0 | `terrygzhou/arc-kit` became the preferred single Claude Code marketplace repo for the core plugin plus overlays |
 | v5.13.1 | Claude Code floor v2.1.172 made wildcard-domain `WebFetch(domain:*.gov.uk)` restrictions reliable for regulated research-agent traffic |
 | June 2026 #576/#579 | Managed fleet settings, `/plugin list --enabled`, and per-agent telemetry guidance landed in the ArcKit docs and telemetry hooks |
 | v5.9.1 | Plugin-bundled MCP servers gained the prefixed tool allowlists and `alwaysLoad` settings needed for ArcKit subagents to reach them reliably |
@@ -537,7 +537,7 @@ the work justifies the higher tier.
 
 `pluginSuggestionMarketplaces` lets admins allowlist org marketplaces whose
 plugins may surface in context-aware tips. Allowlisting
-`tractorjuice/arckit-claude` means Claude Code can suggest ArcKit when a user
+`terrygzhou/arc-kit` means Claude Code can suggest ArcKit when a user
 opens a directory with a `projects/` tree or `ARC-*` artefacts — useful for
 driving adoption across many teams without a manual rollout. Pair with
 `strictKnownMarketplaces` / `blockedMarketplaces` if you want to *restrict*

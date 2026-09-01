@@ -5,9 +5,9 @@
   "description": "Open Agile Architecture (O-AA C208) — Agile enterprise architecture for product-driven, sprint-based delivery. 5 commands: ADM Lite, Product Architecture, Agile Strategy, Agile Security, Agile Governance.",
   "author": {
     "name": "ArcKit Contributors",
-    "url": "https://github.com/tractorjuice/arckit-claude"
+    "url": "https://github.com/terrygzhou/arc-kit"
   },
-  "repository": "https://github.com/tractorjuice/arckit-claude",
+  "repository": "https://github.com/terrygzhou/arc-kit",
   "license": "MIT",
   "defaultEnabled": false,
   "userConfig": {

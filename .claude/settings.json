@@ -57,7 +57,7 @@
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude"
+        "repo": "terrygzhou/arc-kit"
       }
     }
   },

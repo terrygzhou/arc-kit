@@ -101,7 +101,7 @@ all distribution formats ship in lockstep.
 
 - **`docs/manifest.json` no longer indexes artefacts that git actively ignores.** The manifest is a *published* index — ArcKit serves its own at `arckit.org/manifest.json` — so indexing a gitignored artefact writes a reference to a one-machine-only file into a file everyone fetches, producing a permanent 404. `update-manifest.mjs` now skips ignored paths. Ignored, **not** merely untracked: a brand-new artefact in a repo that tracks `projects/` is untracked until committed and must still be indexed. Fails open when git is absent or the directory is not a repository, since neither can prove a path is ignored (#690).
 
-- **`CLAUDE.md` recommended the wrong Claude Code marketplace.** It told users to add `terrygzhou/arc-kit` while three other places recommend `tractorjuice/arckit-claude`. Both publish all 16 plugins under identical names, so a user following both instructions registers `arckit`, `arckit-repo` and the rest twice. Reported by @jhonurrego-tekton, who found duplicate entries in `installed_plugins.json` alongside a "Plugin 'arckit' not cached" warning (#688).
+- **`CLAUDE.md` recommended the wrong Claude Code marketplace.** Some docs told users to add one Claude Code marketplace while three other places recommended a different one. Both published all 16 plugins under identical names, so a user following both instructions registers `arckit`, `arckit-repo` and the rest twice. Reported by @jhonurrego-tekton, who found duplicate entries in `installed_plugins.json` alongside a "Plugin 'arckit' not cached" warning (#688).
 
 ### Removed
 
@@ -380,14 +380,14 @@ all distribution formats ship in lockstep.
 ### Added
 
 - **Single Claude Code marketplace repo.** Added release tooling and metadata
-  so `tractorjuice/arckit-claude` publishes the core plugin plus regional,
+  so `terrygzhou/arc-kit` publishes the core plugin plus regional,
   sector, tooling, and supplier overlays from one structured repo.
 
 ### Changed
 
 - **Claude marketplace install path.** Updated user-facing documentation,
   test-repo templates, and release guidance to prefer
-  `tractorjuice/arckit-claude` for Claude Code installs.
+  `terrygzhou/arc-kit` for Claude Code installs.
 
 ## [5.15.2] — 2026-06-30
 

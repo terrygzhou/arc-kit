@@ -55,7 +55,7 @@ Use the **Write** tool to create each file inside `/tmp/arckit-test-setup/${REPO
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude"
+        "repo": "terrygzhou/arc-kit"
       }
     }
   },
@@ -165,7 +165,7 @@ This project uses the ArcKit plugin which provides 53 slash commands for archite
 
 - [ArcKit Documentation](https://tractorjuice.github.io/arc-kit/)
 - [ArcKit Repository](https://github.com/terrygzhou/arc-kit)
-- [ArcKit Claude Plugin Marketplace](https://github.com/tractorjuice/arckit-claude)
+- [ArcKit Claude Plugin Marketplace](https://github.com/terrygzhou/arc-kit)
 
 <!-- markdownlint-disable-next-line MD040 -->
 ```

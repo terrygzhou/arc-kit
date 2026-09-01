@@ -93,7 +93,7 @@ git push && git push --tags
 ./scripts/tag-plugins.sh X.Y.Z
 
 # 11. Push each distribution to its standalone GitHub repo
-#     (tractorjuice/arckit-claude, arckit-gemini, arckit-codex, …).
+#     (the standalone Claude marketplace repo, arckit-gemini, arckit-codex, …).
 #     The claude target publishes the full Claude marketplace repo: core at
 #     the repo root, overlays under plugin/... paths. This also creates or
 #     preserves each repo's vX.Y.Z tag and GitHub Release:

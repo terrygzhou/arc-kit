@@ -157,7 +157,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Synchronize plugins/arckit-claude/plugins/... with the published "
-            "tractorjuice/arckit-claude standalone repository layout."
+            "standalone Claude marketplace repository layout."
         )
     )
     parser.add_argument(

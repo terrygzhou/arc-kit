@@ -60,7 +60,7 @@ The value is milliseconds. Recommended for: corporate networks with TLS-inspecti
 In Claude Code, run:
 
 ```text
-/plugin marketplace add tractorjuice/arckit-claude
+/plugin marketplace add terrygzhou/arc-kit
 ```
 
 ### Step 2: Install the plugin
@@ -102,7 +102,7 @@ To have the plugin auto-enable for anyone who opens your repo, add `.claude/sett
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude"
+        "repo": "terrygzhou/arc-kit"
       }
     }
   },

@@ -281,7 +281,7 @@ def create_claude_settings() -> None:
             "arckit-claude": {
                 "source": {
                     "source": "github",
-                    "repo": "tractorjuice/arckit-claude",
+                    "repo": "terrygzhou/arc-kit",
                 }
             }
         },

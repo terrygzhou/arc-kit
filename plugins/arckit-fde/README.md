@@ -7,7 +7,7 @@ GitHub-Pages-ready static site into `docs/`.
 ## Install
 
 ```bash
-claude plugin marketplace add tractorjuice/arckit-claude
+claude plugin marketplace add terrygzhou/arc-kit
 claude plugin install arckit-fde@arckit-claude
 ```
 

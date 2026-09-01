@@ -99,7 +99,14 @@ def test_release_process_names_every_standalone_repo():
 
     for distribution_key, (local_dir, repo_name) in EXPECTED_STANDALONE_REPOS.items():
         assert f'[{distribution_key}]="{local_dir}:{repo_name}"' in script
-        assert f"tractorjuice/{repo_name}" in release_doc
+        # The Claude standalone marketplace publishes from the terrygzhou/arc-kit
+        # monorepo; every other target keeps its own tractorjuice/* GitHub repo.
+        expected_slug = (
+            "terrygzhou/arc-kit"
+            if distribution_key == "claude"
+            else f"tractorjuice/{repo_name}"
+        )
+        assert expected_slug in release_doc
         assert (REPO_ROOT / local_dir / "README.md").is_file()
         assert (REPO_ROOT / local_dir / "VERSION").is_file()
 
@@ -159,12 +166,12 @@ def test_claude_standalone_marketplace_matches_plugin_version():
 
         assert plugin["source"] == source
         assert plugin["version"] == plugin_version
-        assert plugin["repository"] == "https://github.com/tractorjuice/arckit-claude"
-        assert plugin["homepage"] == "https://github.com/tractorjuice/arckit-claude"
+        assert plugin["repository"] == "https://github.com/terrygzhou/arc-kit"
+        assert plugin["homepage"] == "https://github.com/terrygzhou/arc-kit"
         assert plugin["license"] == license_name
         assert manifest["name"] == name
         assert manifest["version"] == plugin_version
-        assert manifest["repository"] == "https://github.com/tractorjuice/arckit-claude"
+        assert manifest["repository"] == "https://github.com/terrygzhou/arc-kit"
 
 
 def test_root_claude_marketplace_remains_arc_kit_compatibility_marketplace():
@@ -197,10 +204,10 @@ def test_root_claude_marketplace_remains_arc_kit_compatibility_marketplace():
         assert (REPO_ROOT / local_dir).exists()
         assert root_plugin["version"] == standalone_plugin["version"]
         assert (
-            root_plugin["repository"] == "https://github.com/tractorjuice/arckit-claude"
+            root_plugin["repository"] == "https://github.com/terrygzhou/arc-kit"
         )
         assert (
-            root_plugin["homepage"] == "https://github.com/tractorjuice/arckit-claude"
+            root_plugin["homepage"] == "https://github.com/terrygzhou/arc-kit"
         )
 
 

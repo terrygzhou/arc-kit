@@ -7,7 +7,7 @@
     "name": "ArcKit Contributors",
     "url": "https://github.com/tractorjuice"
   },
-  "repository": "https://github.com/tractorjuice/arckit-claude",
+  "repository": "https://github.com/terrygzhou/arc-kit",
   "license": "MIT",
   "defaultEnabled": false,
   "dependencies": [

@@ -23,7 +23,7 @@ claude --version
 In Claude Code, run:
 
 ```text
-/plugin marketplace add tractorjuice/arckit-claude
+/plugin marketplace add terrygzhou/arc-kit
 ```
 
 ### Step 2: Install the plugin
@@ -301,9 +301,9 @@ This plugin is for Claude Code. For other AI assistants:
 
 ## Links
 
-- [Repository](https://github.com/tractorjuice/arckit-claude)
+- [Repository](https://github.com/terrygzhou/arc-kit)
 - [Documentation](https://tractorjuice.github.io/arc-kit)
-- [Changelog](https://github.com/tractorjuice/arckit-claude/blob/main/CHANGELOG.md)
+- [Changelog](https://github.com/terrygzhou/arc-kit/blob/main/CHANGELOG.md)
 
 ## License
 

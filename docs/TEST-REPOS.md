@@ -39,7 +39,7 @@ All test repos now use the arckit plugin via the marketplace instead of synced f
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude"
+        "repo": "terrygzhou/arc-kit"
       }
     }
   },

@@ -4,7 +4,7 @@ How to test an ArcKit plugin branch before merging.
 
 ## Quick start
 
-To test an unmerged standalone `tractorjuice/arckit-claude` branch, create
+To test an unmerged standalone `terrygzhou/arc-kit` branch, create
 `.claude/settings.json` in any test project:
 
 ```json
@@ -16,7 +16,7 @@ To test an unmerged standalone `tractorjuice/arckit-claude` branch, create
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude",
+        "repo": "terrygzhou/arc-kit",
         "ref": "feat/your-branch-name"
       }
     }
@@ -90,7 +90,7 @@ Replace your test `settings.json` with the production marketplace config:
     "arckit-claude": {
       "source": {
         "source": "github",
-        "repo": "tractorjuice/arckit-claude"
+        "repo": "terrygzhou/arc-kit"
       },
       "autoUpdate": true
     }

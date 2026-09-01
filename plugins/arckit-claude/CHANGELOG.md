@@ -286,17 +286,15 @@ and a new CI guard that fails the build when that happens again. See the root
 
 ### Added
 
-- **Single Claude Code marketplace repo.** The standalone
-  `tractorjuice/arckit-claude` repo now carries the `arckit` core plugin at the
-  repo root and all Claude-only overlays under structured `plugin/...` paths,
+- **Single Claude Code marketplace repo.** The `terrygzhou/arc-kit` repo now carries the `arckit` core plugin at
+  `plugins/arckit-claude/` and all Claude-only overlays under structured `plugin/...` paths,
   including `plugin/uk/finance` and the public-but-proprietary
   `plugin/uk/gcloud`.
 
 ### Changed
 
 - **Marketplace metadata.** Updated Claude plugin manifests and marketplace
-  entries so new installs use `tractorjuice/arckit-claude` while the monorepo
-  remains the development source of truth.
+  entries so new installs use `terrygzhou/arc-kit`.
 
 ## [5.15.2] — 2026-06-30
 

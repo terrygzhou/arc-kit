@@ -5,7 +5,7 @@
 ## Goal
 
 Publish all Claude Code ArcKit plugins from one public standalone marketplace
-repo, `tractorjuice/arckit-claude`, matching the standalone distribution pattern
+repo, `terrygzhou/arc-kit`, matching the standalone distribution pattern
 used by `arckit-codex`, `arckit-gemini`, `arckit-opencode`,
 `arckit-copilot`, `arckit-paperclip`, and `arckit-vibe`.
 
@@ -15,7 +15,7 @@ standalone repo during release.
 
 ## Target Shape
 
-The standalone `tractorjuice/arckit-claude` repo contains the core plugin at the
+The standalone `terrygzhou/arc-kit` repo contains the core plugin at the
 repository root for the normal Claude Code install path:
 
 ```text
@@ -63,7 +63,7 @@ proprietary. The root standalone repo `LICENSE` must explicitly exclude
 Preferred Claude Code install:
 
 ```text
-/plugin marketplace add tractorjuice/arckit-claude
+/plugin marketplace add terrygzhou/arc-kit
 ```
 
 Core plugin:
@@ -82,17 +82,17 @@ claude plugin install arckit-fde@arckit-claude
 
 The older `terrygzhou/arc-kit` marketplace may remain available for
 compatibility and pre-merge branch testing, but user-facing production docs
-should prefer `tractorjuice/arckit-claude`.
+should prefer `terrygzhou/arc-kit`.
 
 ## Implementation Tasks
 
-- [x] Create the public `tractorjuice/arckit-claude` repo.
+- [x] Create the public `terrygzhou/arc-kit` repo.
 - [x] Publish the initial core-only mirror so the repo exists and can be
       inspected.
 - [x] Add standalone marketplace metadata at
       `plugins/arckit-claude/.claude-plugin/marketplace.json`.
 - [x] Point Claude plugin manifests and marketplace entries at
-      `https://github.com/tractorjuice/arckit-claude`.
+      `https://github.com/terrygzhou/arc-kit`.
 - [x] Teach `scripts/push-extensions.sh claude` to publish the full Claude
       marketplace repo instead of only copying `plugins/arckit-claude/`.
 - [x] Copy the core plugin to the standalone repo root and all overlays into
@@ -106,7 +106,7 @@ should prefer `tractorjuice/arckit-claude`.
 - [ ] Cut the `v6.0.0` release from `main`.
 - [ ] Run `./scripts/tag-plugins.sh 6.0.0`.
 - [ ] Run `./scripts/push-extensions.sh claude` to publish the structured
-      `tractorjuice/arckit-claude` repo and create its `v6.0.0` release.
+      `terrygzhou/arc-kit` repo and create its `v6.0.0` release.
 - [ ] Verify a clean project can install the marketplace and all expected plugin
       entries are discoverable.
 
@@ -126,7 +126,7 @@ git diff --check
 
 After merge and release, verify:
 
-- `https://github.com/tractorjuice/arckit-claude` contains the core plugin at the
+- `https://github.com/terrygzhou/arc-kit` contains the core plugin at the
   root.
 - The standalone marketplace lists all 13 Claude plugins.
 - `plugins/uk/finance` and `plugins/uk/gcloud` exist in the standalone repo.
