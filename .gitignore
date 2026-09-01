@@ -253,11 +253,15 @@ deepbook-test-output/
 # Local tool caches (regenerated per session; never commit)
 .codegraph/
 .venv-test/
+.pi/
 
 # OAA E2E harness workspaces (local test projects only; were tracked in 8cb1b4b9
 # and removed in 19cdd56e — keep them out of the repo explicitly rather than
 # relying on the blanket `projects/` pattern above)
 test-oaa-dummy/
+# OAA / TOGAF intake-gate smoke-test projects (generated fixtures; keep local)
+test-oaa-australian-post-product/
+test-adm-australian-post/
 
 # Ruff (Python linter) cache — ruff writes its own inner .gitignore, but keep an
 # explicit root-level rule so the cache stays ignored even if that file is lost
