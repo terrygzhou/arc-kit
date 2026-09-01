@@ -34,7 +34,7 @@ analysis and rationalization.
 
 ## Process
 
-1. **Run the intake interview**: Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the structure below (the effective template) and MANDATORY prerequisites, prefill from existing sources, put **every** intake question to the user for their input one at a time (each question is optional and may be skipped; a skipped question renders as a `TBD` marker), and persist the answers.
+1. **Run the intake interview**: Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the structure below (the effective template) and MANDATORY prerequisites, prefill from existing sources, put **every** intake question to the user one at a time (**ask-always, answer-optional** — the interview must ask; each answer is optional and may be skipped, rendering as a `TBD` marker when skipped), and persist the answers.
 2. **Render `DISC.md`** following the structure below; render any skipped MANDATORY input as a quoted `TBD` marker and list it under "Unresolved fields" in the summary.
 
 ## Structure
