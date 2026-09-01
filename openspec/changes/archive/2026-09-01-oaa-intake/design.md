@@ -30,7 +30,7 @@ This change decides OAA adopts the **TOGAF hard-gate model** on its foundational
 5. **Copy parity guarded specifically for §8.** The OAA sub-plugin copy of the shared block must stay byte-identical to the root and retain §8; a "fix" that rewrites the OAA copy to drop §8 is a spec violation, not just a byte diff.
 6. **Per-command input sets are reference sets, not fixed question lists.** The spec names the expected input *domains* each OAA template surfaces; the interview still derives from the *effective* template at runtime (a custom template changes the questions), and a test asserts the shipped defaults still surface the named domains.
 7. **Sprint-0 prefill is a seeding guarantee, not a new question source.** The Sprint-0 outcome dimensions are valid prefill keys in `.arckit/intake/shared.json` / per-command intake; they make the first OAA command after onboarding start warm, under the generic precedence.
-8. **A standards-coverage floor, not a fixed question list.** The interview derives questions from the *effective template PLUS* a canonical TOGAF/OAA discovery-dimension checklist (D1 vision/strategy, D2 capabilities, D3 stakeholders, D4 constraints/drivers, D5 current-state, D6 technology, D7 data, D8 pain points/gaps/risks, D9 outcome dimensions, D10 axioms). Prefill still applies (a dimension resolvable from artefacts / intake / user_config / shared.json is silent); only unresolvable dimensions are asked, grouped and skippable. This guarantees every OAA artefact is grounded in the standard's core concerns (e.g. `/arckit:product-architecture` asks current-state and pain points even though its template lacks those sections) without adding any diagram/output demand (tone guard intact). The checklist is OAA-scoped and cross-references the generic algorithm's §2 derivation.
+8. **A standards-coverage floor, not a fixed question list.** The interview derives questions from the *effective template PLUS* a canonical TOGAF/OAA discovery-dimension checklist (D1 vision/strategy, D2 capabilities, D3 stakeholders, D4 constraints/drivers, D5 current-state, D6 technology, D7 data, D8 pain points/gaps/risks, D9 outcome dimensions, D10 axioms). Prefill still applies — a resolvable dimension is surfaced for confirmation/override, not silenced; unresolvable dimensions are asked grouped and skippable (skip → TBD). This guarantees every OAA artefact is grounded in the standard's core concerns (e.g. `/arckit:product-architecture` asks current-state and pain points even though its template lacks those sections) without adding any diagram/output demand (tone guard intact). The checklist is OAA-scoped and cross-references the generic algorithm's §2 derivation.
 
 ## Risks / Trade-offs
 
@@ -47,3 +47,18 @@ Edit the five OAA command bodies (both plugin trees): move `PRIN` into a `**MAND
 ## Open Questions
 
 None.
+
+## Ask-always reconciliation (ruling)
+
+`oaa-intake` was drafted before the merged `intake-ask-always` change, and its draft interview-input
+clauses ("fully-prefilled template asks zero questions", "prefilled dimension is silent / not re-asked")
+contradict the now-merged ask-always / answer-optional policy. **Ruling: ask-always is the newer merged
+authority — this change is amended to be consistent with it.** Concretely:
+
+- A fully-prefilled OAA template still surfaces every prefilled value to the user for confirmation or
+  override, one at a time; no prefilled value passes silently (answer-optional: skip renders `TBD`).
+- A canonical discovery dimension resolvable by prefill is surfaced prefilled for confirmation/override,
+  not silenced; only dimensions with no source are asked as grouped, skippable questions.
+- The MANDATORY `PRIN` artefact hard gate (STOP when missing) is unaffected by this ruling — it is a
+  dependency on an upstream artefact, not an interview input.
+- Where the merged `slash-commands` / `intake-ask-always` spec says otherwise, that spec wins.

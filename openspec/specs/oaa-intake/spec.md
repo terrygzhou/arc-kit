@@ -1,6 +1,9 @@
-# oaa-intake Delta — oaa-intake
+# oaa-intake Specification
 
-## ADDED Requirements
+## Purpose
+TBD - created by archiving change oaa-intake. Update Purpose after archive.
+
+## Requirements
 
 ### Requirement: OAA Intake Hard-Blocks On MANDATORY Prerequisites (TOGAF-Consistent)
 Every Open Agile Architecture (`oaa`) overlay command — `oaa-adm-lite`, `product-architecture`, `agile-governance`, `agile-security`, `agile-strategy` — SHALL declare a **MANDATORY** prerequisite tier grounded in the `000-global` `PRIN` (Architecture Principles) artefact, with a "If missing: STOP" instruction, mirroring `togaf/adm`'s `adm-preliminary` hard gate. When the MANDATORY `PRIN` artefact is missing, the OAA command SHALL stop and prompt the user to generate it first (run `/arckit:principles`); the missing MANDATORY prerequisite artefact is a hard dependency and SHALL never be rendered as `TBD`. All other OAA prerequisites (e.g. `ADMP`, `OAPR`, `OASTR`, `OASEC`) SHALL remain **RECOMMENDED** (noted when missing, not blocking). This hard gate applies to prerequisite *artefacts*; interview *inputs* the user skips still render as quoted `TBD` markers (the soft-gate behaviour).
@@ -59,22 +62,22 @@ The intake interview for each OAA command SHALL be derived from that command's o
 - `agile-security`: the four pillars (embedded security stories, risk-based scan thresholds, compliance-as-code gates, sprint-gate validation), security-metric KPIs, Document Control framework / prerequisites.
 - `agile-strategy`: digital dimension (tech / product / operating model), agile dimension (org / cultural / team), O-AA axioms, resilience mapping, wave plan, Document Control scope / owner.
 
-The MANDATORY `PRIN` artefact is a hard dependency, not an interview input, and is not part of these reference input domains. A fully-prefilled OAA template SHALL trigger zero interview questions; the reference domains are asserted against the shipped defaults, and a custom template changes the questions.
+The MANDATORY `PRIN` artefact is a hard dependency, not an interview input, and is not part of these reference input domains. A fully-prefilled OAA template still surfaces every prefilled value to the user for confirmation or override, one at a time (ask-always, answer-optional); no prefilled value passes silently. The reference domains are asserted against the shipped defaults, and a custom template changes the questions.
 
 #### Scenario: OAA interview questions come from the OAA template
 - **WHEN** the user runs `/arckit:oaa-adm-lite` on a project where `PRIN` exists
 - **THEN** the interview questions are derived from the `oaa-adm-lite` template's sections (Sprint-0 outcome dimensions + Document Control), never from a shared generic OAA question list
 
-#### Scenario: Fully-prefilled OAA template asks nothing
+#### Scenario: Fully-prefilled OAA template still surfaces each value for confirmation
 - **WHEN** every OAA input is resolvable from existing `projects/` artefacts, saved `.arckit/intake/` answers, or `user_config`
-- **THEN** the OAA command renders its artefact without asking a single question
+- **THEN** the OAA command still presents each prefilled value to the user to confirm or override, one at a time; the user may confirm it or skip the question (a skipped question renders as a `TBD` marker)
 
 ### Requirement: OAA Sprint-0 Prefill Seeds The Intake Store
 The OAA Sprint-0 outcome dimensions SHALL be valid prefill keys in the project intake store so that a first OAA command after onboarding starts warm. Onboarding answers covering jurisdiction, AI workload type, data classification, user count, latency, budget, timeline, infrastructure, stakeholders, success criteria, regulatory controls, risk profile, and deployment topology SHALL prefill OAA interview inputs where they match, following the generic precedence (existing artefacts > per-command saved intake > onboarding `shared.json` > `user_config`).
 
 #### Scenario: Onboarding seed prefills an OAA command
 - **WHEN** the user completes onboarding that records "AI workload type: LLM inference" and "data classification: confidential", then runs `/arckit:oaa-adm-lite` (with `PRIN` present)
-- **THEN** the oaa-adm-lite interview prefills those two inputs from `.arckit/intake/shared.json` and does not re-ask them
+- **THEN** the oaa-adm-lite interview prefills those two inputs from `.arckit/intake/shared.json` and offers each prefilled value to the user to confirm or override rather than re-deriving it as a blank question
 
 ### Requirement: Standard-Aligned Interview Coverage (TOGAF + OAA)
 The OAA intake interview SHALL derive its questions not only from the effective template's sections but also from a **canonical TOGAF/OAA discovery-dimension checklist**, so that every OAA artefact is grounded in the standard's core concerns even when a particular template section is thin or absent. The checklist is:
@@ -92,15 +95,15 @@ The OAA intake interview SHALL derive its questions not only from the effective 
 | D9 | OAA outcome dimensions (Value / Outcome / Experience / Adoption) | — | OAA outcome model |
 | D10 | OAA axioms alignment | — | O-AA axioms |
 
-A canonical dimension already resolvable by prefill (existing artefacts, `.arckit/intake/`, `user_config`, `shared.json`) SHALL NOT be re-asked; a dimension with no source SHALL be asked as a grouped, skippable question (rendering `TBD` if skipped). This checklist is a **coverage floor in addition to** the template-derived questions, and SHALL NOT add any diagram or output mandate (OAA tone guard).
+A canonical dimension resolvable by prefill (existing artefacts, `.arckit/intake/`, `user_config`, `shared.json`) SHALL still be surfaced to the user, prefilled, for confirmation or override (ask-always, answer-optional); a dimension with no source SHALL be asked as a grouped, skippable question, and a skipped question SHALL render a `TBD` marker. This checklist is a **coverage floor in addition to** the template-derived questions, and SHALL NOT add any diagram or output mandate (OAA tone guard).
 
 #### Scenario: Missing current-state / pain points is still asked
 - **WHEN** the user runs `/arckit:product-architecture`, whose template has no explicit "current-state" or "pain points" section
 - **THEN** the interview still asks the D5 (current-state) and D8 (pain points / gaps) dimensions as grouped questions, because they are canonical TOGAF/OAA discovery concerns
 
-#### Scenario: Prefilled canonical dimension is not re-asked
+#### Scenario: Prefilled canonical dimension is surfaced for confirmation
 - **WHEN** business capabilities (D2) are already documented by a prior capability-map artefact in `projects/`
-- **THEN** the interview prefills D2 from that artefact and does not re-ask it
+- **THEN** the interview prefills D2 from that artefact and offers it to the user to confirm or override rather than re-deriving it as a blank question
 
 #### Scenario: Standards coverage adds no diagram/output demand
 - **WHEN** the interview asks the D5–D8 discovery dimensions for `/arckit:agile-strategy`

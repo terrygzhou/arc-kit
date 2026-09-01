@@ -45,11 +45,12 @@ Use this command when **any** of the following conditions are met:
 
 > **Note**: The ArcKit Project Context hook has already detected all projects, artifacts, external documents, and global policies. Use that context below — no need to scan directories manually.
 
-**RECOMMENDED** (read if available, note if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **PRIN** (Architecture Principles, in 000-global) — Extract: Security principles, compliance requirements, data classification standards
+  - If missing: STOP and ask user to run `/arckit:principles` first. The OAA artefact must be grounded in architecture principles.
 
-  - If missing: warn user to run `/arckit:principles` first
+**RECOMMENDED** (read if available, note if missing):
 
 - **OAPR** (Agile Product Architecture) — Extract: Product mission, guardrails, technology constraints
 
@@ -87,6 +88,8 @@ Identify the target project from the hook context. If the user specifies a proje
 **Run the intake interview**:
 
 - Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, put **every** intake question to the user for their input one at a time (each question is optional and may be skipped; a skipped question renders as a `TBD` marker), and persist the answers.
+
+- Load the OAA discovery-dimension checklist `${CLAUDE_PLUGIN_ROOT}/references/intake-discovery-dimensions.md` (D1–D10) and use it as the canonical coverage floor in addition to the shared block's §2 template-derived questions: a dimension resolvable from existing artefacts, `.arckit/intake/`, `user_config`, or `shared.json` is surfaced prefilled for confirmation/override (ask-always, answer-optional); a dimension with no source is asked as a grouped, skippable question (a skipped question renders a `TBD` marker); the checklist adds no diagram or output mandate.
 
 **Read the template** (with user override support):
 
