@@ -186,3 +186,31 @@ def test_oaa_interview_adds_no_diagram_or_output_mandate():
             assert "no diagram or output mandate" in step or "adds no diagram or output mandate" in step, (
                 f"{tree}/commands/{name}.md intake step must state the checklist adds no diagram/output mandate"
             )
+
+
+def test_oaa_full_recipe_targets_depend_on_prin():
+    """Bulk builds must respect the OAA hard gate (spec scenario: 'Bulk build
+    respects the OAA hard gate'): every OAA artefact target in the oaa-full
+    recipe depends — directly or transitively — on PRIN, so the harness
+    cannot start an OAA target on a project that has no PRIN."""
+    for tree in OAA_SOURCES:
+        text = _read(f"{tree}/recipes/oaa-full.yaml")
+        # Target -> direct deps, parsed straight from the flat recipe.
+        targets = re.findall(
+            r"id: (\w+)[^\n]*\n(?:.*\n)*?\s*deps: \[([^\]]*)\]", text)
+        deps = {tid: [d.strip() for d in body.split(",") if d.strip()]
+                for tid, body in targets}
+        for oaa_tid in ("OAAL", "OAPR", "OAGOV", "OASEC", "OASTR"):
+            assert oaa_tid in deps, f"{tree}/recipes/oaa-full.yaml missing target {oaa_tid}"
+            chain, frontier = set(), deps[oaa_tid]
+            while frontier:
+                nxt = []
+                for tid in frontier:
+                    for d in deps.get(tid, []):
+                        if d not in chain:
+                            chain.add(d)
+                            nxt.append(d)
+                frontier = nxt
+            assert "PRIN" in chain, (
+                f"{tree}/recipes/oaa-full.yaml: {oaa_tid} has no path to PRIN in its deps"
+            )

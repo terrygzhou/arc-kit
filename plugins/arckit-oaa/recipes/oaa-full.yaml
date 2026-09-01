@@ -53,7 +53,7 @@ targets:
     skill: arckit:product-architecture
     args: "{P}"
     output: { project: "{P}-{NAME}", type: OAPR }
-    deps: [REQ, STKE]
+    deps: [PRIN, REQ, STKE]
 
   - id: OAAL
     skill: arckit:oaa-adm-lite
@@ -65,11 +65,11 @@ targets:
     skill: arckit:agile-security
     args: "{P}"
     output: { project: "{P}-{NAME}", type: OASEC }
-    deps: [OAAL, OAPR]
+    deps: [PRIN, OAAL, OAPR]
 
   - id: OAGOV
     skill: arckit:agile-governance
     args: "{P}"
     output: { project: "{P}-{NAME}", type: OAGOV }
-    deps: [OAAL]
+    deps: [PRIN, OAAL]
     optional_deps: [OASEC]
