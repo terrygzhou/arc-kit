@@ -174,7 +174,6 @@ arckit config set llm.model Qwen3.6-27B
 
 **Retry behaviour** — failed LLM calls retry with exponential backoff (2s → 4s → 8s) before failing the wave. Configure via `--base-url` and `--model` per-build, or persist via `arckit config`.
 
-
 ### Platform Support
 
 | Platform | Claude Code Plugin | GitHub Copilot | Codex / OpenCode CLI | Mistral Vibe | Kimi Code CLI |
