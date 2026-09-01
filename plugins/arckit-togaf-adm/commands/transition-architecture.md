@@ -21,7 +21,7 @@ $ARGUMENTS
 
 > **Note**: The ArcKit Project Context hook has already detected all projects, artifacts, external documents, and global policies. Use that context below — no need to scan directories manually.
 
-**MANDATORY** (warn if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **GAPA** (Gap Analysis) — Extract: Capability gaps, gap severity scores, workstream mappings, gap-to-risk mappings
   - If missing: STOP and ask user to run `/arckit:gap-analysis` first. Transition architecture cannot be planned without a gap baseline.

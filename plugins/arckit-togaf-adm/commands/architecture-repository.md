@@ -19,7 +19,7 @@ $ARGUMENTS
 
 > **Note**: The ArcKit Project Context hook has already detected all projects, artifacts, external documents, and global policies. Use that context below — no need to scan directories manually.
 
-**MANDATORY** (warn if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **PRIN** (Architecture Principles, in 000-global) — Extract: Guiding principles, decision framework, technology standards, compliance requirements
   - If missing: STOP and ask user to run `/arckit:principles` first. The repository must be grounded in architecture principles.

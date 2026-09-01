@@ -21,7 +21,7 @@ $ARGUMENTS
 
 > **Note**: The ArcKit Project Context hook has already detected all projects, artifacts, external documents, and global policies. Use that context below — no need to scan directories manually.
 
-**MANDATORY** (warn if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **APP** (Application Inventory) — Extract: Application portfolio, existing technology stack, hosting models, infrastructure dependencies
   - If missing: STOP and ask user to run `/arckit-togaf-adm:application-inventory` first. Technology architecture requires understanding of existing technology assets.

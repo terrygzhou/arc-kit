@@ -32,7 +32,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 ### 2. Prerequisites: Read Architecture Artifacts
 
-**MANDATORY** (warn if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **PRIN** (Architecture Principles, in `000-global`) — Extract: All principles, governance standards, decision rights, compliance requirements
   - If missing: STOP and ask user to run `/arckit:principles` first. The Architecture Board cannot operate without defined principles.

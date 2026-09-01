@@ -21,7 +21,7 @@ $ARGUMENTS
 
 > **Note**: The ArcKit Project Context hook has already detected all projects, artifacts, external documents, and global policies. Use that context below — no need to scan directories manually.
 
-**MANDATORY** (warn if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **BPCM** (Business Capability Model) — Extract: Capability hierarchy, maturity levels, capability ownership, capability-to-objective mappings
   - If missing: STOP and ask user to run `/arckit-togaf-adm:business-capability-map` first. Gap analysis requires a capability baseline.

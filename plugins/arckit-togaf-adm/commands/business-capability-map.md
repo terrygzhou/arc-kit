@@ -21,7 +21,7 @@ $ARGUMENTS
 
 > **Note**: The ArcKit Project Context hook has already detected all projects, artifacts, external documents, and global policies. Use that context below — no need to scan directories manually.
 
-**MANDATORY** (warn if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **ADMP** (ADM Preliminary / Architecture Vision) — Extract: Scope boundaries, architecture vision, drivers, constraints, success criteria, in-scope capabilities
   - If missing: STOP and ask user to run `/arckit:adm-preliminary` first. Business Architecture must be grounded in the ADM scope and vision.

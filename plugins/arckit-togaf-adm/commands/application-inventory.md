@@ -21,7 +21,7 @@ $ARGUMENTS
 
 > **Note**: The ArcKit Project Context hook has already detected all projects, artifacts, external documents, and global policies. Use that context below — no need to scan directories manually.
 
-**MANDATORY** (warn if missing):
+**MANDATORY** (stop if missing — generate upstream artefact first):
 
 - **ADMP** (Architecture Vision / Preliminary ADM) — Extract: Scope boundaries, ADM phase inclusions, strategic vision
   - If missing: STOP and ask user to run `/arckit:adm-preliminary` first. The application inventory must be scoped by the architecture vision.

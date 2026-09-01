@@ -36,8 +36,14 @@ Walk the effective template and collect every input the artefact needs:
 - **Document Control fields** — the metadata fields the template declares in its
   Document Control table / header that are *not* resolvable from `user_config`
   (fields `user_config` can answer are prefill-candidates, not questions).
-- **MANDATORY prerequisite inputs** — the inputs the command's MANDATORY
-  prerequisite tier declares must be present before generation.
+- **MANDATORY prerequisite inputs** — the *values* the command's MANDATORY
+  prerequisite tier declares the user must supply. These are ordinary interview
+  inputs and are skippable (→ `TBD`, see §6).
+- **MANDATORY prerequisite artefacts** — the upstream documents the MANDATORY
+  tier names as preconditions (e.g. a capability model, the principles register).
+  An artefact that does not yet exist is a *hard dependency*, **not** an
+  interview input: the command stops and prompts the user to generate that
+  upstream artefact first, and never renders the missing artefact as `TBD`.
 
 Group related items so that one question can collect a coherent set (e.g. all
 Document Control metadata) rather than one question per leaf.
@@ -93,14 +99,20 @@ missing; merge without clobbering answers the user already set):
 
 ## 6. Render skipped MANDATORY inputs as TBD markers
 
-An input the user skipped that was MANDATORY renders in the artefact as an
-explicit `TBD` marker with the interview question quoted next to it, e.g.:
+An interview input the user skipped that was MANDATORY — a template section,
+a Document Control field, or a MANDATORY prerequisite-tier *value* — renders in
+the artefact as an explicit `TBD` marker with the interview question quoted next
+to it, e.g.:
 
 ```text
 | Document Owner | TBD — "Who is the accountable owner of this artefact?" |
 ```
 
 - Never silently omit a MANDATORY input and never merely warn about it.
+- A missing MANDATORY prerequisite **artefact** (an upstream document that does
+  not yet exist) is a hard dependency, never a skippable input: it does not
+  render as `TBD`. The command stops and asks the user to generate the upstream
+  artefact first (per the command's MANDATORY “If missing: STOP…” instruction).
 - RECOMMENDED missing inputs are noted when absent; OPTIONAL inputs are skipped
   silently.
 
