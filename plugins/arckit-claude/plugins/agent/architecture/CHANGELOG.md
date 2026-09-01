@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+- Diagram-emitting commands now load the Mermaid syntax references before reading
+  their templates, so generated diagrams follow the reference syntax: `agent-design`
+  (flowchart, C4), `agent-maturity` (gantt, quadrant chart), `agent-security`
+  (flowchart, mindmap), `agent-governance` (flowchart), `agent-integration`
+  (sequence diagram), `agent-inventory` (flowchart)
+
 - `agent-architecture` post-build hooks now include `arckit:traceability`
   (requirements traceability matrix) alongside `arckit:health` and `arckit:pages`,
   matching the other overlay recipes
