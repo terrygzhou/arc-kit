@@ -2,6 +2,22 @@
 
 > Replaces the centralised Architecture Review Board with a distributed governance model. Governance is embedded in sprint rhythm, not a periodic gate.
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (O-AA agile governance)
+
+- **Roles:** Who holds the distributed governance roles (architect, tech lead, compliance owner) per team?
+- **Review cadence:** What does the sprint architecture review (pre/post sprint) check, and who runs it?
+- **Debt:** What architecture debt categories exist, and what threshold triggers a debt backlog entry?
+- **Health:** What does the quarterly architecture health rubric measure, and who scores it?
+- **Compliance:** Which continuous compliance checks (compliance-as-code) gate the pipeline, and where do they run?
+
 | Field | Value |
 |---|---|
 | **Issue** | `${user_config.project_issue_prefix}-128` — Agile Governance Cadence Template |

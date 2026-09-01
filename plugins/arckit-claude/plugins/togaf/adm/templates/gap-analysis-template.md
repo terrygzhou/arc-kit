@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Gap Analysis
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (TOGAF 10 — ADM Phase E)
+
+- **Current state:** What is the evidenced current state for the dimensions in scope (capability, application, data, technology)?
+- **Target state:** What is the agreed target state each gap is measured against?
+- **Gaps:** For each gap: what exactly is missing, and what is its business impact?
+- **Root causes:** What is causing each gap (capability, funding, skills, technology, process)?
+- **Mitigations:** What closes each gap, and which mitigation maps to which transition work package?
+
 ## Document Control
 
 | Field | Value |

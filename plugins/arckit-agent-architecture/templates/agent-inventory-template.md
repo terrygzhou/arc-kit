@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # AI Agent Inventory
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (agentic inventory + TOGAF 10 application-view floor)
+
+- **Agents:** Which AI agents exist or are planned? For each: purpose, model, deployment target, owner, risk level, and oversight mode.
+- **Scope:** Which environments and use cases does the inventory cover?
+- **Status:** Which agents are in production vs. staging vs. planned, and which are retired?
+- **Risk basis:** On what evidence is each agent's risk level assigned?
+- **Oversight:** Which agents need human-in-the-loop / on-the-loop oversight, and who is accountable?
+
 ## Document Control
 
 | Field | Value |

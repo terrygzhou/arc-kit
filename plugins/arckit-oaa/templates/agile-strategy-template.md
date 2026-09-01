@@ -6,6 +6,24 @@
 > **Validation:** `validate-agile-strategy.py`
 > **O-AA Reference:** Learning Unit 2 — Agile Strategy
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (O-AA agile strategy + TOGAF 10 discovery floor)
+
+- **Vision (TOGAF 10 D1):** What is the digital transformation vision, and which outcomes does it prioritize?
+- **Digital dimension:** What changes in technology, product, and operating model — and what is the current state of each?
+- **Agile dimension:** What organizational, cultural, and team agility changes are required?
+- **Axioms:** Which O-AA axioms drive the strategy, and where do they conflict with current practice?
+- **Resilience:** Which failure scenarios must the strategy prepare for, and what does each map to?
+- **Waves:** What are the transformation waves, their targets, and their dependencies?
+- **Pain points (TOGAF 10 D8):** What are the top current-state pain points and capability gaps this strategy addresses?
+
 ---
 
 ## Trigger Guidance

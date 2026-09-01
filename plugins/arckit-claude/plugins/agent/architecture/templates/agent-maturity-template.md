@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Agent Program Maturity Model
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (agentic maturity)
+
+- **Current level:** On which dimensions (capabilities, security, governance, evaluation, operations) is maturity assessed?
+- **Baseline:** What is today's evidence-backed maturity per dimension?
+- **Target:** What target level is desired, by when, and what outcome does it unlock?
+- **Gaps:** What are the largest maturity gaps between current and target?
+- **Plan:** What improvements close each gap, in what sequence?
+
 ## Document Control
 
 <!-- DOC-CONTROL-HEADER -->

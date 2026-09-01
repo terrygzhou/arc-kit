@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Agent Security Architecture
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (agentic security)
+
+- **Threat surface:** What are the primary threat vectors (prompt injection, data exfiltration, tool abuse, model supply chain)?
+- **Guardrails:** What input/output filters, PII redaction, and action allow-lists apply?
+- **Secrets & access:** How does the agent access credentials, and what least-privilege boundaries exist?
+- **Data boundaries:** What data may the agent see or exfiltrate, and what classification constraints apply?
+- **Incident response:** What is the kill-switch / rollback procedure for a misbehaving agent?
+
 ## Document Control
 
 <!-- DOC-CONTROL-HEADER -->

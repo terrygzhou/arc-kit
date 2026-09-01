@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Architecture Board Charter
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (TOGAF 10 — ADM governance)
+
+- **Mandate:** What decisions is this board accountable for (approve, reject, escalate)?
+- **Cadence:** How often does the board meet, and what is its decision SLA?
+- **Quorum:** Who must attend / hold a vote, and what is the quorum rule?
+- **Inputs:** Which artefacts and reviews feed board decisions?
+- **Escalation:** How are disputed or high-risk decisions escalated?
+
 ## Document Control
 
 | Field | Value |

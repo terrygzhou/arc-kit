@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Technology Architecture — TOGAF ADM Phase D
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (TOGAF 10 — ADM Phase D)
+
+- **Current infrastructure:** What infrastructure, platforms, and hosting environments run today (cloud/on-prem/hybrid)?
+- **Target topology:** What is the target technology topology (cloud model, regions, runtimes), and why?
+- **Standards:** Which technology standards and platform rules must the design follow?
+- **Constraints:** What vendor, licensing, latency, jurisdiction, or budget constraints apply?
+- **Risk:** Where are the key technical risks (lock-in, performance, security, capacity)?
+
 ## Document Control
 
 | Field | Value |

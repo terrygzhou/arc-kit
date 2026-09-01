@@ -6,6 +6,24 @@ templateVersion: "1.0"
 
 # Architecture Vision
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (TOGAF 10 — ADM Preliminary + Phase A)
+
+- **Business vision:** What is the transformation vision, and why now? (2-3 sentences)
+- **Scope:** Which business areas, capabilities, and systems are in scope — and explicitly out of scope?
+- **Drivers:** What are the key strategic, operational, compliance, and technology drivers for this architecture?
+- **Stakeholders:** Who are the key stakeholders and sponsors, and what does each care about most?
+- **Constraints:** What budget, timeline, jurisdictional/regulatory, and dependency constraints apply?
+- **Goals:** What success criteria or measurable outcomes define a successful architecture?
+- **Governance:** How will architectural decisions be governed and approved?
+
 ## Document Control
 
 | Field | Value |

@@ -2,6 +2,22 @@
 
 > Security embedded in every sprint/iteration. Risk-based testing automation, compliance-as-code integration, continuous validation replacing phase-gate checkpoints. Aligned with O-AA Security Playbook (G216).
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (O-AA agile security)
+
+- **Embedded security:** What security stories and estimates enter sprint planning, and who owns them?
+- **Scan thresholds:** What risk-based scan thresholds gate a sprint (vulnerability, dependency, secret)?
+- **Compliance gates:** Which compliance-as-code gates run in CI/CD, and which regulation/standard each enforces?
+- **Sprint-gate validation:** What evidence closes the sprint security gate (tests, attestations, reviews)?
+- **Metrics:** Which security KPIs feed the metrics dashboard, and what are their targets?
+
 | Field | Value |
 |---|---|
 | **Template** | Agile Security Architecture |

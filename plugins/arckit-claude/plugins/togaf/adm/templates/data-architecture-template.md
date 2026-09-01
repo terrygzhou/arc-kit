@@ -6,6 +6,23 @@ templateVersion: "1.0"
 
 # Data Architecture — TOGAF ADM Phase C.2
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (TOGAF 10 — ADM Phase C, data view)
+
+- **Data domains:** Which key data domains / data assets are in scope, and who owns each?
+- **Classification:** What classification/sensitivity levels apply to these assets, and where are they breached?
+- **Landscape (current):** How is data stored, moved, and governed today (systems, pipelines, quality, lineage)?
+- **Target state:** What is the target data model / data platform, and what gaps exist today vs. target?
+- **Retention & access:** What retention, access-control, and sovereignty constraints apply?
+- **Pain points:** Where are the highest-impact data quality, availability, or integration problems?
+
 ## Document Control
 
 | Field | Value |

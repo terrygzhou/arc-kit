@@ -6,6 +6,25 @@
 > **TOGAF Mapping:** ADM Phase B (Business) + Phase C (Information Systems) + Phase E (Opportunities)
 > **Trigger:** Use when architecture work targets a specific product (not enterprise-wide). Product-centric, outcome-driven, team-led.
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (O-AA product architecture + TOGAF 10 discovery floor)
+
+- **Mission:** What is the product mission in one sentence?
+- **Outcome:** What are the Value / Outcome / Experience / Adoption targets and their measurements?
+- **Principles:** Which product architecture principles (grounded in O-AA axioms) will the team follow?
+- **Team:** What is the cross-functional team composition, and who is the architect on it?
+- **Backlog:** Which epics and architecture items are already on the product backlog?
+- **Roadmap:** What do the next release waves target, and what gate criteria apply?
+- **Current state (TOGAF 10 D5):** What is the product's current state (systems, data, operating model) that the roadmap moves away from?
+- **Pain points (TOGAF 10 D8):** What are the sharpest user or delivery pain points this architecture must relieve?
+
 ---
 
 ## 1. Product Mission and Outcome

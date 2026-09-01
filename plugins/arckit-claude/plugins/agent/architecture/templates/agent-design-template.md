@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Agent Architecture Specification
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (agentic design)
+
+- **Purpose:** What outcome does the agent (or agent system) deliver, and to which users?
+- **Patterns:** Which design patterns apply (planner/executor, critic, memory, tool use, multi-agent), and why?
+- **Context & tools:** What context sources and tools does the agent access?
+- **Failure handling:** How are failures, retries, and escalation to humans designed in?
+- **Evaluation:** How is agent behaviour evaluated (test set, rubric, human review)?
+
 ## Document Control
 
 <!-- DOC-CONTROL-HEADER -->

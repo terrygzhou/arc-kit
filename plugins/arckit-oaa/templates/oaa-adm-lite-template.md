@@ -2,6 +2,24 @@
 
 > Maps the TOGAF ADM cycle to agile sprints. Use when delivering AI architectures in 2-4 week engagement windows. References `schemas/vision.json` and `schemas/implementation-strategy.json`.
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (O-AA Sprint 0 + TOGAF 10 discovery floor)
+
+- **Engagement scope:** What is the scope of this 2-4 week engagement (product, capability, or platform)?
+- **Vision:** What is the outcome this sprint map is working toward, and what does "done" look like?
+- **Stakeholders:** Who are the stakeholders, and what will each measure as success?
+- **Outcome dimensions:** What are the Value, Outcome, Experience, and Adoption targets for the engagement?
+- **Constraints:** What jurisdiction, budget, timeline, and regulatory controls apply?
+- **Current state:** What is the current technology / data / team state relevant to this engagement?
+- **Risks:** What is the top risk to the sprint map, and what de-risks it?
+
 | Field | Value |
 |---|---|
 | **Template** | O-AA ADM Lite |

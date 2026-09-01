@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Agent Governance Framework
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (agentic governance)
+
+- **Oversight model:** Who governs the agent population (board, council, team), and at what cadence?
+- **Policies:** Which policies constrain agent behaviour (permitted actions, data, spend, external communication)?
+- **Audit:** What is audited (decisions, tool calls, cost), retained how long, and who can inspect it?
+- **Approval gates:** Which agent actions or changes require human approval before deployment?
+- **Accountability:** Who is accountable for each agent's outcomes in production?
+
 ## Document Control
 
 [Standard: ID=ARC-{P}-AAOV-v{VERSION}]

@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Architecture Change Request
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (TOGAF 10 — change governance)
+
+- **Change:** What exactly changes (capability, application, data asset, platform), and why?
+- **Impact:** Which stakeholders, services, and artefacts are affected, and how?
+- **Risk:** What is the risk of change, and what is the risk of doing nothing?
+- **Approver:** Who is accountable for approving this change?
+- **Reversibility:** Is the change reversible, and what is the rollback plan?
+
 ## Document Control
 
 | Field | Value |

@@ -6,6 +6,22 @@ templateVersion: "1.0"
 
 # Agent Integration Architecture
 
+## Intake Interview Questions
+
+The template-driven intake interview asks the questions below before rendering this
+artefact. Questions already answerable from existing artefacts, saved intake,
+onboarding data, or organisation config are **not** asked; a skipped question
+renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+
+### Intake questions (agentic integration + TOGAF 10 technology-view floor)
+
+- **Integrations:** Which systems, APIs, tools, and data sources does the agent connect to?
+- **Protocols:** Which integration protocols/patterns apply (MCP, A2A, REST, queues), and why?
+- **Identity & auth:** How does the agent authenticate to each integration?
+- **Contracts:** What are the input/output contracts and versioning rules per integration?
+- **Current tech state (TOGAF 10 D6):** What is the current platform/API infrastructure these integrations run on, and what is the target?
+
 ## Document Control
 
 | Field | Value |
