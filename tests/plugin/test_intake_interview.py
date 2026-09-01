@@ -18,6 +18,7 @@ The interview is implemented as LLM instructions, not compiled code, so a
 """
 
 import os
+import re
 
 import pytest
 
@@ -100,6 +101,152 @@ def test_shared_block_carries_the_question_asking_rules():
     }
     missing = [k for k, ok in checks.items() if not ok]
     assert not missing, f"shared block missing question-asking rules: {missing}"
+
+
+# ---------------------------------------------------------------------------
+# 1a. WIRING — the shared block must resolve from each plugin's own runtime root
+# ---------------------------------------------------------------------------
+# Overlay commands (oaa, togaf/adm, agent/architecture) are shipped as their own
+# sub-plugins: at runtime ${CLAUDE_PLUGIN_ROOT} is the sub-plugin's own
+# directory, NOT the arckit root. Every command references
+# ${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md, so each sub-plugin
+# must carry its own copy — otherwise the model cannot read the interview
+# algorithm and, because the interview is a soft gate, silently skips asking.
+
+def _plugin_root_of(path):
+    """Innermost enclosing directory that contains a .claude-plugin/ dir."""
+    d = os.path.dirname(path)
+    while True:
+        if os.path.isdir(os.path.join(d, ".claude-plugin")):
+            return d
+        parent = os.path.dirname(d)
+        if parent == d:
+            return None
+        d = parent
+
+
+def test_intake_reference_resolves_in_every_plugin_root():
+    for path in _core_artefact_commands() + _overlay_commands():
+        root = _plugin_root_of(path)
+        assert root is not None, f"{path}: no enclosing .claude-plugin root found"
+        ref = os.path.join(root, "references", "intake-instructions.md")
+        assert os.path.isfile(ref), (
+            f"{os.path.basename(path)} runs as plugin rooted at {root}, but its "
+            "intake reference does not resolve: " + ref
+        )
+
+
+def test_overlay_intake_copies_match_the_shared_block():
+    root_block = _read(SHARED_BLOCK)
+    for d in OVERLAY_DIRS:
+        ref = os.path.normpath(os.path.join(d, "..", "references", "intake-instructions.md"))
+        assert os.path.isfile(ref), f"overlay sub-plugin missing its intake copy: {ref}"
+        assert _read(ref) == root_block, f"overlay intake copy diverged from root shared block: {ref}"
+
+
+# ---------------------------------------------------------------------------
+# 1b. WIRING — MANDATORY prerequisite tier: header wording must match its bodies
+# ---------------------------------------------------------------------------
+
+# The TOGAF ADM overlay lives in two trees that must agree: the shipped Claude
+# mirror (what the plugin serves) and the standalone source the converter reads
+# to build the 7 extensions. Both carry the 10 ADM commands, so both are checked.
+ADM_COMMAND_DIRS = (
+    os.path.join(CLAUDE, "plugins", "togaf", "adm", "commands"),
+    os.path.join(REPO_ROOT, "plugins", "arckit-togaf-adm", "commands"),
+)
+
+_MAND_HEADER_RE = re.compile(
+    r"^(#{0,4}\s*)\**MANDATORY\**\s*(?:\((?P<paren>[^)]*)\))?\s*:?\s*$",
+    re.IGNORECASE,
+)
+_NEXT_TIER_RE = re.compile(
+    r"^#{1,4}\s*(?:\**)(RECOMMENDED|OPTIONAL)\**", re.IGNORECASE
+)
+_STOP_RE = re.compile(r"\bSTOP\b", re.IGNORECASE)
+
+
+def _mandatory_tier(body):
+    """Return (header_paren, item_bodies) for a command's MANDATORY tier.
+
+    ``header_paren`` is the text inside the tier header's parentheses (empty when
+    there is none). ``item_bodies`` is the list of ``If missing: ...`` strings
+    belonging to items in that tier. Returns None when the command has no
+    MANDATORY prerequisite tier.
+    """
+    lines = body.splitlines()
+    start = None
+    paren = ""
+    for i, line in enumerate(lines):
+        m = _MAND_HEADER_RE.match(line.strip())
+        if m:
+            start = i
+            paren = (m.group("paren") or "").strip()
+            break
+    if start is None:
+        return None
+    bodies = []
+    for line in lines[start + 1:]:
+        s = line.strip()
+        if _NEXT_TIER_RE.match(s) or s.startswith("## "):
+            break  # next prerequisite tier or a new section ends the MANDATORY tier
+        m = re.search(r"If missing:\s*(.+)$", s)
+        if m:
+            bodies.append(m.group(1).strip())
+    return paren, bodies
+
+
+def test_mandatory_tier_header_matches_item_instructions():
+    """A MANDATORY tier whose items say 'If missing: STOP …' is a hard
+    dependency: its header must read 'stop if missing …', never
+    'warn if missing' (the warn-vs-STOP contradiction from EYW-268).
+    Conversely, a header that promises a stop must be backed by a STOP item.
+    """
+    checked = 0
+    for d in ADM_COMMAND_DIRS:
+        assert os.path.isdir(d), f"missing TOGAF ADM command dir: {d}"
+        for name in sorted(os.listdir(d)):
+            if not name.endswith(".md"):
+                continue
+            tier = _mandatory_tier(_read(os.path.join(d, name)))
+            if tier is None:
+                continue  # no MANDATORY prerequisite tier (e.g. discovery, arch-change)
+            paren, bodies = tier
+            header_lower = paren.lower()
+            header_says_stop = "stop if missing" in header_lower
+            header_says_warn = "warn if missing" in header_lower
+            any_stop_item = any(_STOP_RE.search(b) for b in bodies)
+            label = f"{os.path.basename(d)}/{name}"
+            if any_stop_item:
+                assert header_says_stop, (
+                    f"{label}: items say STOP but header is {paren!r} "
+                    f"(should say 'stop if missing …')"
+                )
+                assert not header_says_warn, (
+                    f"{label}: items say STOP but header says 'warn if missing' "
+                    f"— warn/STOP contradiction"
+                )
+            else:
+                assert not header_says_stop, (
+                    f"{label}: header promises 'stop if missing' but no item body says STOP"
+                )
+            checked += 1
+    # floor: the 10 ADM commands that hard-stop on a prerequisite artefact exist
+    # in each of the two trees.
+    assert checked >= 10, f"expected >=10 MANDATORY tiers across both trees, checked {checked}"
+
+
+def test_mandatory_tier_coverage_is_symmetric_across_trees():
+    """The two ADM trees must agree on WHICH commands carry a MANDATORY tier,
+    so the header fix cannot drift between the plugin and the converter source."""
+    counts = {}
+    for d in ADM_COMMAND_DIRS:
+        counts[os.path.basename(os.path.dirname(d))] = sum(
+            1
+            for n in os.listdir(d)
+            if n.endswith(".md") and _mandatory_tier(_read(os.path.join(d, n))) is not None
+        )
+    assert len(set(counts.values())) == 1, f"MANDATORY-tier command count differs across trees: {counts}"
 
 
 # ---------------------------------------------------------------------------

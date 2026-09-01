@@ -26,3 +26,8 @@
 ## 6. Close out
 - [x] 6.1 `openspec validate template-driven-intake`
 - [x] 6.2 Conventional commit: `feat: add template-driven intake interview to artefact-producing commands`
+
+## 7. Overlay sub-plugin reference parity (fix: interview silently skipped)
+- [x] 7.1 Root cause: overlay commands reference `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md`, but at runtime each overlay sub-plugin (`oaa`, `togaf/adm`, `agent/architecture`) resolves `${CLAUDE_PLUGIN_ROOT}` to its own directory, which shipped no `references/intake-instructions.md` copy — the model could not read the interview algorithm and, the interview being a soft gate, generated artefacts without asking (observed on a fresh install of the `arckit-oaa` / `arckit-togaf-adm` / `arckit-agent-architecture` sub-plugins). Core `arckit` commands were unaffected (file lives at the root `references/`)
+- [x] 7.2 Copy `references/intake-instructions.md` verbatim into `plugins/arckit-claude/plugins/oaa/references/`, `plugins/arckit-claude/plugins/togaf/adm/references/`, and `plugins/arckit-claude/plugins/agent/architecture/references/` (same per-plugin copy pattern as `citation-instructions.md`)
+- [x] 7.3 Add regression tests: every in-scope command's intake reference must resolve inside its own enclosing plugin root, and each overlay copy must be byte-identical to the root shared block (`tests/plugin/test_intake_interview.py`)

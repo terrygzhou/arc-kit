@@ -13,6 +13,10 @@ Before rendering its artefact, every artefact-producing command (core or bundled
 - **WHEN** an overlay command runs — e.g. `togaf/adm`'s `data-architecture`, `oaa`'s `product-architecture`, or `agent/architecture`'s `agent-security`
 - **THEN** its interview questions are derived from that overlay command's own effective template (data flows/ownership; product components and value; threat surfaces respectively), never from a shared generic question set
 
+#### Scenario: Overlay sub-plugins resolve the shared interview block from their own root
+- **WHEN** an overlay sub-plugin (`oaa`, `togaf/adm`, or `agent/architecture`) — which at runtime has its own `${CLAUDE_PLUGIN_ROOT}` distinct from the `arckit` root — runs an artefact-producing command
+- **THEN** the command's reference to `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` resolves to a copy of the shared block shipped inside that sub-plugin (kept byte-identical to the root `references/intake-instructions.md`), so the model can read and run the interview instead of silently skipping it
+
 #### Scenario: Custom template override changes the questions
 - **WHEN** `.arckit/templates-custom/{name}-template.md` exists and its sections differ from the shipped default
 - **THEN** the intake interview derives its questions from the custom template, not the default
