@@ -174,13 +174,6 @@ arckit config set llm.model Qwen3.6-27B
 
 **Retry behaviour** — failed LLM calls retry with exponential backoff (2s → 4s → 8s) before failing the wave. Configure via `--base-url` and `--model` per-build, or persist via `arckit config`.
 
-### OKF Interoperability
-
-ArcKit can exchange Markdown knowledge bundles using an Open Knowledge Format-shaped frontmatter layer:
-
-- `/arckit:export-okf` copies ArcKit `ARC-*.md` artifacts into an OKF bundle with portable `type`, `title`, `resource`, `tags`, `timestamp`, and `arckit` metadata.
-- `/arckit:import-okf` scans an OKF bundle, writes `.arckit/tmp/okf-import-report.json`, and materializes safe imports as `RSCH` review notes by default.
-- Native ArcKit files remain unchanged unless you explicitly enable source frontmatter stamping with `ARCKIT_OKF_FRONTMATTER=1` or `.arckit/config.json` containing `{ "okfFrontmatter": true }`.
 
 ### Platform Support
 
@@ -192,35 +185,6 @@ ArcKit can exchange Markdown knowledge bundles using an Open Knowledge Format-sh
 | Windows (native) | Full support | Full support | Partial | Full support | Full support |
 
 **Windows users**: The Claude Code plugin, GitHub Copilot prompt files, Mistral Vibe extension, and Kimi Code CLI extension work natively on all platforms. For Codex CLI / OpenCode CLI on native Windows (without WSL), some commands containing inline bash snippets may require [Git Bash](https://git-scm.com/downloads/win) or [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install). We recommend WSL2 for the best experience.
-
----
-
-## What it costs (plugin footprint)
-
-Token cost of installing the `arckit` core plugin in a Claude Code session, captured from `claude plugin details arckit` on v2.1.143+:
-
-- **Always-on per session: ~10,042 tokens** — added to every session's system context, covering the 75 command-skills + 5 utility skills (`architecture-workflow`, `arckit-build`, `mermaid-syntax`, `plantuml-syntax`, `wardley-mapping`) + 19 agent descriptors. Hooks (10 events) and MCP servers (6) are harness-resolved at runtime and not counted.
-- **On-invoke: ~250 to ~60K tokens per command** — paid only when a specific skill or agent fires. Most commands are in the 5–10K range.
-
-### On-invoke cost by command
-
-Costs are estimates from the Claude Code tokenizer and may differ from actual usage. Use this table to budget research-heavy multi-command sessions.
-
-| Tier | Range | Commands |
-|------|-------|----------|
-| Lightweight | <2K | `start`, `init`, `build`, `search`, `impact`, `navigator`, `graph-report`, `framework`, `gov-landscape`, `aws-research`, `azure-research`, `gcp-research` |
-| Standard | 2–7K | `customize`, `score`, `principles`, `mermaid-syntax`, `plantuml-syntax`, `architecture-workflow`, `datascout`, `tenders`, `competitors`, `evaluate`, `hld-review`, `mlops`, `devops`, `finops`, `research`, `tcop`, `wardley-mapping`, `template-builder`, `glossary`, `dld-review`, `traceability`, `stakeholders`, `presentation`, `dfd`, `operationalize`, `requirements`, `maturity-model`, `data-model`, `gov-reuse`, `strategy`, `presentation`, `atrs`, `gov-code-search`, `READER-PATTERN` |
-| Heavy | 7–15K | `wardley.value-chain`, `gcloud-clarify`, `ai-playbook`, `sow`, `sobc`, `risk`, `secure`, `dpia`, `dos`, `mod-secure`, `plan`, `conformance`, `roadmap`, `health`, `wardley.doctrine`, `wardley.gameplay`, `pages`, `servicenow`, `gcloud-search`, `principles-compliance`, `story`, `wardley`, `wardley.climate`, `data-mesh-contract`, `platform-design`, `adr`, `arckit-build`, `grants` |
-| Research-heavy | 15–25K | `service-assessment`, `analyze`, `backlog`, `diagram` |
-| Specialist | >25K | `jsp-936` (~60K — MOD JSP 936 AI assurance, defence-only) |
-
-### Trimming the footprint
-
-- The five utility skills already use `paths:` globs to scope their always-on cost to relevant projects (`mermaid-syntax` only loads under `*.mmd`, `wardley-mapping` under WARD artefacts, etc.). The 75 command-skills are listed but not described in detail in the always-on context — the full prompt only loads on invocation.
-- Community overlays (`arckit-uae`, `arckit-fr`, `arckit-ca`, `arckit-eu`, `arckit-at`, `arckit-au`, `arckit-au-energy`, `arckit-us`, `arckit-uk-finance`, `arckit-uk-nhs`, `arckit-togaf-adm`, `arckit-oaa`, `arckit-agent-architecture`) are independent plugins — install only the jurisdictions / sectors you need. Each adds its own always-on baseline. `arckit-uk-finance`, `arckit-uk-nhs`, and `arckit-au-energy` are **sector** overlays (`arckit-au-energy` layers the energy sector on the `arckit-au` jurisdiction baseline); the rest are jurisdiction-based.
-- Heavy commands (`jsp-936`, `analyze`, `diagram`, `backlog`) are on-invoke only; the always-on cost is unaffected by which heavy commands exist.
-
-To measure your own session footprint, run `/context all` (Claude Code v2.1.139+) for per-skill token estimates against your active model.
 
 ---
 
@@ -991,7 +955,7 @@ This runs `/arckit:health` every 30 minutes, surfacing stale research, forgotten
 
 - **Issues**: [GitHub Issues](https://github.com/terrygzhou/arc-kit/issues)
 - **Releases**: [GitHub Releases](https://github.com/terrygzhou/arc-kit/releases)
-- **Latest Version**: [v6.7.5](https://github.com/terrygzhou/arc-kit/releases/tag/v6.7.5)
+- **Latest Version**: [v6.8.0](https://github.com/terrygzhou/arc-kit/releases/tag/v6.8.0)
 
 ---
 
