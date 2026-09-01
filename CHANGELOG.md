@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
+### Added
+
+- **OAA intake hard-gates on the global `PRIN` artefact (TOGAF-consistent).** All five `oaa` overlay commands (`oaa-adm-lite`, `product-architecture`, `agile-governance`, `agile-security`, `agile-strategy`) now declare the `000-global` `PRIN` (Architecture Principles) artefact in a **MANDATORY** prerequisite tier: if it is missing the command stops and points at `/arckit:principles` — it never renders a missing `PRIN` as `TBD`, and bulk builds of OAA targets without `PRIN` fail/skip instead of emitting scaffolded artefacts. Every other OAA prerequisite (`OAAL`, `OAPR`, `OAGOV`, `OASEC`, `OASTR`, `BPCM`, …) stays RECOMMENDED (noted, non-blocking), keeping OAA's lightweight ethos.
+
+- **OAA intake interview gains a TOGAF/OAA discovery floor.** A new OAA-scoped reference, `references/intake-discovery-dimensions.md` (D1 business vision/strategy, D2 capabilities, D3 stakeholders, D4 constraints/drivers, D5 current-state, D6 technology landscape, D7 data architecture & classification, D8 pain points/gaps/risks, D9 outcome dimensions, D10 axiom alignment), is loaded by every OAA intake step alongside the shared block: every OAA artefact is now grounded in the standard's core concerns even when a template section is thin (e.g. `product-architecture` asks current-state and pain points). The checklist is a coverage floor only — it adds no diagram or output mandate (the §8 OAA tone guard is unchanged), and under the ask-always/answer-optional policy prefilled dimensions are surfaced for confirmation/override while source-less ones are asked grouped, skippable, rendering `TBD` when skipped.
+
 
 - **`arckit build` (BYO LLM) rejected every target with `HTTP 400 … exceeds the model's maximum context length`** on any model whose context window equals `max_tokens`. `max_tokens` defaulted to `128000` — the whole context window — but OpenAI-compatible endpoints treat it as the *completion* budget and require `prompt_tokens + completion_tokens ≤ context_window`, so a 2,641-token prompt requested `2641 + 128000 = 130641` and was rejected. `call_llm` now caps the completion budget per request to `context_window − estimated_prompt − reserve`, so the request always fits. A new `llm.context_window` config key (default `128000`, set with `arckit config set llm.context_window N`, shown in `arckit local status`) lets you name a model's real window; the default works as-is.
 

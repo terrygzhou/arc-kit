@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- **MANDATORY `PRIN` hard gate on all five OAA commands.** `oaa-adm-lite`, `product-architecture`, `agile-governance`, `agile-security`, and `agile-strategy` now stop when the `000-global` `ARC-000-PRIN-v[N].md` artefact is missing (run `/arckit:principles` first) — matching the TOGAF ADM hard gate. All other OAA prerequisites remain RECOMMENDED.
+
+- **New OAA discovery-dimension checklist (`references/intake-discovery-dimensions.md`).** Canonical D1–D10 coverage floor (vision/strategy, capabilities, stakeholders, constraints/drivers, current-state, technology, data, pain points/gaps, outcomes, axioms) loaded by every OAA intake step alongside the shared intake block: resolvable dimensions are prefilled and surfaced for confirmation/override (ask-always, answer-optional), source-less dimensions are asked grouped and skippable (skip → `TBD`), and the checklist adds no diagram or output mandate.
+
 - `product-architecture` (C4) and `oaa-adm-lite` (flowchart) now load the Mermaid
   syntax references before reading their templates, so generated diagrams follow
   the reference syntax
