@@ -36,7 +36,7 @@ For Codex CLI, install or upgrade the ArcKit plugin marketplace and enable plugi
 
 ```bash
 # First install
-codex plugin marketplace add tractorjuice/arckit-codex
+codex plugin marketplace add terrygzhou/arckit-codex
 
 # Existing install
 codex plugin marketplace upgrade arckit
