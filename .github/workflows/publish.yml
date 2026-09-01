@@ -8,12 +8,27 @@ jobs:
   publish:
     name: Build & Publish to PyPI
     runs-on: ubuntu-latest
+    # Defense-in-depth: only the canonical fork owns the PYPI_API_TOKEN repo
+    # secret, so never build/upload from a fork that lacks it.
+    if: github.repository == 'terrygzhou/arc-kit'
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Verify PyPI token is configured
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          if [ -z "$PYPI_API_TOKEN" ]; then
+            echo "::error::PYPI_API_TOKEN repo secret is not set."
+            echo "Add it: Settings -> Secrets and variables -> Actions, " \
+                 "or: gh secret set PYPI_API_TOKEN --repo ${GITHUB_REPOSITORY}"
+            exit 1
+          fi
+          echo "PYPI_API_TOKEN is present (${#PYPI_API_TOKEN} chars)."
 
       - name: Install build tools
         run: pip install build twine
@@ -23,6 +38,14 @@ jobs:
 
       - name: Upload to PyPI
         env:
-          TWINE_USERNAME: __token__
+          TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: twine upload dist/*
+        run: |
+          set -euo pipefail
+          if ! twine upload --verbose dist/*; then
+            echo "::error::PyPI upload failed (see twine output above)."
+            echo "403 Forbidden  -> PYPI_API_TOKEN is invalid, expired, or revoked."
+            echo "                -> Regenerate at pypi.org (Account -> API tokens),"
+            echo "                -> then update the repo secret (gh secret set PYPI_API_TOKEN)."
+            exit 1
+          fi
