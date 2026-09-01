@@ -5,9 +5,11 @@
 ## Intake Interview Questions
 
 The template-driven intake interview asks the questions below before rendering this
-artefact. Questions already answerable from existing artefacts, saved intake,
-onboarding data, or organisation config are **not** asked; a skipped question
-renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
+artefact. Every question below is always put to the user for their input, one
+question at a time, and is prefilled where answerable from existing artefacts,
+saved intake, onboarding data, or organisation config so the user can confirm or
+override it. Each question is **optional**: a skipped question renders as a
+`TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
 (discovery dimensions per ADM phase) and the Open Agile Architecture Standard
 (C208, The Open Group, 2020), with its Security Playbook (G216) where applicable;
 each O-AA question below is cited to the C208 section it draws on.
