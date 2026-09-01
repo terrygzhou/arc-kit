@@ -21,7 +21,6 @@ each O-AA question below is cited to the C208 section it draws on.
 - **Vision (TOGAF 10 D1):** What is the digital transformation vision, and which outcomes does it prioritize?
 - **Digital dimension:** What changes in technology, product, and operating model — and what is the current state of each?
 - **Agile dimension:** What organizational, cultural, and team agility changes are required?
-- **Axioms:** Which O-AA axioms drive the strategy, and where do they conflict with current practice?
 - **Resilience:** Which failure scenarios must the strategy prepare for, and what does each map to?
 - **Waves:** What are the transformation waves, their targets, and their dependencies?
 - **Pain points (TOGAF 10 D8):** What are the top current-state pain points and capability gaps this strategy addresses?

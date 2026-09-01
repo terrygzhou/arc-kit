@@ -14,7 +14,6 @@ each O-AA question below is cited to the C208 section it draws on.
 
 ### Intake questions (O-AA agile governance)
 
-- **Roles:** Who holds the distributed governance roles (architect, tech lead, compliance owner) per team?
 - **Review cadence:** What does the sprint architecture review (pre/post sprint) check, and who runs it?
 - **Debt:** What architecture debt categories exist, and what threshold triggers a debt backlog entry?
 - **Health:** What does the quarterly architecture health rubric measure, and who scores it?
@@ -37,7 +36,7 @@ Grounded in the Open Agile Architecture Standard (C208, The Open Group, 2020)
 governance constructs; each answer feeds the distributed governance cadence
 below.
 
-- **Decision rights (C208 §8):** Which decision rights (authority) are allocated to which teams, and is accountability matched to each?
+- **Decision rights (C208 §8):** Which decision rights (authority) are allocated to which teams — architect, tech lead, compliance owner — and is accountability matched to each?
 - **Guardrails over standards (C208 §8.2–8.3):** Which standards become guardrails (policy intent) that teams apply bottom-up, rather than a top-down approved-catalog mandate?
 - **Integrated business+IT governance (C208 §8.3):** How do Quarterly Business Reviews, sponsor resource-release, and post-mortems operate across the tribes, and how is IT investment treated as a subset of business investment?
 - **Alignment levers (C208 §8.3):** What shared purpose, shared consciousness, forcing functions, and feedback loops keep autonomous teams aligned?

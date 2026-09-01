@@ -15,7 +15,6 @@ each O-AA question below is cited to the C208 section it draws on.
 ### Intake questions (O-AA agile security)
 
 - **Embedded security:** What security stories and estimates enter sprint planning, and who owns them?
-- **Scan thresholds:** What risk-based scan thresholds gate a sprint (vulnerability, dependency, secret)?
 - **Compliance gates:** Which compliance-as-code gates run in CI/CD, and which regulation/standard each enforces?
 - **Sprint-gate validation:** What evidence closes the sprint security gate (tests, attestations, reviews)?
 - **Metrics:** Which security KPIs feed the metrics dashboard, and what are their targets?
@@ -41,7 +40,7 @@ architecture below.
 
 - **Minimum Security Architecture (Playbook §2):** What is the MSA that guides this sprint's MVP, and where are the security sub-system boundaries (each with its own lifecycle)?
 - **Layers of controls (Playbook §4.1):** Which of the five layers (assets, security systems, computing/network, physical, personnel) are in scope, and which protection objective (confidentiality/integrity/availability) each serves?
-- **Risk appetite (Playbook §4):** What is the defined risk threshold, and is risk quantified (e.g., Open FAIR: Loss Event Frequency × Loss Magnitude) or via a documented methodology?
+- **Risk appetite (Playbook §4):** What is the defined risk threshold — and the risk-based scan thresholds that gate a sprint (vulnerability, dependency, secret) — quantified via Open FAIR (Loss Event Frequency × Loss Magnitude) or a documented methodology?
 - **DevSecOps pipeline (Playbook §4.2):** Where do threat-modeling, static analysis, dynamic scanning, and penetration testing sit, and what gates each stage?
 - **Roles (Playbook §3):** Who is the agile security architect/champion, and how do they team with risk management, cloud/network providers, and enterprise security?
 - **Security-architecture quality (Playbook §5):** Is the architecture deployable today, testable/falsifiable, roll-backable, and does it provide built-in monitoring and traceability?

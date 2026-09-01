@@ -17,7 +17,7 @@ each O-AA question below is cited to the C208 section it draws on.
 - **Engagement scope:** What is the scope of this 2-4 week engagement (product, capability, or platform)?
 - **Vision:** What is the outcome this sprint map is working toward, and what does "done" look like?
 - **Stakeholders:** Who are the stakeholders, and what will each measure as success?
-- **Outcome dimensions:** What are the Value, Outcome, Experience, and Adoption targets for the engagement?
+- **Outcome dimensions:** What are the Value, Outcome, Experience, and Adoption targets for the engagement, and how is value defined — functional benefits plus the emotional dimension (C208 §4.2.3)?
 - **Constraints:** What jurisdiction, budget, timeline, and regulatory controls apply?
 - **Current state:** What is the current technology / data / team state relevant to this engagement?
 - **Risks:** What is the top risk to the sprint map, and what de-risks it?
@@ -39,7 +39,6 @@ constructs; each answer feeds the sprint-mapped ADM delivery below.
 
 - **Building-block selection (C208 §4.2):** Which O-AA building blocks does this engagement need — Strategy, Value, the three perspectives (Experience, Work System, Technical System), and Data/Information & AI?
 - **Strategy & assumptions (C208 §4.2.1):** What is the strategic positioning in scope, and which strategic assumptions must be experimentally verified (not assumed) during the engagement?
-- **Value definition (C208 §4.2.3):** What is the value proposition, and how is value measured — functional benefits plus the emotional dimension (reduced anxiety, fun, affiliation)?
 - **Perspective scoping (C208 §4.2.4):** For the Experience perspective, which job-to-be-done, pain points and gains are in scope; for Work System, which value-stream activities; for Technical System, which systems and interfaces?
 - **Refactoring waves (C208 §6):** What are the continuous-refactoring waves, and what is the exit/definition-of-done criterion that closes each sprint's architectural increment?
 
