@@ -12,6 +12,7 @@
 ## 3. Regenerate, test, validate
 - [x] 3.1 `python3 scripts/converter.py` (regenerate `extensions/*`)
 - [x] 3.2 `python3 -m pytest tests/plugin/test_adm_intake_ask_always.py tests/plugin/test_intake_interview.py tests/plugin/test_template_intake_questions.py tests/plugin/test_oaa_intake.py tests/codex/test_codex_extension.py -q`
-- [ ] 3.3 `npx markdownlint-cli2` over the changed files (network-gated in sandbox; run where available)
+- [x] 3.3 `npx markdownlint-cli2` over the changed files (run escalated: 0 issues in 24 files; `!openspec/**` is excluded by repo config)
 - [x] 3.4 `openspec validate intake-authoritative-questions`
-- [ ] 3.5 Conventional commit: `feat: state ask-always/answer-optional in ADM commands and wire in template intake questions` — stage this OpenSpec change + the 24 ADM command files + the new test (+ regenerated `extensions/*` if tracked)
+- [x] 3.5 Conventional commit: `feat: state ask-always/answer-optional in ADM commands and wire in template intake questions` — staged this OpenSpec change + the 24 ADM command files + the new test (4a110438); regenerated `extensions/*` are gitignored
+- [x] 4.1 Pre-existing layout-sync gap found by the full suite: `test_layout_is_in_sync` / `test_local_claude_standalone_plugin_paths_match_sources` had been red since 4e708300 (standalone community copies added without re-mirroring); fixed by re-running `scripts/sync-claude-plugin-layout.py` — 12 Claude-tree copies added (634c5a3c)
