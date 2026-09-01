@@ -4,6 +4,12 @@ on:
   release:
     types: [published]
 
+# Serialize concurrent triggers for the same release so a duplicate
+# 'release: published' event cannot run two PyPI uploads in parallel.
+concurrency:
+  group: pypi-${{ github.event.release.tag_name || github.ref }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     name: Build & Publish to PyPI
