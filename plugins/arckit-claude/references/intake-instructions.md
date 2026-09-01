@@ -7,8 +7,9 @@ and bundled overlay (`togaf/adm`, `oaa`, `agent/architecture`) — interviews
 against the *effective* template rather than a hard-coded question list.
 
 The interview is a **soft gate**. It collects input; it never blocks a command,
-never adds diagram or output demands the template does not already ask for, and
-asks zero questions when every input is already prefilled.
+never adds diagram or output demands the template does not already ask for. It
+puts every derived input to the user — prefilled where available to confirm or
+override — one question at a time, each question optional and skippable.
 
 ## When to run
 
@@ -64,19 +65,23 @@ source that provides it:
 A lower-precedence source never overrides a higher one; if sources conflict,
 the higher-precedence value wins.
 
-## 4. Ask only the remainder, one at a time
+## 4. Put every derived input to the user, one at a time
 
-For each input still unknown after prefilling:
+For each derived input (prefilled where available, so the user confirms or
+overrides it):
 
-- Ask **one question at a time** in the user's language, and **quote the
-  template section or Document Control field the question serves** so the
-  question is auditable in the summary.
-- Offer an explicit **skip** option on every question.
-- A fully-prefilled template asks **zero** questions — interview depth is
-  proportional to the actual gap. Never pad with questions the template does
-  not need.
+- Put the question to the user **one at a time** in the user's language, and
+  **quote the template section or Document Control field the question serves**
+  so the question is auditable in the summary. Show the prefilled value (if
+  any) so the user can confirm it or override it.
+- Every question is **optional**: offer an explicit **skip** option on every
+  question, and a skipped question renders as a `TBD` marker in the artefact.
+- Surface **every** derived input, even when fully prefilled — interview depth
+  is bounded only by the derived inputs, not by what is already known. Never
+  pad with inputs the template does not ask for.
 
-Do not re-ask an input already answered by a higher-precedence source.
+A higher-precedence source supplies the value shown; it does not remove the
+question — the prefilled value is still put to the user to confirm or override.
 
 ## 5. Persist answers
 

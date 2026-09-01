@@ -8,13 +8,15 @@ The interview is implemented as LLM instructions, not compiled code, so a
   1. WIRING  — every in-scope artefact-producing command must instruct the model
      to run the shared intake block *before* it renders, and the shared block must
      carry the imperatives that make the model actually *ask* questions
-     (ask-remainder, one-at-a-time, skippable, zero-when-prefilled, TBD-on-skip,
-     bulk exemption). Non-artefact commands must NOT instruct the interview.
+     (ask-every-derived-input, one-at-a-time, optional/skippable,
+     prefilled-shown-for-confirm/override, TBD-on-skip, bulk exemption).
+     Non-artefact commands must NOT instruct the interview.
   2. DECISION — a faithful executable model of the shared block's algorithm
      (intake-instructions.md) run against the spec scenarios, asserting the
      ask/skip outcomes: a fresh project gets asked; a fully-prefilled template
-     gets zero questions; a bulk build never interviews; a skipped MANDATORY
-     input becomes a quoted TBD marker listed in the summary.
+     still surfaces every input for confirmation/override; a bulk build never
+     interviews; a skipped MANDATORY input becomes a quoted TBD marker listed
+     in the summary.
 """
 
 import os
@@ -90,17 +92,19 @@ def test_non_artefact_commands_do_not_instruct_the_interview():
 def test_shared_block_carries_the_question_asking_rules():
     block = _read(SHARED_BLOCK)
     checks = {
-        "asks only the remainder": "Ask only the remainder" in block or "ask only" in block.lower(),
-        "one question at a time": "one question at a time" in block,
-        "explicit skip option": "skip" in block.lower(),
-        "does not re-ask prefilled": "re-ask" in block.lower(),
-        "zero when fully prefilled (proportionality)": ("zero" in block and "prefilled" in block),
-        "TBD marker for skipped MANDATORY": "TBD" in block,
+        "puts every derived input to the user": "Put every derived input to the user" in block,
+        "one at a time": "one at a time" in block,
+        "prefilled value shown for confirm/override": "confirm or override" in block,
+        "each question optional/skippable": "optional" in block.lower(),
+        "skipped question renders a TBD marker": "TBD" in block,
         "summary lists unresolved fields": "Unresolved fields" in block,
         "bulk build exemption (no questions)": "No interactive questions are asked during a build" in block,
+        "proportional 'zero when prefilled' cap removed": "zero" not in block,
+        "ask-only-remainder removed": "Ask only the remainder" not in block,
+        "still-unknown gating removed": "still unknown" not in block,
     }
     missing = [k for k, ok in checks.items() if not ok]
-    assert not missing, f"shared block missing question-asking rules: {missing}"
+    assert not missing, f"shared block missing ask-always/optional rules: {missing}"
 
 
 # ---------------------------------------------------------------------------
@@ -298,16 +302,17 @@ class IntakeInterview:
 
         answers, tbd, questions, summary = {}, [], [], []
         for key in derived:
-            prefilled = self._resolve_prefill(key, artefacts, per_command, shared)
-            if prefilled is not None:
-                answers[key] = prefilled          # never re-ask a prefilled input
-                continue
-            if key in skips:                      # user skipped a MANDATORY input
+            # §4: surface EVERY derived input (ask-always, answer-optional)
+            questions.append(key)
+            if key in skips:                      # user skipped -> quoted TBD marker
                 tbd.append(key)
                 answers[key] = None
                 summary.append(f'| {key} | TBD — "{key}" |')
                 continue
-            questions.append(key)                 # §4: ask only the remainder
+            prefilled = self._resolve_prefill(key, artefacts, per_command, shared)
+            if prefilled is not None:
+                # prefilled value is surfaced for confirm/override; keep the default
+                answers[key] = prefilled
         return len(questions), answers, tbd, summary
 
 
@@ -352,20 +357,21 @@ def test_fresh_project_asks_questions():
     assert n == len(derived), f"expected {len(derived)} questions on a fresh project, got {n}"
 
 
-def test_fully_prefilled_template_asks_zero():
-    """§4 proportionality: a fully-prefilled template asks zero questions."""
+def test_fully_prefilled_template_still_surfaces_every_input():
+    """§4 ask-always: even a fully-prefilled template surfaces every input."""
     ii, derived = _derived()
-    n, _a, _t, _s = ii.interview(derived,
+    n, a, _t, _s = ii.interview(derived,
                                   artefacts={k: "x" for k in derived},
                                   per_command={}, shared={})
-    assert n == 0, f"fully-prefilled template must ask zero questions, got {n}"
+    assert n == len(derived), f"every derived input is surfaced even when fully prefilled, got {n}"
+    assert all(v == "x" for v in a.values()), "prefilled values are carried for confirm/override"
 
 
-def test_partial_prefill_asks_only_the_gap():
+def test_partial_prefill_still_surfaces_every_input():
     ii, derived = _derived()
     prefilled = {k: "v" for k in list(derived)[: len(derived) - 1]}
     n, _a, _t, _s = ii.interview(derived, artefacts=prefilled, per_command={}, shared={})
-    assert n == 1, f"only the one unprefilled input should be asked, got {n}"
+    assert n == len(derived), f"every derived input is surfaced regardless of prefill, got {n}"
 
 
 def test_user_config_resolvable_field_is_not_asked():
@@ -381,7 +387,7 @@ def test_precedence_higher_source_wins():
         artefacts={}, per_command={"project_stage": "per-command"},
         shared={"project_stage": "shared"},
     )
-    assert n == 0
+    assert n == 1, "the single derived input is surfaced to the user"
     assert answers["project_stage"] == "per-command", "per-command intake must beat shared and user_config"
 
 
