@@ -13,7 +13,13 @@ set -uo pipefail
 # each standalone repo. Set ARCKIT_SKIP_EXTENSION_RELEASES=1 for a commit-only
 # sync.
 
-REPO_OWNER="tractorjuice"
+DEFAULT_REPO_OWNER="tractorjuice"
+# Per-distribution publish-owner overrides: detach a standalone repo from the
+# upstream org (e.g. a fork's own Codex repo) without republishing the others.
+declare -A REPO_OWNER_OVERRIDE=(
+  [codex]="${ARCKIT_CODEX_OWNER:-terrygzhou}"
+)
+REPO_OWNER="$DEFAULT_REPO_OWNER"
 
 # ── Auth: prefer GH_TOKEN PAT for push (codespaces scope GITHUB_TOKEN to one repo)
 AUTH_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
@@ -379,6 +385,9 @@ for target in "${TARGETS[@]}"; do
     ((FAILED++))
     continue
   fi
+
+  # Effective publish owner for this target (falls back to the upstream default).
+  REPO_OWNER="${REPO_OWNER_OVERRIDE[$target]:-$DEFAULT_REPO_OWNER}"
 
   IFS=':' read -r local_dir repo_name <<<"${EXTENSIONS[$target]}"
   source_path="$ROOT_DIR/$local_dir"

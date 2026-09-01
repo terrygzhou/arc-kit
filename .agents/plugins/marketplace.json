@@ -8,7 +8,7 @@
       "name": "arckit-codex",
       "source": {
         "source": "url",
-        "url": "https://github.com/tractorjuice/arckit-codex",
+        "url": "https://github.com/terrygzhou/arckit-codex",
         "ref": "main"
       },
       "policy": {

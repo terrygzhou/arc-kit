@@ -1230,8 +1230,8 @@ def generate_codex_plugin_manifest(output_dir):
             "name": "ArcKit",
             "url": "https://github.com/terrygzhou/arc-kit",
         },
-        "homepage": "https://github.com/tractorjuice/arckit-codex",
-        "repository": "https://github.com/tractorjuice/arckit-codex",
+        "homepage": "https://github.com/terrygzhou/arckit-codex",
+        "repository": "https://github.com/terrygzhou/arckit-codex",
         "license": "MIT",
         "keywords": [
             "enterprise-architecture",

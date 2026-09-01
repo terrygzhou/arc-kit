@@ -218,14 +218,14 @@ def test_codex_marketplace_entry_points_to_standalone_repo():
 
     assert marketplace["name"] == "arckit"
     assert marketplace["interface"]["displayName"] == "ArcKit Plugins"
-    assert manifest["homepage"] == "https://github.com/tractorjuice/arckit-codex"
-    assert manifest["repository"] == "https://github.com/tractorjuice/arckit-codex"
+    assert manifest["homepage"] == "https://github.com/terrygzhou/arckit-codex"
+    assert manifest["repository"] == "https://github.com/terrygzhou/arckit-codex"
     plugin = next(
         item for item in marketplace["plugins"] if item["name"] == "arckit-codex"
     )
     assert plugin["source"] == {
         "source": "url",
-        "url": "https://github.com/tractorjuice/arckit-codex",
+        "url": "https://github.com/terrygzhou/arckit-codex",
         "ref": "main",
     }
     assert plugin["policy"] == {
