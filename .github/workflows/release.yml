@@ -65,10 +65,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ steps.tag.outputs.tag }}
         run: |
+          set -uo pipefail
+          # Idempotent: a 'release: published' event fires for a release that
+          # already exists, so a re-trigger must not fail. Re-check at create
+          # time (authoritative; avoids the earlier check's timing race).
+          if gh release view "$TAG_NAME" &>/dev/null; then
+            echo "::notice::Release $TAG_NAME already exists; skipping creation."
+            exit 0
+          fi
           gh release create "$TAG_NAME" \
             --title "ArcKit $TAG_NAME" \
             --notes-file /tmp/release-notes.md \
             || {
-              echo "::warning::Release creation failed (may already exist or permission issue)"
+              echo "::error::Failed to create GitHub Release $TAG_NAME."
               exit 1
             }
