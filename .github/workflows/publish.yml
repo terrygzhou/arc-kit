@@ -42,7 +42,9 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           set -euo pipefail
-          if ! twine upload --verbose dist/*; then
+          # --skip-existing makes re-runs idempotent: if this version was
+          # already uploaded to PyPI, twine skips it instead of 409-ing.
+          if ! twine upload --skip-existing --verbose dist/*; then
             echo "::error::PyPI upload failed (see twine output above)."
             echo "403 Forbidden  -> PYPI_API_TOKEN is invalid, expired, or revoked."
             echo "                -> Regenerate at pypi.org (Account -> API tokens),"
