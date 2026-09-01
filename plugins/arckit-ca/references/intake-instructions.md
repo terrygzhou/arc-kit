@@ -6,10 +6,13 @@ before it renders its artefact. The template is the single source of truth for
 and bundled overlay (`togaf/adm`, `oaa`, `agent/architecture`) — interviews
 against the *effective* template rather than a hard-coded question list.
 
-The interview is a **soft gate**. It collects input; it never blocks a command,
-never adds diagram or output demands the template does not already ask for. It
-puts every derived input to the user — prefilled where available to confirm or
-override — one question at a time, each question optional and skippable.
+The interview is a **soft gate** that is **ask-always, answer-optional**: it
+MUST run, and it MUST put every derived input to the user — prefilled where
+available to confirm or override — one question at a time (the *asking* is
+mandatory). It never blocks a command and never adds diagram or output demands
+the template does not already ask for. Each question's *answer* is optional: the
+user confirms a prefilled value, overrides it, or skips it — a skipped question
+renders as a `TBD` marker.
 
 ## When to run
 
@@ -45,6 +48,13 @@ Walk the effective template and collect every input the artefact needs:
   An artefact that does not yet exist is a *hard dependency*, **not** an
   interview input: the command stops and prompts the user to generate that
   upstream artefact first, and never renders the missing artefact as `TBD`.
+- **Authoritative question lists** — if the effective template carries an
+  `## Intake Interview Questions` section, every question in that block is
+  authoritative and MUST be put to the user (prefilled where available,
+  skippable), in addition to the inputs derived above. For `oaa` overlay
+  commands, the discovery-dimension checklist (`intake-discovery-dimensions.md`,
+  D1–D10) is the canonical coverage floor and its dimensions are likewise
+  asked-always.
 
 Group related items so that one question can collect a coherent set (e.g. all
 Document Control metadata) rather than one question per leaf.
