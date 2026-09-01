@@ -8,7 +8,9 @@ The template-driven intake interview asks the questions below before rendering t
 artefact. Questions already answerable from existing artefacts, saved intake,
 onboarding data, or organisation config are **not** asked; a skipped question
 renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
-(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+(discovery dimensions per ADM phase) and the Open Agile Architecture Standard
+(C208, The Open Group, 2020), with its Security Playbook (G216) where applicable;
+each O-AA question below is cited to the C208 section it draws on.
 
 ### Intake questions (O-AA agile security)
 
@@ -30,6 +32,19 @@ renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
 | **Author** | Enterprise Architecture Lead |
 | **Prerequisites** | ADR-001 (Executable TOGAF ADM), ADR-003 (AI Governance Framework) |
 | **Integrates with** | `governance-report.yaml`, `compliance-mapping.yaml`, ADR-005 (Compliance Validation Pipeline) |
+
+### O-AA Standard (C208) interview questions
+
+Grounded in the O-AA Security Playbook (G216, The Open Group, 2021), which
+aligns to the O-AA Standard (C208); each answer feeds the agile security
+architecture below.
+
+- **Minimum Security Architecture (Playbook §2):** What is the MSA that guides this sprint's MVP, and where are the security sub-system boundaries (each with its own lifecycle)?
+- **Layers of controls (Playbook §4.1):** Which of the five layers (assets, security systems, computing/network, physical, personnel) are in scope, and which protection objective (confidentiality/integrity/availability) each serves?
+- **Risk appetite (Playbook §4):** What is the defined risk threshold, and is risk quantified (e.g., Open FAIR: Loss Event Frequency × Loss Magnitude) or via a documented methodology?
+- **DevSecOps pipeline (Playbook §4.2):** Where do threat-modeling, static analysis, dynamic scanning, and penetration testing sit, and what gates each stage?
+- **Roles (Playbook §3):** Who is the agile security architect/champion, and how do they team with risk management, cloud/network providers, and enterprise security?
+- **Security-architecture quality (Playbook §5):** Is the architecture deployable today, testable/falsifiable, roll-backable, and does it provide built-in monitoring and traceability?
 
 ---
 

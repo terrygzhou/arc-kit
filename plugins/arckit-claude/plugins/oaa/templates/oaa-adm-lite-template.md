@@ -8,7 +8,9 @@ The template-driven intake interview asks the questions below before rendering t
 artefact. Questions already answerable from existing artefacts, saved intake,
 onboarding data, or organisation config are **not** asked; a skipped question
 renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
-(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+(discovery dimensions per ADM phase) and the Open Agile Architecture Standard
+(C208, The Open Group, 2020), with its Security Playbook (G216) where applicable;
+each O-AA question below is cited to the C208 section it draws on.
 
 ### Intake questions (O-AA Sprint 0 + TOGAF 10 discovery floor)
 
@@ -29,6 +31,17 @@ renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
 | **Prerequisites** | `${user_config.references_dir}` — organisation-specific prerequisite documents, if any |
 | **Owner** | Enterprise Architecture Lead |
 | **Replaces** | N/A — standalone sprint-mapped ADM delivery |
+
+### O-AA Standard (C208) interview questions
+
+Grounded in the Open Agile Architecture Standard (C208, The Open Group, 2020)
+constructs; each answer feeds the sprint-mapped ADM delivery below.
+
+- **Building-block selection (C208 §4.2):** Which O-AA building blocks does this engagement need — Strategy, Value, the three perspectives (Experience, Work System, Technical System), and Data/Information & AI?
+- **Strategy & assumptions (C208 §4.2.1):** What is the strategic positioning in scope, and which strategic assumptions must be experimentally verified (not assumed) during the engagement?
+- **Value definition (C208 §4.2.3):** What is the value proposition, and how is value measured — functional benefits plus the emotional dimension (reduced anxiety, fun, affiliation)?
+- **Perspective scoping (C208 §4.2.4):** For the Experience perspective, which job-to-be-done, pain points and gains are in scope; for Work System, which value-stream activities; for Technical System, which systems and interfaces?
+- **Refactoring waves (C208 §6):** What are the continuous-refactoring waves, and what is the exit/definition-of-done criterion that closes each sprint's architectural increment?
 
 ---
 

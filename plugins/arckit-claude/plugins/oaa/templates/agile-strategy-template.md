@@ -12,7 +12,9 @@ The template-driven intake interview asks the questions below before rendering t
 artefact. Questions already answerable from existing artefacts, saved intake,
 onboarding data, or organisation config are **not** asked; a skipped question
 renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
-(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+(discovery dimensions per ADM phase) and the Open Agile Architecture Standard
+(C208, The Open Group, 2020), with its Security Playbook (G216) where applicable;
+each O-AA question below is cited to the C208 section it draws on.
 
 ### Intake questions (O-AA agile strategy + TOGAF 10 discovery floor)
 
@@ -23,6 +25,18 @@ renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
 - **Resilience:** Which failure scenarios must the strategy prepare for, and what does each map to?
 - **Waves:** What are the transformation waves, their targets, and their dependencies?
 - **Pain points (TOGAF 10 D8):** What are the top current-state pain points and capability gaps this strategy addresses?
+
+### O-AA Standard (C208) interview questions
+
+Grounded in the Open Agile Architecture Standard (C208, The Open Group, 2020)
+constructs; each answer feeds the agile strategy below.
+
+- **Situational awareness (C208 §11.1.1):** What front-line "Gemba" evidence informs the strategy, and which incumbent mental models must be challenged?
+- **Hard-to-reverse choices (C208 §11.1.2):** What are the big bets / breakthrough objectives — the Type 1 hard-to-reverse choices the strategy commits to?
+- **Stability vs dynamism (C208 §11.1.4–11.1.5):** How are stable strategic priorities decoupled from dynamic quarterly re-planning, and what cadence do the strategy dialogs run at?
+- **Cross-silo deployment (C208 §11.1.6):** Which breakthrough objectives require cross-functional decomposition, and how are objectives/OKRs cascaded and funded?
+- **Unintended consequences (C208 §11.2):** Which hypotheses underlie the strategy, what experiments test them, and what countermeasures bend the law of unintended consequences?
+- **Axioms as constraints (C208 §9):** Which of the 16 O-AA axioms are adopted as binding constraints, and which conflict with current practice?
 
 ---
 

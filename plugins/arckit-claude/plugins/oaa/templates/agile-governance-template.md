@@ -8,7 +8,9 @@ The template-driven intake interview asks the questions below before rendering t
 artefact. Questions already answerable from existing artefacts, saved intake,
 onboarding data, or organisation config are **not** asked; a skipped question
 renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
-(discovery dimensions per ADM phase) and the O-AA / agentic outcome dimensions below.
+(discovery dimensions per ADM phase) and the Open Agile Architecture Standard
+(C208, The Open Group, 2020), with its Security Playbook (G216) where applicable;
+each O-AA question below is cited to the C208 section it draws on.
 
 ### Intake questions (O-AA agile governance)
 
@@ -28,6 +30,18 @@ renders as a `TBD` marker in the artefact. Sources: TOGAF Standard, 10th Edition
 | **Author** | Enterprise Architecture Lead |
 | **Owner** | Distributed (Team Architect + AI Safety Architect + Legal Counsel) |
 | **Replaces** | Centralised Architecture Review Board (where applicable) |
+
+### O-AA Standard (C208) interview questions
+
+Grounded in the Open Agile Architecture Standard (C208, The Open Group, 2020)
+governance constructs; each answer feeds the distributed governance cadence
+below.
+
+- **Decision rights (C208 §8):** Which decision rights (authority) are allocated to which teams, and is accountability matched to each?
+- **Guardrails over standards (C208 §8.2–8.3):** Which standards become guardrails (policy intent) that teams apply bottom-up, rather than a top-down approved-catalog mandate?
+- **Integrated business+IT governance (C208 §8.3):** How do Quarterly Business Reviews, sponsor resource-release, and post-mortems operate across the tribes, and how is IT investment treated as a subset of business investment?
+- **Alignment levers (C208 §8.3):** What shared purpose, shared consciousness, forcing functions, and feedback loops keep autonomous teams aligned?
+- **Model scope (C208 §8):** Which governance model is targeted — digital governance or TOGAF architecture governance — and what formally replaces the classical architecture review board?
 
 ## Why This Replaces the ARB
 
