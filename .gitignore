@@ -269,6 +269,7 @@ test-adm-australian-post/
 
 # Local env files — may contain API keys or secrets (see AGENTS.md security tips)
 .env
+.env.*
 
 # TypeScript incremental build info (paperclip extension tsc output)
 *.tsbuildinfo
