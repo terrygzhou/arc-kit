@@ -5,6 +5,12 @@ All notable changes to ArcKit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Intake persistence spec standardised (§5) — provenance keys and an audit rule.** The `intake-instructions.md` shared block now names the provenance/audit keys that command intake files may carry beside the required `answers` + `updated` pair: `prefill_provenance` (source of every prefilled value, in §3 precedence order), `mandatory_inputs`, `mandatory_artefact_dependencies`, `recommended_missing`, and `unresolved_if_all_skipped` (the `TBD` markers that would render if every skippable input were skipped, with the quoted question). New **audit rule**: every value an artefact carries must trace to an `answers` entry or a `prefill_provenance` entry; a section or field generated with neither is a conformance gap to be remediated, never left untraced. Closes the gap found in the `test-adm-australian-post` conformance review, where authoritative intake questions (goals, governance, outcomes, current capabilities, gaps, target state) had been answered but never persisted and two Document Control fields had unrecorded provenance. All 38 mirrored copies of `intake-instructions.md` updated in lockstep.
+
 ## [6.8.0] — 2026-09-01
 
 ### Added

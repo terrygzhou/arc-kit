@@ -106,6 +106,29 @@ missing; merge without clobbering answers the user already set):
 }
 ```
 
+`answers` and `updated` are the required keys. **Provenance / audit keys** may
+be added beside them to record where every value the artefact carries came
+from. All are optional, hand-editable, and never rendered into the artefact:
+
+- `prefill_provenance` — object mapping each prefilled or otherwise sourced
+  field/input to its source in §3 precedence order, e.g.
+  `"Document ID": "derived: project 001 + command ADMP + new"` or
+  `"Classification": "prefilled from user_config.default_classification"`.
+- `mandatory_inputs` — the MANDATORY prerequisite-tier *values* the user must
+  supply; `[]` when there are none.
+- `mandatory_artefact_dependencies` — upstream artefacts the MANDATORY tier
+  names (hard dependencies; never rendered as `TBD`).
+- `recommended_missing` — RECOMMENDED inputs absent at generation time
+  (noted, non-blocking).
+- `unresolved_if_all_skipped` — the `TBD` markers that would render if every
+  skippable input were skipped, each with the quoted question that produced it.
+
+**Audit rule:** every value the artefact carries must trace to an `answers`
+entry or a `prefill_provenance` entry. A section or field generated with
+neither is a conformance gap: record the missing provenance — and the missing
+answer for any authoritative question that was asked but not persisted —
+instead of leaving the content untraced.
+
 - `{command-stem}` is the command's slug (e.g. `stakeholders`, `data-architecture`).
 - The file is hand-editable JSON. Editing it changes the artefact on the next
   run. It is never rendered into an artefact itself.
