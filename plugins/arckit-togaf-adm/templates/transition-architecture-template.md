@@ -34,7 +34,7 @@ override it. Each question is **optional**: a skipped question renders as a
 | Classification | `[CLASSIFICATION]` |
 | Status | DRAFT |
 | Version | `[VERSION]` |
-| Created | `[YYYY-MM-DD]` |
+| Created Date | `[YYYY-MM-DD]` |
 | Last Modified | `[YYYY-MM-DD]` |
 | Review Cycle | Monthly during active migration, quarterly after migration |
 | Next Review Date | `[YYYY-MM-DD]` |

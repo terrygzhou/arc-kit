@@ -122,17 +122,17 @@ This maturity model assesses the AI agent program across five dimensions at five
 ```mermaid
 quadrantChart
     title Agent Program Maturity — Current State
-    x-axis__Low --> High
-    y-axis__High Priority --> Low Priority
+    x-axisLow --> High
+    y-axisHigh Priority --> Low Priority
     quadrant-1 Quick Wins
     quadrant-2 Monitor
     quadrant-3 Strategic Investments
     quadrant-4 Develop
-    "Design", [0.3, 0.4]
-    "Governance", [0.1, 0.3]
-    "Security", [0.2, 0.5]
-    "Integration", [0.2, 0.2]
-    "Operations", [0.3, 0.6]
+    "Design": [0.3, 0.4]
+    "Governance": [0.1, 0.3]
+    "Security": [0.2, 0.5]
+    "Integration": [0.2, 0.2]
+    "Operations": [0.3, 0.6]
 ```
 
 ### 2.3 Dimension Analysis

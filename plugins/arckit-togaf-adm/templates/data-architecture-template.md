@@ -30,10 +30,19 @@ override it. Each question is **optional**: a skipped question renders as a
 | Field | Value |
 |-------|-------|
 | Document ID | `ARC-[PROJECT_ID]-DATA-v[VERSION]` |
+| Document Type | Data Architecture |
 | Project | `[PROJECT_NAME]` |
-| Owner | `[OWNER_NAME_AND_ROLE]` |
 | Classification | `[CLASSIFICATION]` |
 | Status | DRAFT |
+| Version | `[VERSION]` |
+| Created Date | `[YYYY-MM-DD]` |
+| Last Modified | `[YYYY-MM-DD]` |
+| Review Cycle | Monthly during active ADM cycle |
+| Next Review Date | `[YYYY-MM-DD]` |
+| Owner | `[OWNER_NAME_AND_ROLE]` |
+| Reviewed By | `[REVIEWER_NAME]` |
+| Approved By | `[APPROVER_NAME]` |
+| Distribution | `[DISTRIBUTION_LIST]` |
 | Created | `[YYYY-MM-DD]` |
 | Review Date | `[YYYY-MM-DD]` |
 

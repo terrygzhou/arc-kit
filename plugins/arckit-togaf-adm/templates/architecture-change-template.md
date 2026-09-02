@@ -34,11 +34,13 @@ override it. Each question is **optional**: a skipped question renders as a
 | **Change ID** | `ACHG-[ACHG_NUM]` |
 | **Classification** | `[CLASSIFICATION]` |
 | **Status** | DRAFT |
+| **Version** | `[VERSION]` |
 | **Change Type** | `[EVOLUTIONARY / TRANSFORMATIONAL / CORRECTIVE]` |
 | **Priority** | `[CRITICAL / HIGH / MEDIUM / LOW]` |
 | **Created Date** | `[YYYY-MM-DD]` |
 | **Last Modified** | `[YYYY-MM-DD]` |
-| **Review Date** | `[YYYY-MM-DD]` |
+| **Review Cycle** | `[REVIEW_CYCLE]` |
+| **Next Review Date** | `[YYYY-MM-DD]` |
 | **Owner** | `[OWNER_NAME_AND_ROLE]` |
 | **Reviewed By** | `[REVIEWER_NAME]` |
 | **Approved By** | `[APPROVER_NAME]` |

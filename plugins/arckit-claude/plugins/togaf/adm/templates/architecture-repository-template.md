@@ -28,15 +28,16 @@ override it. Each question is **optional**: a skipped question renders as a
 
 | Field | Value |
 |-------|-------|
-| Standard ID | `ARC-000-REPO-v{VERSION}` |
+| Document ID | `ARC-000-REPO-v{VERSION}` |
+| Document Type | Architecture Repository |
 | Project | Global Repository |
-| Owner | `[OWNER_NAME_AND_ROLE]` |
 | Classification | `[CLASSIFICATION]` |
 | Status | DRAFT |
-| Created | `[YYYY-MM-DD]` |
-| Review Date | `[YYYY-MM-DD]` |
+| Version | `[VERSION]` |
+| Created Date | `[YYYY-MM-DD]` |
+| Last Modified | `[YYYY-MM-DD]` |
 | Review Cycle | Quarterly |
-| Next Review | `[YYYY-MM-DD]` |
+| Next Review Date | `[YYYY-MM-DD]` |
 | Owner | `[OWNER_NAME_AND_ROLE]` |
 | Reviewed By | `[REVIEWER_NAME]` |
 | Approved By | `[APPROVER_NAME]` |

@@ -29,11 +29,20 @@ override it. Each question is **optional**: a skipped question renders as a
 | Field | Value |
 |-------|-------|
 | Document ID | `ARC-[PROJECT_ID]-GAPA-v[VERSION]` |
+| Document Type | Gap Analysis |
 | Project | `[PROJECT_NAME]` |
-| Owner | `[OWNER_NAME_AND_ROLE]` |
 | Classification | `[CLASSIFICATION]` |
 | Status | DRAFT |
 | Severity Weighting | `[BALANCED / STRATEGIC-RISK / OPERATIONAL]` |
+| Version | `[VERSION]` |
+| Created Date | `[YYYY-MM-DD]` |
+| Last Modified | `[YYYY-MM-DD]` |
+| Review Cycle | Monthly during active ADM cycle |
+| Next Review Date | `[YYYY-MM-DD]` |
+| Owner | `[OWNER_NAME_AND_ROLE]` |
+| Reviewed By | `[REVIEWER_NAME]` |
+| Approved By | `[APPROVER_NAME]` |
+| Distribution | `[DISTRIBUTION_LIST]` |
 | Created | `[YYYY-MM-DD]` |
 | Review Date | `[YYYY-MM-DD]` |
 
@@ -90,8 +99,8 @@ override it. Each question is **optional**: a skipped question renders as a
 ```mermaid
 quadrantChart
     title Gap Severity — Size vs Urgency
-    x-axis__Low --> High
-    y-axis__Low --> High
+    x-axisLow --> High
+    y-axisLow --> High
     quadrant-1 Immediate
     quadrant-2 Plan
     quadrant-3 Monitor
