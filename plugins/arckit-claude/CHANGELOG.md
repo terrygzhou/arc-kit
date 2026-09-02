@@ -5,7 +5,15 @@ All notable changes to the ArcKit Claude Code plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [6.9.0] — 2026-09-02
+
+### Changed
+
+- **Shipped ADM templates now render checklist-conforming artefacts.** All 10 ADM templates carrying a Document Control section — in both the `arckit` and `arckit-togaf-adm` trees — now list the full 14-field table the quality checklist's common check #1 requires, in checklist order (previously 8 of 11 carried a 7-field table, so template-driven generation failed the checklist by construction). The four templates shipping `quadrantChart` mermaid blocks (`capability-map`, `gap-analysis`, `application-inventory`, `agent-maturity`) had blocks that failed to parse — `x-axis__`/`y-axis__` typos and comma-form plot points — now corrected, and check #6's wording in all 31 tracked `quality-checklist.md` copies plus `scripts/autoresearch/program.md` now names the canonical revision-history columns `Version, Date, Author, Description, Reviewer, Approver`. A new TDD guard, `tests/plugin/test_adm_doc_control_conformance.py`, pins the 14-field table, the revision-history header, and the mermaid axis/point syntax.
+
+- **Intake persistence spec standardised (§5) — provenance keys and an audit rule.** The shared `intake-instructions.md` block now names the provenance/audit keys a command intake file may carry beside the required `answers` + `updated` pair: `prefill_provenance` (source of every prefilled value, in §3 precedence order), `mandatory_inputs`, `mandatory_artefact_dependencies`, `recommended_missing`, and `unresolved_if_all_skipped` (the `TBD` markers that would render if every skippable input were skipped, with the quoted question). New audit rule: every value an artefact carries must trace to an `answers` entry or a `prefill_provenance` entry — a section or field generated with neither is a conformance gap to be remediated, never left untraced. All 38 mirrored copies of `intake-instructions.md` updated in lockstep.
+
+## [6.8.0] — 2026-09-01
 
 ### Fixed
 

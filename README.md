@@ -954,7 +954,7 @@ This runs `/arckit:health` every 30 minutes, surfacing stale research, forgotten
 
 - **Issues**: [GitHub Issues](https://github.com/terrygzhou/arc-kit/issues)
 - **Releases**: [GitHub Releases](https://github.com/terrygzhou/arc-kit/releases)
-- **Latest Version**: [v6.8.0](https://github.com/terrygzhou/arc-kit/releases/tag/v6.8.0)
+- **Latest Version**: [v6.9.0](https://github.com/terrygzhou/arc-kit/releases/tag/v6.9.0)
 
 ---
 
