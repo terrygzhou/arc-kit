@@ -213,6 +213,9 @@ tests/*/output/
 tests/mermaid-wardley/
 .claude/scheduled_tasks.lock
 
+# Case-study working directory (local research notes; not part of the toolkit)
+case-study/
+
 # tools/wardley-lsp/ is a clone of the separate (private) tractorjuice/wardley-lsp
 # repo (the OnlineWardleyMaps Language Server). Same convention as
 # arckit-consulting below: changes belong in that repo, not here.
