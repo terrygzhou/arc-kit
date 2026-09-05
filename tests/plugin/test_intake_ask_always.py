@@ -46,6 +46,9 @@ COMMAND_POSITIVE = ("put **every** intake question",
                     "Every question below is always put to the user")
 COMMAND_STALE = "ask only what remains unknown"
 
+# The 75 core command files; the 60 artefact-producing ones wire the interview.
+CORE_COMMANDS = "plugins/arckit-claude/commands"
+
 
 def _read(rel):
     with open(os.path.join(REPO_ROOT, rel)) as fh:
@@ -89,3 +92,31 @@ def test_every_overlay_command_is_ask_always():
                 assert any(p in text for p in COMMAND_POSITIVE), (
                     f"{tree}/commands/{name} missing ask-always wording"
                 )
+
+
+def test_every_core_command_is_ask_always():
+    """The core commands (plugins/arckit-claude/commands) must stay
+    ask-always/answer-optional.
+
+    The overlay commands are guarded by test_every_overlay_command_is_ask_always,
+    but the core tree was migrated late and previously shipped the stale
+    'ask only what remains unknown' summary line. That line let the interview
+    skip asking whenever STKE/PRIN/REQ prefilled the derived inputs, so a
+    fully-prefilled project was never asked anything. Guard against that
+    regression returning.
+    """
+    stale, missing_positive, wired = [], [], 0
+    for name in _listing(CORE_COMMANDS, ".md"):
+        text = _read(f"{CORE_COMMANDS}/{name}")
+        if COMMAND_STALE in text:
+            stale.append(name)
+        if "Run the intake interview per" in text:
+            wired += 1
+            if not any(p in text for p in COMMAND_POSITIVE):
+                missing_positive.append(name)
+    assert not stale, f"core commands still carry stale intake wording: {stale}"
+    assert not missing_positive, (
+        f"core commands wire the interview but lack ask-always framing: {missing_positive}"
+    )
+    # floor: the core tree still wires the interview in the bulk of its commands
+    assert wired >= 60, f"expected >=60 core commands to wire the interview, got {wired}"
