@@ -93,6 +93,8 @@ overrides it):
 A higher-precedence source supplies the value shown; it does not remove the
 question — the prefilled value is still put to the user to confirm or override.
 
+A saved intake file from a previous run of this command is a prefill source (#2 above), not a record that the interview already happened: on a re-run every question is still put to the user, prefilled from that file for confirmation or override.
+
 ## 5. Persist answers
 
 Persist the collected answers for this command to
