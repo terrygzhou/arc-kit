@@ -193,7 +193,7 @@ Glob `projects/{project-dir}/research/ARC-{PROJECT_ID}-DSCT-*-v*.md`. If none, v
 
 **Run the intake interview**:
 
-- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, ask only what remains unknown (one question at a time, each skippable), and persist answers.
+- Run the intake interview per `${CLAUDE_PLUGIN_ROOT}/references/intake-instructions.md` — derive required inputs from the effective template and MANDATORY prerequisites, prefill from existing sources, put **every** intake question to the user one at a time (**ask-always, answer-optional** — the interview must ask; each answer is optional and may be skipped, rendering as a `TBD` marker when skipped), and persist the answers.
 
 ### Step 9: Dispatch writer subagent
 
