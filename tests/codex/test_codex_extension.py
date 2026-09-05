@@ -3,6 +3,7 @@
 import json
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -838,6 +839,69 @@ def test_template_customizations_use_templates_custom():
     for skill_name in AGENT_BACKED_SKILLS | {"arckit-customize", "arckit-requirements"}:
         skill_path = CODEX_SKILLS / skill_name / "SKILL.md"
         assert ".arckit/templates-custom/" in skill_path.read_text(encoding="utf-8")
+
+
+def test_codex_adm_templates_ship_intake_question_blocks():
+    """Generated Codex ADM templates must keep the interview block.
+
+    A workspace .arckit/templates/ materialized by `arckit init` can predate
+    template sections, silently skipping the current-state intake interview.
+    Pin the source-of-truth files so the gap is visible at build time.
+    """
+    for name in (
+        "gap-analysis-template.md",
+        "application-inventory-template.md",
+        "capability-map-template.md",
+    ):
+        path = CODEX_ROOT / "templates" / name
+        assert path.is_file(), f"missing generated template: {path}"
+        content = path.read_text(encoding="utf-8")
+        assert (
+            "## Intake Interview Questions" in content
+        ), f"{name} lost its '## Intake Interview Questions' block"
+
+
+def _materialize_codex_templates(target: Path, *, stale_gap_analysis: bool) -> None:
+    """Copy the generated Codex template tree into a fake workspace."""
+    shutil.copytree(CODEX_ROOT / "templates", target / ".arckit" / "templates")
+    if stale_gap_analysis:
+        gap = target / ".arckit" / "templates" / "gap-analysis-template.md"
+        gap.write_text(
+            gap.read_text(encoding="utf-8").replace("## Intake Interview Questions\n", ""),
+            encoding="utf-8",
+        )
+
+
+def test_codex_hook_warns_on_stale_template_materialization(tmp_path):
+    _materialize_codex_templates(tmp_path, stale_gap_analysis=True)
+    output = run_codex_hook(
+        "UserPromptSubmit",
+        {
+            "hook_event_name": "UserPromptSubmit",
+            "cwd": str(tmp_path),
+            "prompt": "$arckit-gap-analysis",
+        },
+    )
+    context = output["hookSpecificOutput"]["additionalContext"]
+    assert "Template freshness" in context
+    assert "arckit init --here --ai codex" in context
+    assert "gap-analysis-template.md" in context
+
+
+def test_codex_hook_silent_on_fresh_template_materialization(tmp_path):
+    _materialize_codex_templates(tmp_path, stale_gap_analysis=False)
+    output = run_codex_hook(
+        "UserPromptSubmit",
+        {
+            "hook_event_name": "UserPromptSubmit",
+            "cwd": str(tmp_path),
+            "prompt": "$arckit-gap-analysis",
+        },
+    )
+    context = output["hookSpecificOutput"]["additionalContext"]
+    assert "ArcKit Codex plugin v" in context
+    assert "Template freshness" not in context
+    assert "arckit init --here --ai codex" not in context
 
 
 def test_codex_agent_prompts_are_rewritten_and_filtered():

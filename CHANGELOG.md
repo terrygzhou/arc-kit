@@ -5,6 +5,13 @@ All notable changes to ArcKit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **Codex skills silently skipped the current-state intake interview in workspaces initialized with an older ArcKit.** `$arckit-*` skills resolve their "default" template from the workspace's `.arckit/templates/`, so workspaces materialized before the `## Intake Interview Questions` blocks shipped (v6.8.0) never asked the current-state / current-capabilities / application-inventory questions — the interview was skipped without notice. Two hardenings: (1) `arckit init --here --ai codex` now materializes the generated, interview-aware Codex template tree (including `_partials/`, full copytree) instead of the legacy shared top-level `*.md` set, so a refresh actually delivers the interview blocks; (2) the Codex session hook gained a template-freshness check (`hooks/template-freshness.mjs`, wired into `arckit-codex-hook.mjs` `buildContext`) that detects a missing or content-drifted `.arckit/templates/` materialization — content-based, not mtime-based, since plugin-cache mtimes are unreliable — and surfaces a `Template freshness` warning with the `arckit init --here --ai codex` refresh hint in session context on ArcKit prompts. Customizations stay in `.arckit/templates-custom/`. Tests: `tests/codex/test_template_freshness_guard.mjs` (unit), `test_codex_hook_warns_on_stale_template_materialization` / `test_codex_hook_silent_on_fresh_template_materialization` (hook wiring), and `test_codex_adm_templates_ship_intake_question_blocks` (pins the generated templates as source of truth).
+
+
 ## [6.9.0] — 2026-09-02
 
 ### Changed

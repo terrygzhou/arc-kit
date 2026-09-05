@@ -166,6 +166,7 @@ def get_data_paths():
             "version": base_path / "VERSION",
             "changelog": base_path / "CHANGELOG.md",
             "codex_references": base_path / "extensions" / "arckit-codex" / "references",
+            "codex_templates": base_path / "extensions" / "arckit-codex" / "templates",
             "codex_skills": base_path / "extensions" / "arckit-codex" / "skills",
             "codex_agents": base_path / "extensions" / "arckit-codex" / "agents",
             "codex_hooks": base_path / "extensions" / "arckit-codex" / "hooks",
@@ -340,6 +341,49 @@ Use the `/arckit:customize` command to copy templates for editing:
     return project_path
 
 
+def _copy_templates(
+    project_path: Path,
+    data_paths: dict,
+    ai_assistant: str,
+    all_ai: bool,
+) -> None:
+    """Copy the shipped template tree into ``<project>/.arckit/templates/``.
+
+    Codex targets (``--ai codex`` or ``--all-ai``) receive the generated,
+    interview-aware set at ``extensions/arckit-codex/templates`` (merged by
+    ``scripts/converter.py`` from every ``plugins/*/templates/``); other
+    assistants keep the legacy shared tree at ``.arckit/templates``. A full
+    copytree (not just top-level ``*.md``) so ``_partials/`` ships too.
+    """
+    console.print("[cyan]Setting up templates...[/cyan]")
+
+    templates_src = data_paths["templates"]
+    if ai_assistant == "codex" or all_ai:
+        codex_templates_src = data_paths.get("codex_templates")
+        if codex_templates_src and codex_templates_src.exists():
+            templates_src = codex_templates_src
+        else:
+            console.print(
+                "[yellow]Warning: extensions/arckit-codex/templates not found - "
+                "run `python scripts/converter.py` first; "
+                "falling back to legacy .arckit/templates[/yellow]"
+            )
+
+    console.print(f"[dim]Debug: Resolved template source: {templates_src}[/dim]")
+
+    templates_dst = project_path / ".arckit" / "templates"
+
+    if templates_src.exists():
+        console.print(f"[dim]Copying templates from: {templates_src}[/dim]")
+        shutil.copytree(templates_src, templates_dst, dirs_exist_ok=True)
+        template_count = sum(1 for _ in templates_dst.rglob("*.md"))
+        console.print(f"[green]✓[/green] Copied {template_count} templates")
+    else:
+        console.print(
+            f"[yellow]Warning: Templates not found at {templates_src}[/yellow]"
+        )
+
+
 @app.command()
 def init(
     project_name: str = typer.Argument(
@@ -501,36 +545,20 @@ def init(
     create_project_structure(project_path, ai_assistant, all_ai)
 
     # Copy templates from installed package or source
-    console.print("[cyan]Setting up templates...[/cyan]")
-
     data_paths = get_data_paths()
-    templates_src = data_paths["templates"]
     scripts_src = data_paths["scripts"]
 
+    _copy_templates(project_path, data_paths, ai_assistant, all_ai)
+
     console.print(f"[dim]Debug: Resolved data paths:[/dim]")
-    console.print(f"[dim]  templates: {templates_src}[/dim]")
     console.print(f"[dim]  scripts: {scripts_src}[/dim]")
 
-    templates_dst = project_path / ".arckit" / "templates"
     scripts_dst = project_path / ".arckit" / "scripts"
     agent_folder = AGENT_CONFIG[ai_assistant]["folder"]
 
     # Determine destination subfolder based on assistant type
     subfolder = "commands" if ai_assistant == "opencode" else "prompts"
     commands_dst = project_path / agent_folder / subfolder
-
-    # Copy templates if they exist
-    if templates_src.exists():
-        console.print(f"[dim]Copying templates from: {templates_src}[/dim]")
-        template_count = 0
-        for template_file in templates_src.glob("*.md"):
-            shutil.copy2(template_file, templates_dst / template_file.name)
-            template_count += 1
-        console.print(f"[green]✓[/green] Copied {template_count} templates")
-    else:
-        console.print(
-            f"[yellow]Warning: Templates not found at {templates_src}[/yellow]"
-        )
 
     # Copy scripts if they exist
     if scripts_src.exists():

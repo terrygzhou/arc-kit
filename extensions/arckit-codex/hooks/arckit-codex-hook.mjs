@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildProjectContext } from "./project-context-builder.mjs";
+import { templateFreshnessNote } from "./template-freshness.mjs";
 import { runGraphInjectHook } from "./graph-inject.mjs";
 import { runSyncGuidesHook } from "./sync-guides.mjs";
 
@@ -754,6 +755,11 @@ function buildContext(data) {
     "Use $arckit-* skills for ArcKit workflows. Use project-local `.arckit/templates-custom/` before base templates when customizing outputs.",
     `Workspace root: ${workspaceRoot}`,
   ];
+
+  const freshnessNote = templateFreshnessNote(workspaceRoot, join(PLUGIN_ROOT, "templates"));
+  if (freshnessNote) {
+    lines.push("", freshnessNote);
+  }
 
   const projectContext = buildProjectContext(workspaceRoot);
   if (projectContext) {
