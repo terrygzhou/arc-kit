@@ -144,3 +144,7 @@ Custom templates in `.arckit/templates-custom/` are preserved across upgrades. O
 ```bash
 /arckit:customize requirements   # Copy template for safe customization
 ```
+
+### Skills skip the current-state intake interview
+
+If a workspace was initialized with an older ArcKit version, its `.arckit/templates/` may predate the `## Intake Interview Questions` blocks that skills use to ask about current state, capabilities and applications — the interview is silently skipped. The Codex session hook surfaces a `Template freshness` warning in the session context when `.arckit/templates/` is missing or out of date with the installed plugin; refresh with `arckit init --here --ai codex` (for Codex targets this materializes the generated, interview-aware template tree). Keep template customizations in `.arckit/templates-custom/`, which is preserved across refreshes.
