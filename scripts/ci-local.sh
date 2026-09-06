@@ -41,6 +41,8 @@ run "multi-instance parity"      python3 scripts/check-multi-instance-parity.py
 run "doc-type registry refs"     python3 scripts/check-doc-type-registry.py
 run "guide site-link check"      python3 scripts/check-guide-site-links.py
 run "colon notation check"       python3 scripts/standardise-colon.py --check
+# --- diagram sidecar checks (D2 + archify; SKIPs when toolchains are absent) ---
+run "diagram sidecar checks" bash scripts/diagrams.sh check
 
 # --- node registration / template tests (no network) ---
 run "doc-types dual registration" node scripts/tests/test-doc-types-dual-registration.mjs
