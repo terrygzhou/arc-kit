@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`scripts/ci-local.sh` pre-push gate.** Runs the `lint-markdown` GitHub Actions check suite locally (markdown style, cross-references, recipe sanity, doc-type collisions, shared-asset drift, guide-tree parity, multi-instance parity, doc-type registry, site links, colon notation, Node registration/template tests, and the npm validator + hook suites), so you can commit freely and push to `main` only when everything is green. `SKIP_NETWORK=1` skips the network-dependent steps.
+
 ### Fixed
 
 - **A fully-prefilled intake re-run could still be batch-confirmed or skipped.** On a re-run with a complete saved `.arckit/intake/{command-stem}.json` (and fully-prefilled inputs), the executor could collapse the ask-always interview into a single “confirm all prefilled answers” question — and when no structured question tool was available it proceeded without asking at all (reported on `arckit-agile-strategy`). The no-batch rule is now explicit: `intake-instructions.md` (all 7 byte-identical copies) gains the no-batch clause (never collapse the interview into a single batch-confirmation question, even when fully prefilled; each question is its own turn) and the plain-text fallback (if the client offers no structured question tool, ask each question in plain text, one at a time — the interview is never skipped), and the shared intake bullet of all 106 artefact-producing command files (core + 3 overlay trees + mirrors) carries both clauses, so every generated Codex/Gemini/OpenCode/Copilot/Paperclip/Mistral/Kimi skill states them. Guarded by `tests/plugin/test_intake_ask_always.py` (`NO_BATCH` / `PLAIN_FALLBACK` constants across the 7 reference copies and every wired command).

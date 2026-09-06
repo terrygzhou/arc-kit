@@ -12,6 +12,7 @@ ArcKit is a multi-target architecture governance toolkit. The canonical plugin l
 - `node tests/plugin/test_graph_inject.mjs` and related `.mjs` files run hook utility tests.
 - `./scripts/bump-version.sh X.Y.Z` updates version-bearing files for a release.
 - `npx markdownlint-cli2 "**/*.md"` checks Markdown style using `.markdownlint-cli2.jsonc`.
+- `./scripts/ci-local.sh` runs the `lint-markdown` CI check suite locally (offline variant: `SKIP_NETWORK=1 ./scripts/ci-local.sh`); run it before pushing so CI is not your only pre-push gate.
 
 ## Coding Style & Naming Conventions
 
