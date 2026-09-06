@@ -95,6 +95,11 @@ question — the prefilled value is still put to the user to confirm or override
 
 A saved intake file from a previous run of this command is a prefill source (#2 above), not a record that the interview already happened: on a re-run every question is still put to the user, prefilled from that file for confirmation or override.
 
+**No batch confirmation.** Never collapse the interview into a single "confirm all
+prefilled answers" question, even when every input is fully prefilled from saved
+intake, artefacts, or user config: each question is put to the user as its own
+turn. If the client offers no structured question tool, ask each question in plain text, one at a time — the interview is conducted question by question, never skipped, and never replaced by a "proceed without asking" decision.
+
 ## 5. Persist answers
 
 Persist the collected answers for this command to

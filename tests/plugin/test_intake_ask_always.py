@@ -50,6 +50,11 @@ COMMAND_POSITIVE = ("put **every** intake question",
 COMMAND_STALE = "ask only what remains unknown"
 # Commands must state that saved/prefilled answers never waive the interview.
 COMMAND_RERUN = "never waives the interview"
+# No-batch rule: the interview must never collapse into a single
+# available the questions are asked in plain text — never skipped.
+NO_BATCH = "Never collapse the interview into a single"
+PLAIN_FALLBACK = "ask each question in plain text"
+
 
 # The 75 core command files; the 60 artefact-producing ones wire the interview.
 CORE_COMMANDS = "plugins/arckit-claude/commands"
@@ -72,6 +77,8 @@ def test_shared_reference_is_ask_always():
         assert REF_RERUN in text, f"{rel} missing re-run no-waive rule"
         for stale in REF_STALE:
             assert stale not in text, f"{rel} still has stale wording: {stale!r}"
+        assert NO_BATCH in text, f"{rel} missing the no-batch rule"
+        assert PLAIN_FALLBACK in text, f"{rel} missing the plain-text fallback rule"
 
 
 def test_all_seven_shared_reference_copies_are_byte_identical():
@@ -101,6 +108,12 @@ def test_every_overlay_command_is_ask_always():
                 assert COMMAND_RERUN in text, (
                     f"{tree}/commands/{name} missing re-run no-waive rule"
                 )
+                assert NO_BATCH in text, (
+                    f"{tree}/commands/{name} missing the no-batch rule"
+                )
+                assert PLAIN_FALLBACK in text, (
+                    f"{tree}/commands/{name} missing the plain-text fallback rule"
+                )
 
 
 def test_every_core_command_is_ask_always():
@@ -114,7 +127,7 @@ def test_every_core_command_is_ask_always():
     fully-prefilled project was never asked anything. Guard against that
     regression returning.
     """
-    stale, missing_positive, missing_rerun, wired = [], [], [], 0
+    stale, missing_positive, missing_rerun, missing_nobatch, missing_fallback, wired = [], [], [], [], [], 0
     for name in _listing(CORE_COMMANDS, ".md"):
         text = _read(f"{CORE_COMMANDS}/{name}")
         if COMMAND_STALE in text:
@@ -125,12 +138,22 @@ def test_every_core_command_is_ask_always():
                 missing_positive.append(name)
             elif COMMAND_RERUN not in text:
                 missing_rerun.append(name)
+            if NO_BATCH not in text:
+                missing_nobatch.append(name)
+            if PLAIN_FALLBACK not in text:
+                missing_fallback.append(name)
     assert not stale, f"core commands still carry stale intake wording: {stale}"
     assert not missing_positive, (
         f"core commands wire the interview but lack ask-always framing: {missing_positive}"
     )
     assert not missing_rerun, (
         f"core commands wire the interview but lack the re-run no-waive rule: {missing_rerun}"
+    )
+    assert not missing_nobatch, (
+        f"core commands wire the interview but lack the no-batch rule: {missing_nobatch}"
+    )
+    assert not missing_fallback, (
+        f"core commands wire the interview but lack the plain-text fallback rule: {missing_fallback}"
     )
     # floor: the core tree still wires the interview in the bulk of its commands
     assert wired >= 60, f"expected >=60 core commands to wire the interview, got {wired}"
