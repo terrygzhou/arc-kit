@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`scripts/ci-local.sh` pre-push gate.** Runs the `lint-markdown` GitHub Actions check suite locally (markdown style, cross-references, recipe sanity, doc-type collisions, shared-asset drift, guide-tree parity, multi-instance parity, doc-type registry, site links, colon notation, Node registration/template tests, and the npm validator + hook suites), so you can commit freely and push to `main` only when everything is green. `SKIP_NETWORK=1` skips the network-dependent steps.
+- **Diagram sidecar layer: D2 corpus + archify showcase, CI-checked.** Six D2 sidecars under `projects/000-global/diagrams/` (one per major artefact: BPCM-v2.0, TECH-v1.0, TRANS-v1.0, DATA-v1.0, APP-v2.0, GAPA-v2.0) mirror the mermaid diagrams in the corresponding `ARC-*.md` artefacts and ship local `svg/` renders; ArchiMate semantics are encoded as a layer-container + "realizes"-edge idiom (reference: `arc-000-tech-v1.0.d2`). archify showcase specs (`.workflow.json` → `.workflow.html`) are optional per artefact — the TRANS showcase is delivered at **standard** quality, with its one unresolvable edge crossing documented rather than claimed at professional. `scripts/diagrams.sh check|render` validates/renders the whole layer (old-d2-build detection with a compile-only fallback; missing toolchains SKIP, never fail), and is wired into `scripts/ci-local.sh` as a new "diagram sidecar checks" step. Conventions, naming, and quality bar are documented in `docs/DIAGRAMS.md`.
+
+- **`scripts/ci-local.sh` pre-push gate.** Runs the `lint-markdown` GitHub Actions check suite locally (markdown style, cross-references, recipe sanity, doc-type collisions, shared-asset drift, guide-tree parity, multi-instance parity, doc-type registry, site links, colon notation, diagram sidecar checks, Node registration/template tests, and the npm validator + hook suites), so you can commit freely and push to `main` only when everything is green. `SKIP_NETWORK=1` skips the network-dependent steps.
 
 ### Fixed
 
