@@ -22,6 +22,13 @@ ArcKit is a toolkit for enterprise architects that transforms architecture gover
 
 ---
 
+## About This Fork
+
+This repo was previously forked from [tractorjuice/arc-kit](https://github.com/tractorjuice/arc-kit). This fork focuses on:
+
+- **Guided enterprise architecture** – workflows that actively interview the user, driving enterprise architecture planning and delivery through structured, conversational intake rather than template-filling.
+- **Agility in delivery** – turning guided EA artifacts into actionable outputs so architecture can be delivered quickly and iteratively, based on the guided EA artifacts.
+
 ## Quick Start
 
 Three ways to run ArcKit - pick the one that fits your workflow:
