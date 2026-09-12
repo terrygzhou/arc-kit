@@ -92,3 +92,12 @@ All artifacts must pass these 10 checks:
 - Traceability to O-AA C208 Chapter 18 (Governance)
 
 - Governance artefacts minimal (no more than 2 per sprint)
+
+### ARCH -- ArchiMate View
+
+- Single-layer stereotyping: all structural elements belong to the one selected layer (plus optional Motivation overlay)
+- Every `Rel_Realization` edge points concrete → abstract (application → business, technology → application)
+- Element count within threshold: ≤ 12 elements per layer; split into sequenced views at natural boundaries when exceeded
+- Pinned include line present: `!include <archimate/Archimate>` (PlantUML ArchiMate standard library; do not substitute other include forms)
+- Legend included for any custom notation beyond the standard-library vocabulary
+- No C4 or UML elements mixed into the ArchiMate diagram (companion C4 view is a separate `ARC-*` diagram artifact)

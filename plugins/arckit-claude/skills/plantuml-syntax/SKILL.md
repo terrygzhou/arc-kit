@@ -5,6 +5,7 @@ paths:
   - "**/*.puml"
   - "**/*.plantuml"
   - "**/ARC-*-DIAG-*.md"
+  - "**/ARC-*-ARCH-*.md"
 ---
 
 # PlantUML Syntax Reference
@@ -28,6 +29,7 @@ Select the appropriate diagram type and read the corresponding reference file:
 | Component Diagram | [component-diagrams.md](references/component-diagrams.md) | — |
 | Use Case Diagram | [use-case-diagrams.md](references/use-case-diagrams.md) | — |
 | Deployment Diagram | [deployment-diagrams.md](references/deployment-diagrams.md) | — |
+| ArchiMate Layer View | [archimate.md](references/archimate.md) | `/arckit:archimate` |
 
 ## Styling & Errors
 

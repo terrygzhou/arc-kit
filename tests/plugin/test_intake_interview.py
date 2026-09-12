@@ -74,7 +74,7 @@ def _read(path):
 
 def test_all_in_scope_commands_instruct_the_interview():
     in_scope = _core_artefact_commands() + _overlay_commands()
-    assert len(in_scope) == 83, f"expected 83 in-scope commands, got {len(in_scope)}"
+    assert len(in_scope) == 84, f"expected 84 in-scope commands, got {len(in_scope)}"
     for path in in_scope:
         body = _read(path)
         assert INSTRUCTION_PREFIX in body, f"{os.path.basename(path)}: missing 'Run the intake interview per'"
