@@ -1,0 +1,15 @@
+@startuml
+title ArchiMate three-layer sample (ArcKit fixture)
+!include <archimate/Archimate>
+
+LAYOUT_TOP_DOWN()
+
+Business_Process(bProcess, "Claims intake process")
+Application_Component(aComp, "Claims administration component")
+Application_DataObject(aData, "Claims record (logical data object)")
+Technology_Node(tNode, "Claims platform node")
+
+Rel_Realization(aComp, bProcess, "realizes")
+Rel_Flow(bProcess, aData, "produces")
+Rel_Access_rw(aData, tNode, "reads/writes")
+@enduml

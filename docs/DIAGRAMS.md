@@ -48,6 +48,13 @@ as an idiom:
 
 Reference idiom: `projects/000-global/diagrams/arc-000-tech-v1.0.d2`.
 
+**Generated ArchiMate views are not D2 sidecars.** `/arckit:archimate` writes
+PlantUML ArchiMate-notation layer views to
+`projects/{p}/diagrams/ARC-NNN-ARCH-NNN-v1.0.md` (pinned
+`!include <archimate/Archimate>`), one view per layer. The D2 idiom above
+remains hand-authored sidecars only: do not convert generated `ARC-*-ARCH-*`
+artifacts into D2, and do not author ArchiMate views in D2.
+
 ## Quality Bar
 
 - Every `.d2` sidecar must compile (CI via `./scripts/diagrams.sh check`).
