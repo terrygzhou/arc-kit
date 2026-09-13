@@ -78,6 +78,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/skills/plantuml-syntax/references/archimate.md` — 
 - Every generated diagram uses the pinned include line from the reference (do not substitute other include forms without re-pinning the reference).
 - Element macros: `Category_ElementName(alias, "description")` — one category per view.
 - Relationship macros: `Rel_<Type>(from, to, "label")` with optional `_Up|_Down|_Left|_Right` direction suffix.
+- **Diagram Production Policy:** before rendering, apply the "Diagram Production Policy" section of the reference — use the ArchiMate stdlib when the diagram is ArchiMate-representable or an ArchiMate view should be added; carry the PlantUML source inline and emit the **self-contained `.svg` as the only new file** (no new architecture document files). See § Diagram Production Policy + § Offline Self-Contained SVG Rendering in `skills/plantuml-syntax/references/archimate.md`.
 
 ## Step 3: Generate the View
 
@@ -187,6 +188,7 @@ After generating the view, evaluate it against the criteria below. Report the re
 | 7 | Layout consistency | One layout direction; layers stacked in tier order; no cross-layer noise | {assessment} | {PASS/FAIL} |
 | 8 | Legend for custom notation | Any custom notation is documented in a `legend` block | {assessment} | {PASS/FAIL} |
 | 9 | Inventory traceability | Every diagram element appears in the Element Inventory and every relationship in the traceability table | {assessment} | {PASS/FAIL} |
+| 10 | Self-contained SVG deliverable | ArchiMate-representable diagram is produced with PlantUML ArchiMate; its `.svg` is committed, embedded, and self-contained (no external URLs beyond W3C namespaces; offline-openable); and no new architecture document file was created (only `.svg`) | {assessment} | {PASS/FAIL} |
 
 ### Remediation by Criterion
 
@@ -201,12 +203,13 @@ After generating the view, evaluate it against the criteria below. Report the re
 | 7 (Layout consistency) | Apply `LAYOUT_TOP_DOWN()`; reorder declarations in tier order; remove edges that jump two layer steps |
 | 8 (Legend) | Add a `legend` block mapping custom notation to plain-English meaning |
 | 9 (Inventory traceability) | Regenerate the Element Inventory and Layer & Realization Traceability tables from the diagram source |
+| 10 (Self-contained SVG) | Re-render offline with the pinned jar (`java -jar plantuml-1.2026.8.jar -tsvg`); confirm the `.svg` has no `http(s)` URL beyond the W3C `2000/svg`/`1999/xlink` namespaces and local `#anchor` `xlink:href` only; keep the PlantUML source inline and do not emit any new architecture document file |
 
 ### Iterative Review Loop
 
 1. Generate the view code
-2. Evaluate all 9 criteria in the quality gate table
-3. If any criterion fails: apply the corresponding remediation, regenerate, re-evaluate all 9 criteria
+2. Evaluate all 10 criteria in the quality gate table
+3. If any criterion fails: apply the corresponding remediation, regenerate, re-evaluate all 10 criteria
 4. Repeat up to **3 iterations**
 5. If criteria still fail after 3 iterations, document accepted trade-offs and proceed
 

@@ -111,6 +111,8 @@ Apply these principles when generating diagrams in Step 3. In particular:
 
 ## Step 2: Determine the Diagram Type
 
+> **ArchiMate note:** if the requested diagram is ArchiMate-representable (a layer/tier, capability, service, application or technology component, or motivation — driver/goal/constraint) or an ArchiMate view should be added, render it with **PlantUML ArchiMate** instead of C4/Mermaid, per the Diagram Production Policy in `skills/plantuml-syntax/references/archimate.md` (inline PlantUML source, self-contained `.svg` as the only new file). This is additive — non-ArchiMate C4/Mermaid/Sequence/ER/Diagram behaviour is unchanged.
+
 Based on the user's request and available artifacts, select the appropriate diagram type:
 
 ### Mode A: C4 Context Diagram (Level 1)

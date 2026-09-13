@@ -237,3 +237,68 @@ def test_diagrams_md_maps_generated_path_to_archimate_command():
         "docs/DIAGRAMS.md must map the generated ArchiMate path to /arckit:archimate"
     assert re.search(r"ARC-[A-Z0-9*-]*ARCH", text), \
         "docs/DIAGRAMS.md must show the ARC-*-ARCH-* artifact pattern"
+
+
+# --- ArchiMate SVG self-containment (OpenSpec archimate-svg-delivery) -------
+#
+# The Diagram Production Policy (skills/plantuml-syntax/references/archimate.md,
+# § Diagram Production Policy + § Offline Self-Contained SVG Rendering) requires
+# emitted ArchiMate .svg deliverables to be self-contained: rendered offline
+# against the pinned jar, with no external URL beyond the W3C XML namespace
+# declarations and no `xlink:href` pointing off-file. The committed fixture
+# three-layer.svg is the render-truth reference.
+
+FIXTURE_SVG = REPO_ROOT / "tests/fixtures/archimate/three-layer.svg"
+ARCHIMATE_REFERENCE = REPO_ROOT / "plugins/arckit-claude/skills/plantuml-syntax/references/archimate.md"
+
+# The only URLs a self-contained ArchiMate SVG may carry: W3C XML namespace
+# declarations. Anything else is an external (server/CDN) dependency.
+ALLOWED_URLS = {
+    "http://www.w3.org/2000/svg",
+    "http://www.w3.org/1999/xlink",
+}
+
+
+def extract_urls(svg_text: str) -> set[str]:
+    return set(re.findall(r"https?://[^\"' )>]+", svg_text))
+
+
+def extract_xlink_hrefs(svg_text: str) -> set[str]:
+    return set(re.findall(r"""xlink:href=["\']([^"\']*)["\']""", svg_text))
+
+
+def test_fixture_svg_is_self_contained():
+    assert FIXTURE_SVG.is_file(), "render-truth fixture three-layer.svg missing"
+    text = read(FIXTURE_SVG)
+    urls = extract_urls(text) - ALLOWED_URLS
+    assert not urls, f"fixture SVG carries external URLs (breaks offline delivery): {sorted(urls)}"
+    for href in extract_xlink_hrefs(text):
+        assert href.startswith("#"), f"fixture SVG xlink:href escapes the file: {href!r}"
+
+
+@pytest.mark.parametrize("svg_path", sorted(glob.glob(str(REPO_ROOT / "projects/**/*.svg"), recursive=True)))
+def test_project_archimate_svgs_are_self_contained(svg_path: str):
+    # Any ArchiMate SVG committed under a project's diagrams/ tree must satisfy
+    # the same self-containment standard as the fixture.
+    text = read(Path(svg_path))
+    urls = extract_urls(text) - ALLOWED_URLS
+    assert not urls, f"{svg_path}: external URL in self-contained ArchiMate SVG: {sorted(urls)}"
+    for href in extract_xlink_hrefs(text):
+        assert href.startswith("#"), f"{svg_path}: xlink:href escapes the file: {href!r}"
+
+
+def test_reference_documents_diagram_production_policy():
+    text = read(ARCHIMATE_REFERENCE)
+    assert "## Diagram Production Policy" in text, \
+        "archimate.md reference missing the Diagram Production Policy section"
+    assert "## Offline Self-Contained SVG Rendering" in text, \
+        "archimate.md reference missing the Offline Self-Contained SVG Rendering section"
+    # The two policy points the OpenSpec spec locks: (c) .svg is the only new
+    # emitted file, and self-containment is the delivery expectation.
+    assert "only new file" in text, "policy must state the .svg is the only new emitted file"
+
+
+def test_command_quality_gate_has_self_contained_svg_criterion():
+    text = read(COMMAND)
+    assert "Self-contained SVG" in text, \
+        "archimate.md quality gate missing the self-contained-SVG deliverable criterion"

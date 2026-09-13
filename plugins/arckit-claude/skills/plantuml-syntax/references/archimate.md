@@ -177,3 +177,28 @@ Use the theme's named colour tokens (`#Business`, `#Application`, `#Technology`,
 | Hard-coded hex layer colours | Breaks theme swaps; drifts from the pinned colour standard | Use `#Business`/`#Application`/`#Technology` tokens |
 | Kitchen-sink view: more than one structural layer, or > 12 elements per layer | Unreadable; defeats the one-view-per-layer governance model | Split at natural boundaries; sequence the views |
 | Inlining the stdlib source into public-URL diagram text | ~3.6 KB URL bloat; macros re-fetched per render | Use the pinned `!include <archimate/Archimate>` line (or the raw-URL include form) |
+
+## Diagram Production Policy
+
+When a document-generating command needs a diagram, decide whether to render it with the ArchiMate stdlib:
+
+1. **Use PlantUML ArchiMate** when a diagram is *ArchiMate-representable* — i.e. it depicts an architecture concern this notation models: a layer or tier (Motivation / Strategy / Business / Application / Technology / Physical / Implementation), capabilities, services, application or technology components, or motivation (drivers, goals, outcomes, constraints). Also use it when an *additional* ArchiMate view should be added to a document even if the document already carries other diagram types.
+2. **Representable vs not (heuristic).** Yes → layer/tier, capability, service, application/technology component, motivation (driver/goal/outcome/constraint), value stream, course of action. No → sequence / call interaction, entity–relationship (ER), Gantt / schedule, timeline / roadmap, or data-flow that carries no architectural typing. For the "No" cases, keep the document's existing diagram mechanism (e.g. Mermaid) — this policy does not force ArchiMate where the content is not an architecture view.
+3. **Inline source, SVG-only output.** When this policy applies, carry the PlantUML ArchiMate source *inline* in the document and render it to a **self-contained `.svg`** (see § Offline Self-Contained SVG Rendering). The `.svg` is the **only new file emitted** — do not create new architecture document files (no new `.md` or `.puml` artefacts) to host the diagram or its source.
+
+## Offline Self-Contained SVG Rendering
+
+ArchiMate `.svg` deliverables are produced offline against the **pinned build** already declared in § Pinned API — PlantUML **1.2026.8**, Java 21, `plantuml-1.2026.8.jar`. Render with the jar directly (no public server, no URL-include path):
+
+```sh
+java -jar plantuml-1.2026.8.jar -tsvg -checkonly some-view.puml   # validate
+java -jar plantuml-1.2026.8.jar -tsvg some-view.puml               # emit some-view.svg
+```
+
+Because the pinned jar embeds the ArchiMate stdlib, `!include <archimate/Archimate>` resolves offline — no fetch at render time.
+
+**Self-containment expectation (verify before delivery):** an emitted ArchiMate `.svg` SHALL contain **no `http(s)://` URL other than the W3C XML namespace declarations** (`http://www.w3.org/2000/svg`, `http://www.w3.org/1999/xlink`), and all `xlink:href` values limited to **local `#anchors`**. It must open and render fully offline (no external assets, fonts, or scripts). Quick check:
+
+```sh
+grep -rhoE "https?://[^\"' )]+" some-view.svg | sort -u   # expect only the two W3C namespaces above
+```
