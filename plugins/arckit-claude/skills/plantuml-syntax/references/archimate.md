@@ -62,9 +62,11 @@ Per-layer fills are PlantUML **named-colour tokens** (`#Business`, `#Application
 
 | Layer | Token | Rendered fill (1.2026.8) |
 | --- | --- | --- |
-| Business | `#Business` | `#C9FFC9` |
-| Application | `#Application` | `#FFFFCC` |
-| Technology | `#Technology` | `#C2F0FF` |
+| Business | `#Business` | `#FFFFCC` |
+| Application | `#Application` | `#C2F0FF` |
+| Technology | `#Technology` | `#C9FFC9` |
+
+(Values read from the committed fixture render `tests/fixtures/archimate/three-layer.svg`: `bProcess` → `#FFFFCC`, `aComp`/`aData` → `#C2F0FF`, `tNode` → `#C9FFC9`. Re-verify against the fixture whenever the pin is re-rendered.)
 
 Do not hard-code hex layer colours in generated diagrams — use the tokens so theme swaps (saturated / low-saturation / handwriting) stay automatic.
 
