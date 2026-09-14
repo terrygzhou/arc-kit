@@ -296,3 +296,23 @@ After writing the file, show a concise summary (NOT the full document):
    - **Low Priority**: Maintain in backlog, remove if no longer relevant
 
 10. **Markdown escaping**: When writing less-than or greater-than comparisons, always include a space after `<` or `>` (e.g., `< 3 seconds`, `> 99.9% uptime`) to prevent markdown renderers from interpreting them as HTML tags or emoji
+
+## PlantUML ArchiMate View (additive)
+
+When the artefact content is **ArchiMate-representable** (a layer/tier, capability, service, application or technology component, or a motivation element — driver/goal/constraint), add a PlantUML-ArchiMate view to the generated artefact:
+
+1. Load `${CLAUDE_PLUGIN_ROOT}/skills/plantuml-syntax/references/archimate.md` (pinned `!include <archimate/Archimate>`, PlantUML 1.2026.8) for notation.
+2. Fill the `## PlantUML ArchiMate View` block in the template, stereotyped into the **Capability (target vs current)** layer focus.
+3. Quality gates: single-layer stereotyping; ≤ 12 elements per layer; realization edges point concrete → abstract; no unlabelled cross-layer edges.
+
+This is additive — the existing Mermaid diagram(s) are retained, not replaced.
+
+## PlantUML ArchiMate Companion View (Implementation & Migration, additive)
+
+When the artefact content supports a **Implementation & Migration** companion view, add a **separate** PlantUML-ArchiMate companion view to the generated artefact (a separate sequenced `ARCH` document, not merged into the base view above):
+
+1. Load `${CLAUDE_PLUGIN_ROOT}/skills/plantuml-syntax/references/archimate.md` (pinned `!include <archimate/Archimate>`, PlantUML 1.2026.8) for notation.
+2. Fill the `### PlantUML ArchiMate Companion View (Implementation & Migration)` block in the `gap-analysis` template (`{companion_impl_migration_elements}`, `{companion_impl_migration_relationships}`, `{companion_impl_migration_layout}`).
+3. Quality gates: separate `ARCH` document; ≤ 12 elements per layer; realization edges point concrete → abstract; split-never-drop (reduce to the most material elements or split into another `ARCH` doc, never silently drop).
+
+This is additive — the demanded base view and existing Mermaid diagram(s) are retained, not replaced.

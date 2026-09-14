@@ -371,3 +371,35 @@ LAYOUT_TOP_DOWN()
 - **CLI**: `java -jar plantuml.jar <file>.puml`
 - **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
 - **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+
+### PlantUML ArchiMate Companion View (Physical)
+
+**Layer focus**: Physical
+
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> Companion view: a separate sequenced `ARCH` document — additive to the base view above, never merged into it.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {technology_architecture_physical_title}
+
+LAYOUT_TOP_DOWN()
+
+' Companion layer elements
+{companion_physical_elements}
+
+' Realization/relationship edges (concrete->abstract)
+{companion_physical_relationships}
+
+{companion_physical_layout}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md`

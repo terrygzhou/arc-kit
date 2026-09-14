@@ -398,3 +398,36 @@ This cadence maps to TOGAF ADM phases G and H (continuous):
 - `governance-report.yaml`: Governance report schema (Phase G governance)
 
 - `${user_config.safety_checklist_id}`: Safety checklist integrated into compliance monitoring
+
+## PlantUML ArchiMate View
+
+**Layer focus**: Strategy (governance capability)
+
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> This view is additive; the Mermaid diagram(s) above are unchanged.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {diagram_title}
+
+LAYOUT_TOP_DOWN()
+
+' Elements
+{plantuml_elements}
+
+' Relationships (realization concrete->abstract; serving/flow/access)
+{plantuml_relationships}
+
+' Layout constraints (hidden placement edges)
+{plantuml_layout}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md`

@@ -339,3 +339,13 @@ When the artefact content is **ArchiMate-representable** (a layer/tier, capabili
 3. Quality gates: single-layer stereotyping; ≤ 12 elements per layer; realization edges point concrete → abstract; no unlabelled cross-layer edges.
 
 This is additive — the existing Mermaid diagram(s) are retained, not replaced.
+
+## PlantUML ArchiMate Companion View (Implementation & Migration, additive)
+
+When the artefact content supports a **Implementation & Migration** companion view, add a **separate** PlantUML-ArchiMate companion view to the generated artefact (a separate sequenced `ARCH` document, not merged into the base view above):
+
+1. Load `${CLAUDE_PLUGIN_ROOT}/skills/plantuml-syntax/references/archimate.md` (pinned `!include <archimate/Archimate>`, PlantUML 1.2026.8) for notation.
+2. Fill the `### PlantUML ArchiMate Companion View (Implementation & Migration)` block in the `transition-architecture` template (`{companion_impl_migration_elements}`, `{companion_impl_migration_relationships}`, `{companion_impl_migration_layout}`).
+3. Quality gates: separate `ARCH` document; ≤ 12 elements per layer; realization edges point concrete → abstract; split-never-drop (reduce to the most material elements or split into another `ARCH` doc, never silently drop).
+
+This is additive — the demanded base view and existing Mermaid diagram(s) are retained, not replaced.

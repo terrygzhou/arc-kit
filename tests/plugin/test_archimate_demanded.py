@@ -3,13 +3,16 @@ source plugins: arckit-togaf-adm and arckit-oaa.
 
 Companion to tests/plugin/test_archimate_conformance.py (which guards the
 core /arckit:archimate + ARCH doc-type). This file guards the *adoption into
-the ADM/OAA artefacts* (OpenSpec change: archimate-demanded-artefacts).
+the ADM/OAA artefacts* (OpenSpec changes: archimate-demanded-artefacts and
+archimate-coverage-expansion).
 
-The demanded set is fixed (proposal table). Each demanded template SHALL carry
-one PlantUML-ArchiMate block using the pinned include line; the matching
-command SHALL load the pinned notation reference and fill the block when the
-artefact is ArchiMate-representable; and every pre-change ```mermaid block
-(ADM templates) SHALL be byte-for-byte preserved.
+The demanded set is now the full 17-artefact base list (superseding the
+original 7). Each demanded template SHALL carry one PlantUML-ArchiMate base
+view using the pinned include line; the matching command SHALL load the pinned
+notation reference and fill the block when the artefact is ArchiMate-
+representable; the four Batch-1 companion views SHALL appear as a separate
+pinned block; and every pre-change ```mermaid block (ADM templates) SHALL be
+byte-for-byte preserved.
 """
 
 import hashlib
@@ -31,7 +34,7 @@ PINNED_INCLUDE = "!include <archimate/Archimate>"
 
 REF_PATH = "skills/plantuml-syntax/references/archimate.md"
 
-# (plugin, template filename, command filename, archimate layer focus)
+# Original 7 demanded base views (plugin, template filename, command filename, layer focus).
 DEMANDED = [
     ("arckit-togaf-adm", "application-inventory-template.md", "application-inventory.md", "Application"),
     ("arckit-togaf-adm", "rationalization-template.md", "application-rationalization.md", "Application + Capability"),
@@ -42,7 +45,43 @@ DEMANDED = [
     ("arckit-oaa", "product-architecture-template.md", "product-architecture.md", "Application"),
 ]
 
-ADM_TEMPLATE_NAMES = [d[1] for d in DEMANDED if d[0] == "arckit-togaf-adm"]
+# 10 newly-in-scope base views added by archimate-coverage-expansion.
+NEW_BASE = [
+    ("arckit-togaf-adm", "adm-preliminary-template.md", "adm-preliminary.md", "Strategy"),
+    ("arckit-togaf-adm", "architecture-board-template.md", "architecture-board.md", "Strategy / governance"),
+    ("arckit-togaf-adm", "architecture-change-template.md", "architecture-change.md", "Implementation increments"),
+    ("arckit-togaf-adm", "architecture-repository-template.md", "architecture-repository.md", "Structure"),
+    ("arckit-togaf-adm", "data-architecture-template.md", "data-architecture.md", "Application/Technology data objects"),
+    ("arckit-togaf-adm", "discovery-template.md", "discovery.md", "Motivation"),
+    ("arckit-togaf-adm", "gap-analysis-template.md", "gap-analysis.md", "Capability (target vs current)"),
+    ("arckit-oaa", "agile-governance-template.md", "agile-governance.md", "Strategy / governance"),
+    ("arckit-oaa", "agile-security-template.md", "agile-security.md", "Technology / Application security"),
+    ("arckit-oaa", "agile-strategy-template.md", "agile-strategy.md", "Strategy / value stream"),
+]
+
+# Full 17-artefact demanded base set.
+ALL_BASE = DEMANDED + NEW_BASE
+
+# Four Batch-1 companion views: (plugin, template, command, companion-type marker).
+COMPANION = [
+    ("arckit-togaf-adm", "transition-architecture-template.md", "transition-architecture.md", "Companion View (Implementation & Migration)"),
+    ("arckit-togaf-adm", "gap-analysis-template.md", "gap-analysis.md", "Companion View (Implementation & Migration)"),
+    ("arckit-togaf-adm", "tech-architecture-template.md", "technology-architecture.md", "Companion View (Physical)"),
+    ("arckit-oaa", "oaa-adm-lite-template.md", "oaa-adm-lite.md", "Companion View (Physical)"),
+]
+
+# ADM in-scope templates carrying pre-change ```mermaid blocks (fixture keys).
+ADM_MERMAID_NAMES = [
+    "adm-preliminary-template.md",
+    "application-inventory-template.md",
+    "architecture-board-template.md",
+    "capability-map-template.md",
+    "data-architecture-template.md",
+    "gap-analysis-template.md",
+    "rationalization-template.md",
+    "tech-architecture-template.md",
+    "transition-architecture-template.md",
+]
 
 
 def _dir(plugin):
@@ -88,9 +127,15 @@ def _id(param):
     return f"{plugin}/{cmd}"
 
 
-# --- 1. demanded ArchiMate block present in each template -------------------
+def _cid(param):
+    plugin, tpl, cmd, marker = param
+    kind = marker.split("(", 1)[1].rstrip(")") if "(" in marker else marker
+    return f"{plugin}/{cmd}[{kind}]"
 
-@pytest.mark.parametrize("demanded", DEMANDED, ids=[_id(d) for d in DEMANDED])
+
+# --- 1. demanded ArchiMate base view present in all 17 templates -------------
+
+@pytest.mark.parametrize("demanded", ALL_BASE, ids=[_id(d) for d in ALL_BASE])
 def test_archimate_block_in_template(demanded):
     plugin, tpl, _cmd, _layer = demanded
     text = _read(_dir(plugin) / "templates" / tpl)
@@ -99,14 +144,14 @@ def test_archimate_block_in_template(demanded):
         if PINNED_INCLUDE in b and "@startuml" in b
     ]
     assert archimate_blocks, (
-        f"{plugin}/templates/{tpl}: expected a PlantUML-ArchiMate block with "
-        f"the pinned include line {PINNED_INCLUDE!r}; found none"
+        f"{plugin}/templates/{tpl}: expected a PlantUML-ArchiMate base-view block "
+        f"with the pinned include line {PINNED_INCLUDE!r}; found none"
     )
 
 
-# --- 2. demanded directive present in each command --------------------------
+# --- 2. demanded base-view directive present in each command -----------------
 
-@pytest.mark.parametrize("demanded", DEMANDED, ids=[_id(d) for d in DEMANDED])
+@pytest.mark.parametrize("demanded", ALL_BASE, ids=[_id(d) for d in ALL_BASE])
 def test_archimate_directive_in_command(demanded):
     plugin, _tpl, cmd, _layer = demanded
     text = _read(_dir(plugin) / "commands" / cmd)
@@ -118,13 +163,33 @@ def test_archimate_directive_in_command(demanded):
     )
 
 
+# --- 2b. Batch-1 companion view present in the 4 artefacts ------------------
+
+@pytest.mark.parametrize("companion", COMPANION, ids=[_cid(c) for c in COMPANION])
+def test_companion_view_in_template(companion):
+    plugin, tpl, _cmd, marker = companion
+    text = _read(_dir(plugin) / "templates" / tpl)
+    assert marker in text, (
+        f"{plugin}/templates/{tpl}: expected the companion-view section "
+        f"{marker!r}; found none"
+    )
+    archimate_blocks = [
+        b for b in _plantuml_blocks(text)
+        if PINNED_INCLUDE in b and "@startuml" in b
+    ]
+    assert len(archimate_blocks) >= 2, (
+        f"{plugin}/templates/{tpl}: expected a second (companion) PlantUML-ArchiMate "
+        f"block; found {len(archimate_blocks)}"
+    )
+
+
 # --- 3. pre-change Mermaid blocks are byte-for-byte preserved ---------------
 
 def _snap():
     return json.loads(_read(SNAPSHOT))
 
 
-@pytest.mark.parametrize("name", ADM_TEMPLATE_NAMES)
+@pytest.mark.parametrize("name", ADM_MERMAID_NAMES)
 def test_mermaid_blocks_preserved(name):
     snap = _snap()[name]
     current = set(
@@ -140,7 +205,7 @@ def test_mermaid_blocks_preserved(name):
 
 def test_snapshot_fixture_well_formed():
     snap = _snap()
-    assert set(snap) == set(ADM_TEMPLATE_NAMES), "snapshot must cover exactly the 5 ADM templates"
+    assert set(snap) == set(ADM_MERMAID_NAMES), "snapshot must cover exactly the ADM mermaid-carrying in-scope templates"
     for name, meta in snap.items():
         assert meta["count"] > 0, f"{name}: snapshot has zero mermaid blocks"
         assert all(len(h) == 64 for h in meta["sha256"]), f"{name}: bad sha256 in snapshot"

@@ -86,3 +86,13 @@ override it. Each question is **optional**: a skipped question renders as a
 - Feeds into: `BPCM` (target capability design), `APP` (current vs target inventory),
   `DATA` (current data state), `TECH` (current technology baseline),
   `GAPA` (current vs target gap)
+
+## PlantUML ArchiMate View (additive)
+
+When the artefact content is **ArchiMate-representable** (a layer/tier, capability, service, application or technology component, or a motivation element — driver/goal/constraint), add a PlantUML-ArchiMate view to the generated artefact:
+
+1. Load `${CLAUDE_PLUGIN_ROOT}/skills/plantuml-syntax/references/archimate.md` (pinned `!include <archimate/Archimate>`, PlantUML 1.2026.8) for notation.
+2. Fill the `## PlantUML ArchiMate View` block in the template, stereotyped into the **Motivation (drivers / goals)** layer focus.
+3. Quality gates: single-layer stereotyping; ≤ 12 elements per layer; realization edges point concrete → abstract; no unlabelled cross-layer edges.
+
+This is additive — the existing Mermaid diagram(s) are retained, not replaced.

@@ -377,3 +377,13 @@ After writing the file, show a concise summary (NOT the full document):
 - **NCSC CAF**: Security control updates for technology changes
 - **Technology Code of Practice**: Reuse-first principle for technology changes
 - **Cross-Government Services**: Impact on shared services (GOV.UK Pay, Notify, Design System)
+
+## PlantUML ArchiMate View (additive)
+
+When the artefact content is **ArchiMate-representable** (a layer/tier, capability, service, application or technology component, or a motivation element — driver/goal/constraint), add a PlantUML-ArchiMate view to the generated artefact:
+
+1. Load `${CLAUDE_PLUGIN_ROOT}/skills/plantuml-syntax/references/archimate.md` (pinned `!include <archimate/Archimate>`, PlantUML 1.2026.8) for notation.
+2. Fill the `## PlantUML ArchiMate View` block in the template, stereotyped into the **Implementation (change increments)** layer focus.
+3. Quality gates: single-layer stereotyping; ≤ 12 elements per layer; realization edges point concrete → abstract; no unlabelled cross-layer edges.
+
+This is additive — the existing Mermaid diagram(s) are retained, not replaced.
