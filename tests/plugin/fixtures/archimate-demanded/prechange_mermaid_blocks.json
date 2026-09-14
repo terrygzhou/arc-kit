@@ -1,0 +1,38 @@
+{
+  "application-inventory-template.md": {
+    "count": 4,
+    "sha256": [
+      "b8c1878a15ffb06379b0b2615a01f77bb7bcd21c9dc41cd06d5506fa959c4db8",
+      "33351d1b7d45e7471cc2346902eb6ae357d956d23129fe33ba7352f343e8b176",
+      "92ae0b108d7a66987c147a99c2c091781b7812771936e0056ae2f1de8a6dceb1",
+      "e42377ad31cf1d5920bdea2cd1bb01db9fb16747a7fbba026c4bdab9d8f8dcd2"
+    ]
+  },
+  "capability-map-template.md": {
+    "count": 3,
+    "sha256": [
+      "044dbd3b4f4b96eee9440d414f9656e5fec8aa7a3ea771f4f12a9bb8e9803847",
+      "347c893e987c1f755370db68d124b765a04f9bfe3b5723a3de118829822b0e77",
+      "aa1ad5ec5fc1d5ed2e3a208112c865b94672899434eccf940b574874d308e869"
+    ]
+  },
+  "rationalization-template.md": {
+    "count": 2,
+    "sha256": [
+      "0887fe33c5640a14fc7b6f988d454f27c2e2c43acce85272a682028d783943cd",
+      "a3c93f27e7c8b039a9cf8dd4222d10bb81d922e4801b16dd16e035391b3ae4db"
+    ]
+  },
+  "tech-architecture-template.md": {
+    "count": 1,
+    "sha256": [
+      "b6a8a22d999e17316465728119beefd38b33f0a7925d6570d7087e1fbcade5c3"
+    ]
+  },
+  "transition-architecture-template.md": {
+    "count": 1,
+    "sha256": [
+      "2c2a2854a877e8aadb136d3292cccad0289410100afe28f5d02700bbde602f1b"
+    ]
+  }
+}
