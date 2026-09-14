@@ -371,6 +371,7 @@ LAYOUT_TOP_DOWN()
 - **CLI**: `java -jar plantuml.jar <file>.puml`
 - **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
 - **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.
 
 ### PlantUML ArchiMate Companion View (Physical)
 
@@ -403,3 +404,4 @@ LAYOUT_TOP_DOWN()
 - **CLI**: `java -jar plantuml.jar <file>.puml`
 - **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
 - **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.

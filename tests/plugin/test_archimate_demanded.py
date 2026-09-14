@@ -183,6 +183,57 @@ def test_companion_view_in_template(companion):
     )
 
 
+
+# --- 2c. ArchiMate views are rendered to a self-contained SVG -------------
+# PlantUML does not render in markdown, so every ArchiMate-carrying command
+# must direct rendering the inline source to a self-contained .svg, and every
+# ArchiMate template section must carry the .svg delivery note.
+
+CMD_SVG_MARKERS = ("plantuml-1.2026.8.jar -tsvg", "Offline Self-Contained SVG Rendering")
+TPL_SVG_MARKER = "self-contained `.svg`"
+
+
+@pytest.mark.parametrize("demanded", ALL_BASE, ids=[_id(d) for d in ALL_BASE])
+def test_svg_delivery_in_base_command(demanded):
+    plugin, _tpl, cmd, _layer = demanded
+    text = _read(_dir(plugin) / "commands" / cmd)
+    for marker in CMD_SVG_MARKERS:
+        assert marker in text, (
+            f"{plugin}/commands/{cmd}: expected a self-contained SVG-render "
+            f"clause containing {marker!r}"
+        )
+
+
+@pytest.mark.parametrize("demanded", ALL_BASE, ids=[_id(d) for d in ALL_BASE])
+def test_svg_delivery_in_base_template(demanded):
+    plugin, tpl, _cmd, _layer = demanded
+    text = _read(_dir(plugin) / "templates" / tpl)
+    assert TPL_SVG_MARKER in text, (
+        f"{plugin}/templates/{tpl}: expected a self-contained `.svg` delivery note"
+    )
+
+
+@pytest.mark.parametrize("companion", COMPANION, ids=[_cid(c) for c in COMPANION])
+def test_svg_delivery_in_companion_command(companion):
+    plugin, _tpl, cmd, _marker = companion
+    text = _read(_dir(plugin) / "commands" / cmd)
+    for marker in CMD_SVG_MARKERS:
+        assert marker in text, (
+            f"{plugin}/commands/{cmd}: expected the companion-view self-contained "
+            f"SVG-render clause containing {marker!r}"
+        )
+
+
+@pytest.mark.parametrize("companion", COMPANION, ids=[_cid(c) for c in COMPANION])
+def test_svg_delivery_in_companion_template(companion):
+    plugin, tpl, _cmd, _marker = companion
+    text = _read(_dir(plugin) / "templates" / tpl)
+    assert text.count(TPL_SVG_MARKER) >= 2, (
+        f"{plugin}/templates/{tpl}: expected the `.svg` delivery note on BOTH the "
+        f"base and the companion sections (found {text.count(TPL_SVG_MARKER)})"
+    )
+
+
 # --- 3. pre-change Mermaid blocks are byte-for-byte preserved ---------------
 
 def _snap():
