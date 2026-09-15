@@ -537,3 +537,70 @@ Example: [Sprint 3] ADM-E: WAVE-001 Foundation Infrastructure
 - The Open Group: Open Agile Architecture (O-AA) Standard
 
 - The Agile Enterprise Architect Playbook (G226) — TOGAF + Agile integration
+
+## PlantUML ArchiMate View
+
+**Layer focus**: Technology + Application
+
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> This view is additive; the Mermaid diagram(s) above are unchanged.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {diagram_title}
+
+LAYOUT_TOP_DOWN()
+
+' Elements
+{plantuml_elements}
+
+' Relationships (realization concrete->abstract; serving/flow/access)
+{plantuml_relationships}
+
+' Layout constraints (hidden placement edges)
+{plantuml_layout}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.
+
+### PlantUML ArchiMate Companion View (Physical)
+
+**Layer focus**: Physical
+
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> Companion view: a separate sequenced `ARCH` document — additive to the base view above, never merged into it.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {oaa_adm_lite_physical_title}
+
+LAYOUT_TOP_DOWN()
+
+' Companion layer elements
+{companion_physical_elements}
+
+' Realization/relationship edges (concrete->abstract)
+{companion_physical_relationships}
+
+{companion_physical_layout}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.

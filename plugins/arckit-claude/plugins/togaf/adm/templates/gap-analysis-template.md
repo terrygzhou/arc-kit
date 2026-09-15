@@ -223,3 +223,70 @@ flowchart TD
 **ArcKit Version**: `{ARCKIT_VERSION}`
 **Project**: `[PROJECT_NAME]` (Project `[PROJECT_ID]`)
 **Severity Weighting Profile**: `[BALANCED / STRATEGIC-RISK / OPERATIONAL]`
+
+## PlantUML ArchiMate View
+
+**Layer focus**: Capability (target vs current)
+
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> This view is additive; the Mermaid diagram(s) above are unchanged.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {diagram_title}
+
+LAYOUT_TOP_DOWN()
+
+' Elements
+{plantuml_elements}
+
+' Relationships (realization concrete->abstract; serving/flow/access)
+{plantuml_relationships}
+
+' Layout constraints (hidden placement edges)
+{plantuml_layout}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.
+
+### PlantUML ArchiMate Companion View (Implementation & Migration)
+
+**Layer focus**: Implementation & Migration
+
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> Companion view: a separate sequenced `ARCH` document — additive to the base view above, never merged into it.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {gap_analysis_impl_migration_title}
+
+LAYOUT_TOP_DOWN()
+
+' Companion layer elements
+{companion_impl_migration_elements}
+
+' Realization/relationship edges (concrete->abstract)
+{companion_impl_migration_relationships}
+
+{companion_impl_migration_layout}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.

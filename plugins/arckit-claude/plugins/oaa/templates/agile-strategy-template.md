@@ -457,3 +457,37 @@ python validate-agile-strategy.py path/to/your-canvas.yaml
 | `product-architecture-template.md` | Strategy Canvas defines the why; Product Architecture defines the what |
 | `agile-governance-cadence-template.md` | Strategy Canvas sets direction; Governance Cadence maintains it |
 | `adm-preliminary-template.md` | Use ADM-P for formal TOGAF engagements; Strategy Canvas for agile planning |
+
+## PlantUML ArchiMate View
+
+**Layer focus**: Strategy (capabilities / value stream)
+
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> This view is additive; the Mermaid diagram(s) above are unchanged.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {diagram_title}
+
+LAYOUT_TOP_DOWN()
+
+' Elements
+{plantuml_elements}
+
+' Relationships (realization concrete->abstract; serving/flow/access)
+{plantuml_relationships}
+
+' Layout constraints (hidden placement edges)
+{plantuml_layout}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.
