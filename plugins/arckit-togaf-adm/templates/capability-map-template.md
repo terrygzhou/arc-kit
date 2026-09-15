@@ -184,3 +184,44 @@ LAYOUT_TOP_DOWN()
 - **Public server**: https://www.plantuml.com/plantuml/uml/ (keep the view small; never inline the stdlib into the URL source)
 - **Notation reference**: `skills/plantuml-syntax/references/archimate.md`
 - **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.
+
+## Capability Map (ArchiMate View)
+
+**Layer focus**: Strategy / Capability (hierarchical capability map)
+
+> This dedicated view renders the capability **hierarchy** (L1 domains → L2
+> sub-capabilities → optional L3 detailed capabilities) as an ArchiMate
+> Strategy-layer view. It is **additive**: the Mermaid mindmap and the
+> capability→target realization view above are unchanged.
+>
+> Notation: PlantUML ArchiMate standard library — pinned `!include <archimate/Archimate>` (PlantUML 1.2026.8).
+> Whole→part edges use `Rel_Composition(parent, child, "contains")` (or `Rel_Aggregation` where a sub-capability is standalone) and point L1→L2 (whole→part); composition edges are NOT realization edges. `LAYOUT_TOP_DOWN()`; ≤ 12 elements/layer — above the gate, split at a capability-domain boundary into an additional sequenced `ARCH` document.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {capmap_title}
+
+LAYOUT_TOP_DOWN()
+
+' L1 capability domains, e.g. Strategy_Capability(D1, "Policy & Underwriting")
+{capmap_l1_domains}
+
+' L2 sub-capabilities, e.g. Strategy_Capability(D1_1, "Decisioning")
+{capmap_l2_subcapabilities}
+
+' L3 detailed capabilities — only when Level 3 is defined; otherwise leave this placeholder empty
+{capmap_l3_detailed}
+
+' Whole->part edges, e.g. Rel_Composition(D1, D1_1, "contains"); use Rel_Aggregation if a child is standalone
+{capmap_composition_edges}
+
+@enduml
+```
+
+**View this diagram** (PlantUML does NOT render in GitHub markdown):
+
+- **CLI**: `java -jar plantuml.jar <file>.puml`
+- **Notation reference**: `skills/plantuml-syntax/references/archimate.md` (§ Capability-Map ArchiMate Nesting)
+- **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.

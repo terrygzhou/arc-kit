@@ -260,3 +260,53 @@ def test_snapshot_fixture_well_formed():
     for name, meta in snap.items():
         assert meta["count"] > 0, f"{name}: snapshot has zero mermaid blocks"
         assert all(len(h) == 64 for h in meta["sha256"]), f"{name}: bad sha256 in snapshot"
+
+
+# --- 2d. BPCM capability map rendered as a PlantUML-ArchiMate view ----------
+# OpenSpec change: bpcm-capmap-archimate. The BPCM capability hierarchy
+# (L1 domains -> L2 sub-capabilities -> optional L3) is ArchiMate-representable
+# as nested Strategy_Capability joined by a whole->part edge
+# (Rel_Composition "...contains..."). That view is ADDITIVE to the Mermaid
+# mindmap and to the existing capability->target realization view.
+
+BPCM_TPL = "capability-map-template.md"
+BPCM_CMD = "business-capability-map.md"
+BPCM_CAPMAP_SECTION = "Capability Map (ArchiMate View)"
+BPCM_WHOLE_TO_PART = "Rel_Composition"
+
+
+def test_bpcm_capmap_archimate_view_in_template():
+    text = _read(ADM_DIR / "templates" / BPCM_TPL)
+    assert BPCM_CAPMAP_SECTION in text, (
+        f"arckit-togaf-adm/templates/{BPCM_TPL}: expected a "
+        f"{BPCM_CAPMAP_SECTION!r} section (ArchiMate capability map)"
+    )
+    assert "Strategy_Capability" in text, (
+        f"arckit-togaf-adm/templates/{BPCM_TPL}: expected Strategy_Capability "
+        f"elements in the capability-map view"
+    )
+    capmap_blocks = [b for b in _plantuml_blocks(text) if BPCM_WHOLE_TO_PART in b]
+    assert capmap_blocks, (
+        f"arckit-togaf-adm/templates/{BPCM_TPL}: expected a PlantUML-ArchiMate "
+        f"capability-map block using the whole->part {BPCM_WHOLE_TO_PART!r} edge"
+    )
+
+
+def test_bpcm_capmap_directive_in_command():
+    text = _read(ADM_DIR / "commands" / BPCM_CMD).lower()
+    assert BPCM_WHOLE_TO_PART.lower() in text, (
+        f"arckit-togaf-adm/commands/{BPCM_CMD}: expected the whole->part "
+        f"{BPCM_WHOLE_TO_PART!r} edge to be named"
+    )
+    assert "whole" in text, (
+        f"arckit-togaf-adm/commands/{BPCM_CMD}: expected the whole->part "
+        f"(parent->child) edge direction to be stated"
+    )
+    assert "contains" in text, (
+        f"arckit-togaf-adm/commands/{BPCM_CMD}: expected whole->part edges to "
+        f"be labelled 'contains'"
+    )
+    assert "split" in text or "capability-domain" in text, (
+        f"arckit-togaf-adm/commands/{BPCM_CMD}: expected the <=12-element "
+        f"split gate (split at a capability-domain boundary)"
+    )

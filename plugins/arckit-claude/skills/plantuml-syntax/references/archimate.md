@@ -159,6 +159,29 @@ In a generated view:
 - **`Rel_Influence`** is the Motivation→structural connector (driver/constraint/goal → capability or process), not to be confused with `Rel_Realization`.
 - Every edge carries a one-line label; unlabelled edges fail quality-gate criterion 4.
 
+## Capability-Map ArchiMate Nesting
+
+A hierarchical capability map (L1 domains → L2 sub-capabilities → optional L3
+detailed capabilities) is an ArchiMate-representable Strategy-tier view:
+
+- Each node is a `Strategy_Capability` element; nesting depth is L1 → L2 → (optional L3).
+- Whole→part edges use `Rel_Composition(parent, child, "contains")` (default) or `Rel_Aggregation` where a sub-capability clearly retains standalone existence. Point them L1→L2 whole→part — **never** reversed.
+- Composition edges are **not** realization edges: the concrete→abstract `Rel_Realization` rule does not apply to `Rel_Composition` / `Rel_Aggregation`; the "whole" (parent domain) connects down to the "part" (child sub-capability).
+- `LAYOUT_TOP_DOWN()`; keep the hierarchy top-down so parent domains read above their children.
+- The ≤ 12 elements/layer gate still applies to the combined L1+L2 view; above the gate, split at a natural capability-domain boundary into additional sequenced `ARCH` documents (cross-linked in Linked Artifacts) — never silently drop.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+LAYOUT_TOP_DOWN()
+Strategy_Capability(P, "Policy & Underwriting")
+Strategy_Capability(P1, "Decisioning")
+Strategy_Capability(P2, "Policy Admin")
+Rel_Composition(P, P1, "contains")
+Rel_Composition(P, P2, "contains")
+@enduml
+```
+
 ## Colour Standards
 
 Use the theme's named colour tokens (`#Business`, `#Application`, `#Technology`, …) — **never hard-code hex layer colours** (see the rendered-fill table in § Pinned API for what each token produces on 1.2026.8). Theme swaps (saturated / low-saturation / handwriting) stay automatic only when tokens are used. Any notation beyond the stdlib vocabulary (custom stereotypes, hand-drawn shapes) must be documented in a `legend` block in the same diagram (quality-gate criterion 8).

@@ -299,6 +299,17 @@ When the artefact content is **ArchiMate-representable** (a layer/tier, capabili
 
 This is additive — the existing Mermaid diagram(s) are retained, not replaced.
 
+### BPCM capability map (ArchiMate hierarchical view)
+
+In addition to the realization view above, render the capability *hierarchy* as a dedicated PlantUML-ArchiMate Strategy-layer view in the `## Capability Map (ArchiMate View)` template block:
+
+1. Model each Level 1 domain and Level 2 sub-capability as a `Strategy_Capability` element; Level 3 detailed capabilities are **optional** — include them only when the artefact defines a Level 3 table (leave the Level-3 placeholder empty otherwise, no error).
+2. Join parent to child with a **whole→part** edge: `Rel_Composition(parent, child, "contains")` by default (L1 domain contains its L2 sub-capability; L2 contains its L3 detail). Point it L1→L2 whole→part — never reversed. Use `Rel_Aggregation` instead only where a sub-capability clearly retains standalone existence.
+3. `LAYOUT_TOP_DOWN()`; composition edges are NOT realization edges, so the concrete→abstract realization rule does not apply to them.
+4. ≤ 12 elements per layer gate: if a single L1+L2 layer exceeds 12 elements, **split** the map at a natural **capability-domain** boundary into an additional sequenced `ARCH` document (cross-linked in Linked Artifacts) — never silently drop.
+
+This view is additive: the Mermaid mindmap and the capability→target realization view are retained, not replaced.
+
 ## Render the ArchiMate view(s) to self-contained SVG(s)
 
 PlantUML does not render in GitHub markdown, so each ArchiMate view above (the demanded base view, and any companion view) is delivered as a rendered **self-contained `.svg`** — the inline PlantUML source above stays the source of truth:
