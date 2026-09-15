@@ -39,3 +39,10 @@
 - [x] 7.3 `npx markdownlint-cli2` over the changed files
 - [x] 7.4 `openspec validate archimate-demanded-artefacts`
 - [x] 7.5 `CHANGELOG.md` Unreleased entry; conventional commit staging: 7 templates + 7 commands + new test + `openspec/changes/archimate-demanded-artefacts/` + CHANGELOG (regenerated `extensions/*` stay uncommitted)
+
+## 8. Optional ArchiMate overlay views (spec-defined; implementation pending)
+- [ ] 8.1 RED: extend `tests/plugin/test_archimate_demanded.py` to assert, per demanded artefact, that the template carries a marked **optional-overlay** affordance (Motivation / Strategy-Capability / Data-only) and that the matching command directive names the overlay selection rule + the combined-view ≤ 12 gate (reduce-or-split)
+- [ ] 8.2 GREEN templates: add an optional overlay block (commented/guarded, keyed to the artefact's layer) to the 5 ADM + 2 OAA demanded templates — Mermaid + demanded base view byte-preserved
+- [ ] 8.3 GREEN commands: extend the 7 directives with the overlay selection rule (mirror `/arckit:archimate` Question 2 + "Data only"; default = include only overlays whose content is present) and the combined-view element-count gate
+- [ ] 8.4 Add a `### PlantUML ArchiMate Optional Overlays` reference note to `skills/plantuml-syntax/references/archimate.md` (overlay element macros + realization direction + split threshold)
+- [ ] 8.5 Regen `extensions/*` (`python3 scripts/converter.py`), re-run `tests/plugin/test_archimate_demanded.py` + `test_archimate_conformance.py`, `openspec validate archimate-demanded-artefacts`, `CHANGELOG.md` entry

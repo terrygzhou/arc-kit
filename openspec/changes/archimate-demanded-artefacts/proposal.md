@@ -73,3 +73,28 @@ Demanded artefacts and their ArchiMate layer focus:
   `plugins/arckit-oaa/templates/*.md` + 2 `plugins/arckit-oaa/commands/*.md`
   (+ 1 focused conformance test), `CHANGELOG.md`, this change's delta spec.
 - Regenerated (gitignored): `extensions/*`.
+
+## Optional Overlay Views (added)
+
+Beyond the demanded base-layer views above, each demanded ArchiMate artefact MAY
+carry **optional** ArchiMate overlay views — the same user-selectable add-ons
+the core `/arckit:archimate` command already models (Question 2: Motivation
+yes / no / capability-map; the "Data only" option). This change adds the
+matching `artifact-generation` requirement:
+
+- **Optional set (fixed):** Motivation overlay (drivers / goals / constraints),
+  Strategy-Capability overlay (capabilities realizing the layer), Data-only view
+  (logical data objects + cross-layer flows).
+- **Conditional + additive:** an overlay is included only when the artefact
+  content supports it, is always additive to the demanded base view (never
+  replaces it or any Mermaid block), reuses the pinned include and
+  concrete→abstract realization direction, and applies the ≤ 12 elements/layer
+  gate to the combined view (reduce or split into an extra sequenced `ARCH`
+  doc, never silently drop).
+- **Selection mirrors the shared ArchiMate intake; non-interactive templates
+  default to "include exactly the overlays whose content is present."**
+
+This is **spec-defined only** in this change (the requirement + scenarios are
+authored); wiring the optional overlay blocks into the 7 templates/commands and
+their focused test are tracked as pending tasks (§8) and are NOT part of the
+demanded-set implementation already shipped.
