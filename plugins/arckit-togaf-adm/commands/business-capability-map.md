@@ -301,14 +301,48 @@ This is additive — the existing Mermaid diagram(s) are retained, not replaced.
 
 ### BPCM capability map (ArchiMate hierarchical view)
 
-In addition to the realization view above, render the capability *hierarchy* as a dedicated PlantUML-ArchiMate Strategy-layer view in the `## Capability Map (ArchiMate View)` template block:
+In addition to the realization view above, render the capability *hierarchy* as a
+dedicated PlantUML-ArchiMate Strategy-layer view in the `## Capability Map
+(ArchiMate View)` template block.
 
-1. Model each Level 1 domain and Level 2 sub-capability as a `Strategy_Capability` element; Level 3 detailed capabilities are **optional** — include them only when the artefact defines a Level 3 table (leave the Level-3 placeholder empty otherwise, no error).
-2. Join parent to child with a **whole→part** edge: `Rel_Composition(parent, child, "contains")` by default (L1 domain contains its L2 sub-capability; L2 contains its L3 detail). Point it L1→L2 whole→part — never reversed. Use `Rel_Aggregation` instead only where a sub-capability clearly retains standalone existence.
-3. `LAYOUT_TOP_DOWN()`; composition edges are NOT realization edges, so the concrete→abstract realization rule does not apply to them.
-4. ≤ 12 elements per layer gate: if a single L1+L2 layer exceeds 12 elements, **split** the map at a natural **capability-domain** boundary into an additional sequenced `ARCH` document (cross-linked in Linked Artifacts) — never silently drop.
+**Build every diagram top-down.** L1 domains sit at the top and lower levels
+below (`LAYOUT_TOP_DOWN()`); a parent always reads above its children — never
+invert the hierarchy. Model each Level 1 domain and Level 2 sub-capability — and
+Level 3 detailed capabilities, **optional** (include them only when the artefact
+defines a Level 3 table; leave the Level-3 placeholder empty otherwise, no
+error) — as a `Strategy_Capability` element, joined whole→part by
+`Rel_Composition(parent, child, "contains")` (use `Rel_Aggregation` only where a
+sub-capability clearly retains standalone existence). Composition edges are NOT
+realization edges, so the concrete→abstract realization rule does not apply to
+them.
 
-This view is additive: the Mermaid mindmap and the capability→target realization view are retained, not replaced.
+**Complexity-adaptive rendering (top-down, by refinement level).** Pick the
+diagram set from the model's complexity — total elements `E` across all present
+levels (L1 + L2 [+ L3]) and the widest single level:
+
+- **Simple model → flatten to one diagram.** When `E ≤ 12`, emit a **single**
+  top-down diagram flattening every present level into one ArchiMate view.
+- **Complex model → abstract level-by-level, one diagram per refinement.** When
+  `E > 12` (or any single level is denser than ~12 elements), do NOT cram it into
+  one box:
+  1. emit an **abstract overview** diagram showing the top level only — the L1
+     domains, each labelled with its child count as a roll-up — this is the
+     "abstract" diagram;
+  2. emit **refinement** diagrams, one **per L1 domain**, each showing that
+     domain's L2 sub-hierarchy (and its L3 detail when defined). Every
+     refinement diagram respects the **≤ 12 elements/layer gate**; a refinement
+     that still exceeds 12 is refined further level-by-level (per sub-domain)
+     **split** the densest one at a natural **capability-domain** (or
+     sub-domain) boundary into a further sequenced `ARCH` document — the ≤ 12
+     gate is never violated and no element is silently dropped;
+  3. cross-link abstract ↔ refinement in Linked Artifacts (abstract → "expand
+     this domain" → refinement).
+
+Each diagram renders to a self-contained `.svg` (pinned `plantuml-1.2026.8.jar
+-tsvg`, offline). The inline PlantUML source is the source of truth.
+
+This view is additive: the Mermaid mindmap and the capability→target realization
+view are retained, not replaced.
 
 ## Render the ArchiMate view(s) to self-contained SVG(s)
 

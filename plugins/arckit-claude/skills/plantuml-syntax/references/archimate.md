@@ -182,6 +182,33 @@ Rel_Composition(P, P2, "contains")
 @enduml
 ```
 
+## Capability-Map Complexity-Adaptive Rendering (top-down, by refinement level)
+
+Build every capability-map diagram **top-down** (`LAYOUT_TOP_DOWN()`; a parent
+always reads above its children). Choose the *set* of diagrams from model
+complexity (total elements `E` across all present levels + widest single level):
+
+- **Simple (`E ≤ 12`) → one flattened diagram:** a single top-down view of every
+  present level (L1 → L2 → optional L3).
+- **Complex (`E > 12`, or a single level denser than ~12) → abstract level-by-level,
+  one diagram per refinement:**
+  1. an **abstract overview** — top level only (L1 domains, each labelled with its
+     child count as a roll-up);
+  2. **refinement** diagrams, one **per L1 domain** (that domain's L2 sub-hierarchy +
+     L3 when defined). Each refinement is a separate sequenced `ARCH` document,
+     gated to ≤ 12 elements/layer; refine further per sub-domain if still dense —
+     never silently drop. Cross-link abstract ↔ refinement.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+LAYOUT_TOP_DOWN()
+' abstract overview: L1 domains with a child-count roll-up
+Strategy_Capability(D1, "Policy & Underwriting (4 sub-caps)")
+Strategy_Capability(D2, "Channel & Distribution (3 sub-caps)")
+@enduml
+```
+
 ## Colour Standards
 
 Use the theme's named colour tokens (`#Business`, `#Application`, `#Technology`, …) — **never hard-code hex layer colours** (see the rendered-fill table in § Pinned API for what each token produces on 1.2026.8). Theme swaps (saturated / low-saturation / handwriting) stay automatic only when tokens are used. Any notation beyond the stdlib vocabulary (custom stereotypes, hand-drawn shapes) must be documented in a `legend` block in the same diagram (quality-gate criterion 8).

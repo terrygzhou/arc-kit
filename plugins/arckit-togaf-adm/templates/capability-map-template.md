@@ -225,3 +225,64 @@ LAYOUT_TOP_DOWN()
 - **CLI**: `java -jar plantuml.jar <file>.puml`
 - **Notation reference**: `skills/plantuml-syntax/references/archimate.md` (§ Capability-Map ArchiMate Nesting)
 - **Artefact delivery**: the view is shipped as a rendered **self-contained `.svg`** (offline, pinned build `plantuml-1.2026.8.jar -tsvg`; no external URLs, fully offline-openable); the inline PlantUML source above is retained as the source of truth.
+
+## Capability Map — Complexity-Adaptive Regime (choose one)
+
+> Build every capability-map diagram **top-down** (L1 at the top, `LAYOUT_TOP_DOWN()`; a
+> parent always reads above its children). The block above (all levels in one
+> `@startuml`) is the **flattened / simple** shape. Choose the diagram set from
+> the model's complexity — total elements `E` across all present levels (L1 + L2
+> [+ L3]) and the widest single level:
+>
+> - **Simple (`E ≤ 12`) → flatten to one diagram.** Use the block above as-is
+>   (a single top-down view of every present level).
+> - **Complex (`E > 12`, or any single level denser than ~12 elements) → abstract
+>   level-by-level, one diagram per refinement.** Do not cram it into one box:
+>   1. an **abstract overview** (top level only — the L1 domains, each with its
+>      child count as a roll-up);
+>   2. **refinement** diagrams, one **per L1 domain** (that domain's L2 sub-hierarchy
+>      and its L3 detail when defined). Each refinement is a separate sequenced
+>      `ARCH` document gated to ≤ 12 elements/layer; refine further per sub-domain
+>      if still dense — never silently drop.
+>
+> Cross-link abstract ↔ refinement in Linked Artifacts; each renders to a
+> self-contained `.svg` (pinned `plantuml-1.2026.8.jar -tsvg`, offline).
+
+### Abstract overview (complex regime, top level only)
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {capmap_overview_title}
+
+LAYOUT_TOP_DOWN()
+
+' L1 domains only, each labelled with its child count, e.g. Strategy_Capability(D1, "Policy & Underwriting (4 sub-caps)")
+{capmap_overview_domains}
+
+@enduml
+```
+
+### Refinement (complex regime, one per L1 domain)
+
+One `@startuml`/`@enduml` per L1 domain, each a separate sequenced `ARCH` document
+(drill that domain's L2 sub-hierarchy + L3 detail when defined). Keep each ≤ 12
+elements/layer; split the densest domain per sub-domain if needed.
+
+```plantuml
+@startuml
+!include <archimate/Archimate>
+
+title {capmap_refinement_title}
+
+LAYOUT_TOP_DOWN()
+
+' this L1 domain + its L2 children (+ L3 when defined)
+{capmap_refinement_domain}
+
+' whole->part edges for this domain only
+{capmap_refinement_edges}
+
+@enduml
+```

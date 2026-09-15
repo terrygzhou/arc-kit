@@ -310,3 +310,48 @@ def test_bpcm_capmap_directive_in_command():
         f"arckit-togaf-adm/commands/{BPCM_CMD}: expected the <=12-element "
         f"split gate (split at a capability-domain boundary)"
     )
+
+
+# --- 2f. Capability map: top-down + complexity-adaptive (OpenSpec bpcm-capmap-level-refinement)
+# Every capability-map ArchiMate diagram is built top-down (L1 at the top).
+# The *set* of diagrams is chosen by model complexity: a simple model is
+# flattened into ONE diagram; a complex model is abstracted level-by-level
+# (an abstract L1 overview + one refinement diagram per L1 domain).
+BPCM_REGIME_MARKER = "complexity-adaptive"
+
+
+def test_bpcm_capmap_top_down_and_regimes_in_command():
+    text = _read(ADM_DIR / "commands" / BPCM_CMD).lower()
+    # top-down invariant (a parent always reads above its children)
+    assert "top-down" in text or "top down" in text, (
+        "arckit-togaf-adm/commands/business-capability-map.md: expected the "
+        "top-down build invariant to be stated"
+    )
+    # simple regime: flatten to a single diagram
+    assert "flatten" in text or "single diagram" in text, (
+        "expected the simple-model regime (flatten all levels to one diagram)"
+    )
+    # complex regime: abstract overview + refinement diagrams
+    assert "abstract" in text, "expected the complex-model 'abstract overview' regime"
+    assert "refinement" in text, "expected the complex-model 'refinement diagrams' regime"
+    # the 12-element gate is the regime threshold
+    assert "12" in text, "expected the 12-element regime threshold to be named"
+    # refinement is per-domain (level-by-level)
+    assert "per l1 domain" in text or "per-domain" in text or "per domain" in text, (
+        "expected the refinement regime to be per L1 domain"
+    )
+
+
+def test_bpcm_capmap_regime_placeholders_in_template():
+    text = _read(ADM_DIR / "templates" / BPCM_TPL)
+    low = text.lower()
+    assert "complexity" in low, (
+        f"arckit-togaf-adm/templates/{BPCM_TPL}: expected the complexity-adaptive "
+        "regime to be stated"
+    )
+    assert "flatten" in low, "expected the simple (flatten) regime"
+    assert "abstract" in low, "expected the complex (abstract overview) regime"
+    assert "refinement" in low, "expected the complex (refinement) regime"
+    # layered-abstraction variant placeholders
+    assert "{capmap_overview" in text, "expected an abstract-overview placeholder"
+    assert "{capmap_refinement" in text, "expected a per-domain refinement placeholder"
