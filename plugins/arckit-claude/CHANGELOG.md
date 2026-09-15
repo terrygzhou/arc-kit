@@ -5,6 +5,16 @@ All notable changes to the ArcKit Claude Code plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.10.0] — 2026-09-15
+
+### Added
+
+- **`/arckit:bmm` — Business Motivation Model (BMM 1.3) command.** New `commands/bmm.md` (`doc-type: BMM`, `effort: max`): single canonical BMM model per project rendered from `templates/bmm-template.md` (9 pipeline sections + 14-field Document Control + generation footer), projected to two sequenced base ArchiMate views (Motivation; Strategy/Capability) plus an optional companion-view menu, all delivered as offline self-contained `.svg` (pinned `plantuml-1.2026.8.jar -tsvg`). Intake interview (scope + companion menu in one call, max 2 rounds) over the shared ask-always block, prefilled from STKE/PRIN/SOBC/RISK/ROAD; quality gates G1–G5 with a 3-iteration remediation loop; handoffs to `strategy`, `roadmap`, `sobc` (UK-regime condition), and `archimate`.
+- **`BMM` doc-type registration (single-instance, root-level).** `BMM` (Business Motivation Model, category *Planning*) added to `config/doc-types.mjs` `DOC_TYPES` only — deliberately kept out of `MULTI_INSTANCE_TYPES` and `SUBDIR_MAP` — plus the `/arckit:pages` known-artifact-types table (dual registration enforced by `check-doc-type-registry.py`).
+- **BMM metamodel reference in every plugin tree.** `references/bmm-reference.md`: BMM 1.3 element/relationship catalogue, BMM ↔ ArchiMate ↔ ArcKit mapping tables (STKE/SOBC/STRAT/ROAD/BPCM/ARCH), BIZBOK S&SA + UK Green-Book alignment notes, and gate criteria G1–G5.
+- **`## BMM Projection` section in the ArchiMate skill reference (append-only).** `skills/plantuml-syntax/references/archimate.md` gains stereotyped encodings for the 4.0-only BMM elements (`Objective`, `Measure`, `Strategic Theme`) and the `Rel_Influence`/`Rel_Realization`/`Rel_Composition`/`Rel_Flow` relationship vocabulary, with legend rules and rendered spike fixtures under `tests/fixtures/archimate/bmm/`; all pre-existing sections stay byte-identical (SHA-256 fixture).
+- **BMM quality-checklist section in all tracked copies** and traceability clauses: `strategy.md` consumes BMM Strategic Themes when present; `sobc.md` maps its 5 case sections to the BMM Case (UK-regime Green-Book note).
+
 ## [6.9.0] — 2026-09-02
 
 ### Changed

@@ -92,6 +92,7 @@ add(GUIDE_SECTIONS.CORE, 'Planning', 'live', [
 ]);
 add(GUIDE_SECTIONS.CORE, 'Planning', 'beta', [
   'backlog',
+  'bmm',
   'roadmap',
   'strategy',
 ]);

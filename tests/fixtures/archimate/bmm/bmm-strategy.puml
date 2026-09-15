@@ -1,0 +1,23 @@
+@startuml
+title BMM Strategy/Capability view sample (ArcKit fixture [A3])
+!include <archimate/Archimate>
+
+LAYOUT_TOP_DOWN()
+
+Strategy_Capability(themeA, "Theme: Faster Claims (capability domain)")
+Strategy_Capability(capDigital, "Digital claims intake")
+Strategy_Capability(capDecision, "Automated decisioning")
+Rel_Composition(themeA, capDigital, "contains")
+Rel_Composition(themeA, capDecision, "contains")
+Strategy_CourseOfAction(coa1, "Pilot automated decisioning in Q3")
+Strategy_Resource(res1, "Decisioning engine licence")
+Rel_Assignment(res1, coa1, "assigned to")
+Business_Process(bProcess, "Claims intake process")
+Rel_Realization(capDigital, bProcess, "realizes")
+
+legend
+  "Theme: ..." — BMM Strategic Theme stereotyped onto
+  Strategy_Capability (no native Strategic Theme macro in
+  the pinned 3.x stdlib; see archimate.md § BMM Projection)
+end legend
+@enduml

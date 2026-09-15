@@ -207,6 +207,7 @@ Only include these known artifact types. Match by type code pattern `ARC-{PID}-{
 | | ROAD | `ARC-*-ROAD-*.md` | Roadmap |
 | | STRAT | `ARC-*-STRAT-*.md` | Architecture Strategy |
 | | BKLG | `ARC-*-BKLG-*.md` | Product Backlog |
+| | BMM | `ARC-*-BMM-*.md` | Business Motivation Model |
 | **Planning (Community-contributed — OAA Overlay)** | | | |
 | | OASTR | `ARC-*-OASTR-*.md` | Agile Strategy |
 | **Architecture** | | | |

@@ -1,0 +1,19 @@
+@startuml
+title BMM Motivation view sample (ArcKit fixture [A2])
+!include <archimate/Archimate>
+
+LAYOUT_TOP_DOWN()
+
+Motivation_Stakeholder(stK, "Regulator (claims service standards)")
+Motivation_Stakeholder(stB, "Customers (faster payouts)")
+Motivation_Outcome(oFast, "Faster, accurate claims payouts")
+Motivation_Goal(gDigital, "Digitise end-to-end claims handling")
+Motivation_Driver(dCost, "Rising manual processing cost")
+Motivation_Constraint(cBudget, "FY budget cap on platform spend")
+
+Rel_Influence(dCost, oFast, "drives")
+Rel_Influence(cBudget, gDigital, "constrains")
+Rel_Influence(stK, oFast, "expects")
+Rel_Influence(stB, oFast, "values")
+Rel_Realization(gDigital, oFast, "realizes")
+@enduml

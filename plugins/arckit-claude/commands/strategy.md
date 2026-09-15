@@ -35,6 +35,7 @@ $ARGUMENTS
 - **WARD** (Wardley Maps, in wardley-maps/) — Extract: Component evolution, build vs buy positioning, technology radar
 - **ROAD** (Architecture Roadmap) — Extract: Timeline, phases, milestones, investment by year, capability evolution
 - **SOBC** (Strategic Outline Business Case) — Extract: Investment figures, NPV, IRR, payback period, benefits timeline
+- **BMM** (Business Motivation Model) — Extract: Strategic Themes, the outcomes → goals → objectives → measures ladder, drivers, and courses of action. When a BMM model is present, consume its Strategic Themes into the "Strategic Themes & Investment Areas" section and keep the Driver → Goal → Outcome → Theme → KPI chain intact
 
 **OPTIONAL** (read if available, skip silently if missing):
 
@@ -174,6 +175,7 @@ Create a comprehensive Architecture Strategy document that synthesises insights 
 
 - List source documents with document IDs
 - Traceability matrix: Driver → Goal → Outcome → Theme → Principle → KPI
+- Where a **BMM** (Business Motivation Model) exists for the project, extend the chain upstream: BMM Driver/Outcome/Goal → BMM Strategic Theme → strategy theme, so strategy themes stay traceable to the motivation model that produced them
 
 #### Next Steps & Recommendations
 

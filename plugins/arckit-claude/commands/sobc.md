@@ -314,6 +314,7 @@ Provide:
 4. **Traceability note**:
    - "All [X] benefits traced to stakeholder goals in ARC-{PROJECT_ID}-STKE-v*.md"
    - "All [Y] risks linked to stakeholder conflict analysis"
+   - "**BMM** cross-reference (UK regime, HM Treasury Green Book 5-case model): when a **BMM** (Business Motivation Model) exists for the project, map its *Case For / Case Against* section to the Strategic Case (case for change) and Economic Case (options appraisal / benefits), and its *Assumptions* and *Impact Factors* to the Management Case risks; cite the BMM document by ID in External References"
 
 ## Common Patterns
 

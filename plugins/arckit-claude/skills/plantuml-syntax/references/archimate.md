@@ -252,3 +252,40 @@ Because the pinned jar embeds the ArchiMate stdlib, `!include <archimate/Archima
 ```sh
 grep -rhoE "https?://[^\"' )]+" some-view.svg | sort -u   # expect only the two W3C namespaces above
 ```
+
+## BMM Projection
+
+The pinned stdlib is 3.x-flavoured. BMM 1.3 (ArchiMate 4.0-aligned) adds three Motivation/Strategy elements with **no native macro** in the pinned library: **Objective**, **Measure**, and **Strategic Theme**. They are encoded as stereotypes — never faked as native. Full BMM fidelity (case narrative, assumption rationale, impact-factor analysis) lives in the BMM markdown artefact (`/arckit:bmm`, `ARC-{P}-BMM-v1.0.md`); views are *projections* of that model, not a substitute for it.
+
+### Stereotyped encodings
+
+| BMM element | Encoding |
+| --- | --- |
+| Objective | `Motivation_Goal(alias, "Objective: …")` |
+| Measure | `Motivation_Goal(alias, "Measure: …")` |
+| Strategic Theme | `Strategy_Capability(alias, "Theme: …")` or a `group` container |
+
+- **Single-tier stereotyping:** one view carries stereotypes from either the Motivation tier (Objective / Measure) or the Strategy tier (Theme) — never both.
+- **Legend is mandatory:** every view using a stereotype carries a `legend` block mapping the encoding to its plain-English meaning. Where no native macro exists for a relationship (e.g. "contributes to"), the edge style is defined in that same `legend` block — never invent notation without documenting it.
+
+### Relationship vocabulary (BMM → pinned macros)
+
+| BMM relationship | Encoding |
+| --- | --- |
+| instruments / influences | `Rel_Influence` (labelled "drives" / "constrains" / "expects" / "values") |
+| realizes | `Rel_Realization` — always **concrete → abstract** (goal → outcome, objective → goal, capability → process) |
+| contributes to | `Rel_Influence` or a legend-defined edge (no native macro) |
+| contains / part of | `Rel_Composition` (whole → part, the BPCM idiom) / `Rel_Aggregation` |
+| measures | `Rel_Realization` (labelled "measures") |
+| assigned to | `Rel_Assignment` (resource → course of action) |
+| outcome stream (optional) | `Rel_Flow` |
+
+### Sample fixture
+
+`tests/fixtures/archimate/bmm/` — rendered against the pinned jar (PlantUML 1.2026.8):
+
+- `bmm-motivation.{puml,svg}` — [A2] stakeholders → outcomes with driver/constraint influence edges
+- `bmm-strategy.{puml,svg}` — [A3] stereotyped-theme `Strategy_Capability` nesting (`Rel_Composition`) with courses of action and resources
+- `bmm-ladder.{puml,svg}` — [O1] stereotyped Objective/Measure ladder
+
+The committed `.svg` files are self-contained (no URL beyond the W3C namespace declarations) — the offline-delivery reference for BMM-carrying views.

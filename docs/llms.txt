@@ -42,6 +42,7 @@ Every command reads a template from `.arckit/templates/`, creates or reuses a nu
 
 ### Planning and strategy
 
+- [Business Motivation Model (BMM 1.3)](https://arckit.org/guides/bmm.md): `/arckit:bmm` motivation model — stakeholders, outcomes, goals, drivers, case, strategic themes — plus ArchiMate motivation/strategy views.
 - [Project plan](https://arckit.org/guides/plan.md): `/arckit:plan` timeline and sequencing.
 - [Business case (SOBC)](https://arckit.org/guides/business-case.md): `/arckit:sobc` HM Treasury Green Book.
 - [Architecture strategy](https://arckit.org/guides/strategy.md): `/arckit:strategy`.

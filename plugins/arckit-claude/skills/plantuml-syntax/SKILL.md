@@ -30,6 +30,7 @@ Select the appropriate diagram type and read the corresponding reference file:
 | Use Case Diagram | [use-case-diagrams.md](references/use-case-diagrams.md) | — |
 | Deployment Diagram | [deployment-diagrams.md](references/deployment-diagrams.md) | — |
 | ArchiMate Layer View | [archimate.md](references/archimate.md) | `/arckit:archimate` |
+| BMM Motivation / Strategy View | [archimate.md](references/archimate.md) § BMM Projection | `/arckit:bmm` |
 
 ## Styling & Errors
 

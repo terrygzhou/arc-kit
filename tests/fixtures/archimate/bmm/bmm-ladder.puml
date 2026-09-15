@@ -1,0 +1,21 @@
+@startuml
+title BMM Goal/Objective/Measure ladder sample (ArcKit fixture [O1])
+!include <archimate/Archimate>
+
+LAYOUT_TOP_DOWN()
+
+Motivation_Outcome(oFast, "Faster claims payouts (outcome)")
+Motivation_Goal(gDigital, "Digitise end-to-end claims handling (goal)")
+Motivation_Goal(oj1, "Objective: cut median payout time to 48h")
+Motivation_Goal(m1, "Measure: median payout time (KPI, weekly)")
+Rel_Realization(gDigital, oFast, "realizes")
+Rel_Realization(oj1, gDigital, "operationalises")
+Rel_Realization(m1, oj1, "measures")
+
+legend
+  Stereotypes — BMM elements without native macros in the
+  pinned 3.x stdlib (see archimate.md § BMM Projection):
+  | "Objective:" prefix | BMM Objective |
+  | "Measure:" prefix   | BMM Measure   |
+end legend
+@enduml

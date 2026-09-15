@@ -101,3 +101,12 @@ All artifacts must pass these 10 checks:
 - Pinned include line present: `!include <archimate/Archimate>` (PlantUML ArchiMate standard library; do not substitute other include forms)
 - Legend included for any custom notation beyond the standard-library vocabulary
 - No C4 or UML elements mixed into the ArchiMate diagram (companion C4 view is a separate `ARC-*` diagram artifact)
+
+### BMM -- Business Motivation Model
+
+- G1 ladder completeness: every outcome ≥ 1 goal; every goal ≥ 1 objective; every objective ≥ 1 measure (a dangling objective or goal fails the gate)
+- G2 no empty quadrants: Case For, Case Against, Assumptions, and Impact Factors are all populated (placeholder text "TBC" / "—" fails the gate)
+- G3 theme realization: every strategic theme realizes ≥ 1 capability (in-model link or BPCM cross-reference)
+- G4 view conformance: pinned include line `!include <archimate/Archimate>`; ≤ 12 elements per layer; split-never-drop; realization concrete → abstract; single-tier stereotyping; legend for any custom notation (stereotypes, legend-defined edges)
+- G5 sequence continuity: BMM-emitted views take the next free `ARCH` number; existing `ARCH` documents are never renumbered or rewritten
+- Views are projections of the [A1] model — a diagram never substitutes for the model

@@ -62,6 +62,7 @@ export const DOC_TYPES = {
   'ROAD':      { name: 'Roadmap',                          category: 'Planning' },
   'STRAT':     { name: 'Architecture Strategy',            category: 'Planning' },
   'BKLG':      { name: 'Product Backlog',                  category: 'Planning' },
+  'BMM':       { name: 'Business Motivation Model',        category: 'Planning' },
   // Architecture
   'PRIN':      { name: 'Architecture Principles',          category: 'Architecture' },
   'HLDR':      { name: 'High-Level Design Review',         category: 'Architecture' },

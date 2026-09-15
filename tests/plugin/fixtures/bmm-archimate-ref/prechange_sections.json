@@ -1,0 +1,55 @@
+{
+  "file": "plugins/arckit-claude/skills/plantuml-syntax/references/archimate.md",
+  "note": "SHA-256 of every top-level (## ) section body of the pinned archimate reference, captured with trailing-newline normalisation (body.rstrip('\\n')) so that append-only top-level sections do not invalidate earlier hashes. The BMM Projection section (OpenSpec bmm-adoption, task 4.1) is append-only: pre-existing section bodies must stay byte-identical.",
+  "generated_for": "tests/plugin/test_bmm_conformance.py",
+  "sections": {
+    "_preamble": {
+      "sha256": "d2f47059a7997cb362938778360cf9bab2b8d349764e2a59c2f56bfcc302ddd1",
+      "lines": 10
+    },
+    "Pinned API": {
+      "sha256": "3c104a9252c17f258a902b477dd9590b399dd6e43319200226250523f7af98b8",
+      "lines": 84
+    },
+    "Notation Cheat-Sheet": {
+      "sha256": "fc509605291da01a15cca51fc9061a0d4f54c301298780da612cf5ed003a3e63",
+      "lines": 39
+    },
+    "Layer-Tier Ordering Rules": {
+      "sha256": "6c6d698ee3eb0c92926d11e44ce2535f69bd8d43dd0f3dc33f135a06f364f3ad",
+      "lines": 19
+    },
+    "Realization / Relationship Direction Rules": {
+      "sha256": "a2841c0fd254db55a8ae2a22d4c5c01e1dcb46a1d1dd239397b50abbd2169637",
+      "lines": 9
+    },
+    "Capability-Map ArchiMate Nesting": {
+      "sha256": "f066e979b13901ab836328f3443b9c7665a5e5049ef382bfdd934ed0ff2b9f3b",
+      "lines": 23
+    },
+    "Capability-Map Complexity-Adaptive Rendering (top-down, by refinement level)": {
+      "sha256": "c31b15b5a6a164561d88de9552aad6f3eb6d1e98728247eab2331a25d72ac25e",
+      "lines": 27
+    },
+    "Colour Standards": {
+      "sha256": "243aad56168afb75b5ec1a5426a6ddf7f675a8cb5ffadae356b1184b6d5909e5",
+      "lines": 4
+    },
+    "Element-Count Threshold": {
+      "sha256": "061594ad0dc680367db6ef46b3ecf15c9499199b8ed7b326a98b688f66413bf1",
+      "lines": 4
+    },
+    "Antipatterns (never emit)": {
+      "sha256": "f280fce0f9c36842bbc2e9f30e853256970f0ef443bd1c64090753ebffda2b90",
+      "lines": 11
+    },
+    "Diagram Production Policy": {
+      "sha256": "30cd2c57609c4c2dc80d4306e2c59eba976fa7736dccd955f59731c324038bd9",
+      "lines": 8
+    },
+    "Offline Self-Contained SVG Rendering": {
+      "sha256": "339c5ff0af8a2720db6d7fe37dccd00cd869b1e59abd1bb26b499107d8ac4de0",
+      "lines": 16
+    }
+  }
+}
