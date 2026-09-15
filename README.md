@@ -24,10 +24,18 @@ ArcKit is a toolkit for enterprise architects that transforms architecture gover
 
 ## About This Fork
 
-This repo was previously forked from [tractorjuice/arc-kit](https://github.com/tractorjuice/arc-kit). This fork focuses on:
+ArcKit is a fork of the original [tractorjuice/arc-kit](https://github.com/tractorjuice/arc-kit), which we build on and extend. Our fork diverges from upstream along four deliberate axes:
 
-- **Guided enterprise architecture** – workflows that actively interview the user, driving enterprise architecture planning and delivery through structured, conversational intake rather than template-filling.
-- **Agility in delivery** – turning guided EA artifacts into actionable outputs so architecture can be delivered quickly and iteratively, based on the guided EA artifacts.
+- **User intake control flow** – guided workflows that actively *interview* the user, driving enterprise architecture planning and delivery through structured, conversational intake (ask-always questions with provenance-persisted answers) rather than passive template-filling. The interview is the control flow: it decides what gets generated, and it is never silently skipped.
+- **Open group standards commands** – first-class, standards-aligned command sets shipped as dedicated plugins: **TOGAF ADM** (`arckit-togaf-adm`) and the **Open Architecture Alliance** (`arckit-oaa`), so governance artefacts map to publicly defined frameworks (Open Group / OAA standards) instead of a single bespoke method.
+- **BYO LLM** – Bring-Your-Own-LLM support: `arckit build` recipes run against any local or remote OpenAI-compatible endpoint, decoupling the toolkit from any one model or vendor.
+- **ArchiMate standard adoption** – architecture views expressed in the open **ArchiMate** standard (PlantUML-ArchiMate notation with pinned standard-library includes and self-contained SVG delivery), alongside the existing Mermaid diagrams — not just vendor or ad-hoc notations.
+
+These build on the fork's two guiding themes: **guided enterprise architecture** (conversational intake over template-filling) and **agility in delivery** (turning guided EA artefacts into fast, iterative, actionable outputs).
+
+### Roadmap
+
+Our roadmap is intentionally **different from upstream** and is where our ongoing investment lands: **agentic EA**. We continuously put effort into agentic enterprise-architecture research and development — autonomous research agents, multi-agent delivery, self-verifying artefact generation, and the intake/governance control flow that orchestrates them. This fork is expected to evolve on its own trajectory rather than track the upstream project's roadmap.
 
 ## Quick Start
 
