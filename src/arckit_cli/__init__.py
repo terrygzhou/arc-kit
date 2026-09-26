@@ -1396,6 +1396,7 @@ def resolve_recipe_path(recipe_name: str, project_root: Path) -> Path:
         3. project_root/plugins/arckit-*/skills/*/recipes/{recipe}.yaml (nested skills)
         4a. share/arckit/scripts/{recipe}.yaml           (legacy system install)
         4b. share/arckit/plugins/arckit-*/recipes/{recipe}.yaml (installed plugins)
+        4c. user_data_dir('arckit')/plugins/arckit-*/recipes/{recipe}.yaml (user-installed plugins)
         5. project_root/scripts/recipes/{recipe}.yaml    (local scripts)
     """
     all_searched: list[tuple[str, Path]] = []
@@ -1446,6 +1447,18 @@ def resolve_recipe_path(recipe_name: str, project_root: Path) -> Path:
                     label = f"plugin share: {plugin_recipes.parent.name}"
                     if try_path(label, plugin_file) is not None:
                         return plugin_file
+    except Exception:
+        pass
+
+    # 4c. Check user_data_dir('arckit')/plugins/arckit-*/recipes/ (user-installed plugin recipes)
+    try:
+        user_plugins_base = Path(platformdirs.user_data_dir("arckit")) / "plugins"
+        if user_plugins_base.is_dir():
+            for plugin_recipes in sorted(user_plugins_base.glob("arckit-*/recipes")):
+                plugin_file = plugin_recipes / f"{recipe_name}.yaml"
+                label = f"user plugin: {plugin_recipes.parent.name}"
+                if try_path(label, plugin_file) is not None:
+                    return plugin_file
     except Exception:
         pass
 
