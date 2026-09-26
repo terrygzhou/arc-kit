@@ -5,6 +5,12 @@ All notable changes to the ArcKit Claude Code plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.10.1] — 2026-09-27
+
+### Fixed
+
+- Recipe resolver now searches user-installed plugin recipe dirs: `resolve_recipe_path()` gains step 4c, checking `user_data_dir('arckit')/plugins/arckit-*/recipes/` (via `platformdirs`, symmetric with `get_data_paths()`), so recipes shipped by user-level plugin installs resolve without a project `.arckit/recipes/` override.
+
 ## [6.10.0] — 2026-09-15
 
 ### Added
