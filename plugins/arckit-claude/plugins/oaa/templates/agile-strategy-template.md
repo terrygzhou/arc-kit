@@ -4,7 +4,7 @@
 > **Issue:** ${user_config.project_issue_prefix}-126 | **Command:** `/arckit-oaa:agile-strategy`
 > **Schema:** `agile-strategy-canvas.yaml`
 > **Validation:** `validate-agile-strategy.py`
-> **O-AA Reference:** Learning Unit 2 — Agile Strategy
+> **O-AA Reference:** Ch. 11 (Agile Strategy)
 
 ## Intake Interview Questions
 

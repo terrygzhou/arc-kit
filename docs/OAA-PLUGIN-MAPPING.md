@@ -128,7 +128,7 @@ Primary ownership is per the plugin README coverage table and command bodies; "s
 
 **Coverage summary:** 11 of 16 axioms are owned by at least one command; 3 (A1, A2, A10) appear only incidentally in the `OAAL` template; 3 (A4 Touchpoint Orchestration, A8 Loosely-Coupled Systems, A13 Organizational Leveling) are **not cited anywhere** in the OAA plugin. Note A4 and A13 have natural homes in `agile-strategy`/`product-architecture` (journey/touchpoint design, team sizing), and A8 in the Sprint 2 technology work — cheap to close if axiom coverage is a quality target.
 
-Citation integrity is machine-enforced: `scripts/check_oaa_axioms.py` (run OK on 2026-08-24, 37 files checked) validates that every `Axiom N` citation uses a published 1–16 number and matches the published name, and keeps the 16-axiom table in `oaa-reference.md` in sync.
+Citation integrity is machine-enforced: `scripts/check_oaa_axioms.py` (runs as the "OAA axiom guard" step in `scripts/ci-local.sh`; OK on 2026-09-27, 40 files checked) validates that every `Axiom N` citation uses a published 1–16 number and, when named, matches the published name; that the 16-axiom table in `oaa-reference.md` stays in sync; that no "Learning Unit" phrasing remains; that G216/G226 are cited in the right context; that no stale pre-v3.0 C208 chapter coordinates remain (verified coordinates: Ch. 11/14/4.6/8, ADM Lite as an ArcKit convention over TOGAF ADM, C182); and that the `oaa-adm-lite` axiom set is consistent across command, template, and table.
 
 ---
 
@@ -144,7 +144,7 @@ Checked against the C208 HTML package table of contents (authoritative chapter m
 | F4 | P2 | **Namespace drift between canonical and bundled copies.** `plugins/arckit-oaa` cross-references bare `/arckit:adm-preliminary` etc.; the bundled mirror `plugins/arckit-claude/plugins/oaa` uses `/arckit-togaf-adm:…` / `/arckit-oaa:…`. Correct only if the target surface's plugin set matches; the converter doesn't currently normalise this, and a command run on a surface where the overlay commands live in the core namespace would emit non-resolvable handoffs. | `diff plugins/arckit-claude/plugins/oaa/commands/oaa-adm-lite.md plugins/arckit-oaa/commands/oaa-adm-lite.md` |
 | F5 | P3 | **No OAA usage guides.** `docs/guides/` holds 216 per-command guides for core + TOGAF commands but none for the 5 OAA commands, even though all 5 ship on the Paperclip extension. | `docs/guides/` listing |
 | F6 | P3 | **Axiom coverage gaps (A4, A8, A13).** See §4 matrix — touchpoint orchestration, loosely-coupled systems, and organizational leveling have no owning command. Deliberate scoping is fine, but the gap should be declared in `oaa-reference.md` rather than left implicit. | grep matrix §4 |
-| — | OK | Axiom number/name integrity (16/16, 37 files), doc-type registry ↔ pages allow-list parity, Paperclip command parity (5/5 in `src/data/commands.json`), generated fixture `test-oaa-dummy/` (REQ/STKE/OASTR/OAPR/OAAL all present and schema-shaped) | `check_oaa_axioms.py` run 2026-08-24: OK |
+| — | OK | Axiom number/name integrity (16/16, 37 files), doc-type registry ↔ pages allow-list parity, Paperclip command parity (5/5 in `src/data/commands.json`), generated fixture `test-oaa-dummy/` (REQ/STKE/OASTR/OAPR/OAAL all present and schema-shaped) | `check_oaa_axioms.py` run 2026-08-24: OK; re-run 2026-09-27: OK (40 files, 7 checks incl. stale-chapter + oaa-adm-lite set consistency) |
 
 ---
 

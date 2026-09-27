@@ -74,7 +74,7 @@ Place citation markers **immediately after** the requirement, finding, risk, or 
 **Examples:**
 
 ```text
-The sprint architecture vision must align with O-AA C208 Axiom 11 [OAS-C-C1] and cover all 8 ADM phases [OAS-C-C2].
+The sprint architecture vision must align with the O-AA C208 axioms (Ch. 9) [OAS-C-C1] and cover all 8 ADM phases [OAS-C-C2].
 ```text
 
 ## Category Assignment
@@ -105,7 +105,7 @@ When referencing the Open Agile Architecture standard:
 
 - Source ID: `OAS-C` (O-AA Standard C208)
 
-- Always include the specific chapter or axiom number (e.g., `[OAS-C-C1]` for Chapter 10, Axiom 11)
+- Always include the specific chapter or axiom number (e.g., `[OAS-C-C1]` for Ch. 11 (Agile Strategy))
 
 - Official source: Open Agile Architecture (openagilearchitecture.com)
 

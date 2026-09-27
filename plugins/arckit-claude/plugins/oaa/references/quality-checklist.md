@@ -31,7 +31,7 @@ All artifacts must pass these 10 checks:
 
 - Backlog-driven approach with user stories per ADM phase
 
-- Traceability to O-AA C208 axioms (especially Axiom 11: Agile Architecture)
+- Traceability to O-AA C208 axioms (axioms 1–10 applied per sprint; see the 16-axiom table in `oaa-reference.md`)
 
 - Sprint review outputs documented (architecture artefacts per sprint)
 
@@ -49,7 +49,7 @@ All artifacts must pass these 10 checks:
 
 - Value stream mapping included if multi-product portfolio
 
-- Traceability to O-AA C208 Chapter 12 (Product Architecture)
+- Traceability to O-AA C208 Ch. 14 (Product Architecture)
 
 ### OASTR — Agile Strategy
 
@@ -61,7 +61,7 @@ All artifacts must pass these 10 checks:
 
 - Business outcome metrics defined per strategic initiative
 
-- Traceability to O-AA C208 Chapter 10 (Strategy)
+- Traceability to O-AA C208 Ch. 11 (Agile Strategy)
 
 - Portfolio alignment with investment decisions documented
 
@@ -75,7 +75,7 @@ All artifacts must pass these 10 checks:
 
 - Security controls assessed in continuous (not gate-based) model
 
-- Traceability to O-AA C208 Chapter 17 (Security)
+- Traceability to O-AA C208 Ch. 4.6 (Security by Design) + Axiom 16 + G216
 
 - Residual security risk documented after sprint mitigations
 
@@ -89,7 +89,7 @@ All artifacts must pass these 10 checks:
 
 - Change management process operating at sprint velocity
 
-- Traceability to O-AA C208 Chapter 18 (Governance)
+- Traceability to O-AA C208 Ch. 8 (Agile Governance)
 
 - Governance artefacts minimal (no more than 2 per sprint)
 

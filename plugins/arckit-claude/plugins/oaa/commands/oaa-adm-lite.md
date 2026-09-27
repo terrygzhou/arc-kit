@@ -115,21 +115,27 @@ The O-AA ADM Lite maps the TOGAF ADM cycle to agile sprints:
 
 ### 5. O-AA Axiom Alignment
 
-Every O-AA deliverable must reference the relevant O-AA axioms:
+Every O-AA deliverable must reference the relevant O-AA axioms. C208 Ch. 9 defines exactly 16 named axioms (§9.1–§9.16); `oaa-adm-lite` applies axioms 1–10 to the ADM Lite mapping:
 
-- **Axiom 1:** "The purpose of architecture is to improve the organisation."
+- **Axiom 1 (Customer Experience Focus)** — architecture enables delivery of a differentiated customer experience by analyzing enterprise-to-customer interactions
 
-- **Axiom 2:** "An organisation cannot have a strategy without an architecture."
+- **Axiom 2 (Outside-In Thinking)** — discover hidden, untold customer needs (jobs-to-be-done, journey mapping, design thinking) before scoping work
 
-- **Axiom 3:** "Architecture must be product-centric."
+- **Axiom 3 (Rapid Feedback Loops)** — verify customer and user assumptions early and often (OODA, PDCA, prototyping at any stage)
 
-- **Axiom 4:** "Architecture must be fit for purpose."
+- **Axiom 4 (Touchpoint Orchestration)** — orchestrate every enterprise and ecosystem touchpoint holistically, not point by point
 
-- **Axiom 5:** "Architecture is a means to an end, not an end in itself."
+- **Axiom 5 (Value Stream Alignment)** — specify value from the customer's standpoint; one value stream per product or service family
 
-- **Axiom 6:** "Architecture is a shared asset."
+- **Axiom 6 (Autonomous Cross-Functional Teams)** — segment delivery into autonomous cross-functional teams; team autonomy is a prerequisite to speed
 
-- **Axiom 7:** "Architecture is the property of the whole organisation."
+- **Axiom 7 (Authority, Responsibility, and Accountability Distribution)** — balance freedom with responsibility and accountability at every layer
+
+- **Axiom 8 (Loosely-Coupled Systems)** — favour loosely-coupled, modular architectures; modularity shortens development time and increases product flexibility
+
+- **Axiom 9 (Modular Data Platform)** — domains own and serve their own data; a centralized monolithic data platform is an anti-pattern
+
+- **Axiom 10 (Simple Common Operating Principles)** — one set of simple mechanisms for all elements and connections (e.g., standard APIs)
 
 ### 6. Shared Schema Definitions
 
@@ -264,7 +270,7 @@ After writing the file, show a concise summary (NOT the full document):
 
 2. **Shared Schemas**: The `vision.yaml` and `implementation-strategy.yaml` schemas are shared between O-AA and traditional TOGAF commands. This ensures consistency regardless of which approach the client selects.
 
-3. **Product-Centric**: O-AA mandates product-centric architecture (Axiom 3). The organizing principle is the product, not capabilities or services.
+3. **Product-Centric**: O-AA mandates product-centric architecture (Axiom 15: Project to Product Shift). The organizing principle is the product, not capabilities or services.
 
 4. **Use Write Tool**: The O-AA ADM Lite document is typically 150-300 lines. ALWAYS use the Write tool to create it.
 

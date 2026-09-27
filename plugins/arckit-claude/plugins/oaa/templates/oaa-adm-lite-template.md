@@ -88,9 +88,9 @@ Use this template when **any** of the following conditions are met:
 
 ### O-AA Axiom Alignment
 
-- **Axiom 1:** "The purpose of architecture is to improve the organisation." — every decision traces to business outcome
+- **Axiom 1 (Customer Experience Focus)** — every decision traces to business outcome
 
-- **Axiom 4:** "Architecture must be fit for purpose." — no gold-plating; scope constrained to client's immediate delivery horizon
+- **Axiom 4 (Touchpoint Orchestration)** — no gold-plating; scope constrained to client's immediate delivery horizon
 
 ### Activities
 
@@ -172,9 +172,9 @@ vision:
 
 ### O-AA Axiom Alignment
 
-- **Axiom 6:** "Architecture is about outcomes, not outputs." — capabilities measured by business value delivered, not diagram count
+- **Axiom 6 (Autonomous Cross-Functional Teams)** — capabilities measured by business value delivered, not diagram count
 
-- **Axiom 8:** "Every stakeholder has an architecture concern." — data classification and compliance controls trace to specific stakeholder concerns from Sprint 0
+- **Axiom 8 (Loosely-Coupled Systems)** — data classification and compliance controls trace to specific stakeholder concerns from Sprint 0
 
 ### Activities
 
@@ -247,9 +247,9 @@ applications:
 
 ### O-AA Axiom Alignment
 
-- **Axiom 3:** "The organization's architecture must fit its strategy." — technology choices directly enable the AI workload type declared in Sprint 0
+- **Axiom 3 (Rapid Feedback Loops)** — technology choices directly enable the AI workload type declared in Sprint 0
 
-- **Axiom 10:** "Architecture is not just IT." — operational model (who monitors, who responds) defined alongside technical stack
+- **Axiom 10 (Simple Common Operating Principles)** — operational model (who monitors, who responds) defined alongside technical stack
 
 ### Activities
 
@@ -325,9 +325,9 @@ infrastructure:
 
 ### O-AA Axiom Alignment
 
-- **Axiom 2:** "Architecture is about enabling change, not preventing it." — implementation plan enables rapid delivery with governance built in
+- **Axiom 2 (Outside-In Thinking)** — implementation plan enables rapid delivery with governance built in
 
-- **Axiom 5:** "The right architecture is the one that gets built." — pragmatic trade-offs over theoretical perfection
+- **Axiom 5 (Value Stream Alignment)** — pragmatic trade-offs over theoretical perfection
 
 ### Activities
 
@@ -410,9 +410,9 @@ migration:
 
 ### O-AA Axiom Alignment
 
-- **Axiom 7:** "Architecture governance is not about control, it's about enablement." — governance accelerates delivery by providing guardrails, not bureaucracy
+- **Axiom 7 (Authority, Responsibility, and Accountability Distribution)** — governance accelerates delivery by providing guardrails, not bureaucracy
 
-- **Axiom 9:** "Architecture is a living, breathing entity." — continuous monitoring and adaptation, not a one-time document
+- **Axiom 9 (Modular Data Platform)** — continuous monitoring and adaptation, not a one-time document
 
 ### Activities
 
