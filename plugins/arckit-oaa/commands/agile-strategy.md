@@ -239,6 +239,8 @@ After writing the file, show a concise summary (NOT the full document):
 ### Shared Schemas
 - ✅ strategy-canvas.json → schemas/strategy-canvas.json
 
+The schemas ship with this plugin in `schemas/` (9 shared architecture schemas); validate artifacts with `python3 validate-architecture.py <artifact> --phase <phase>` — see `schemas/README.md`.
+
 - ✅ vision.yaml → schemas/vision.json (shared with O-AA Lite)
 
 - ✅ product-architecture.json → schemas/product-architecture.json (shared with Product Architecture)

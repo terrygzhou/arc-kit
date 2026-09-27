@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://arckit.org/schemas/architecture/governance-cadence.json",
+  "title": "ArcKit OAA — Sprint Governance Cadence (governance-cadence.yaml)",
+  "description": "Distributed governance cadence: recurring review activities with owners and gates, the sprint review panel (3-5 members), decision paths, and architecture-debt review rules. O-AA specific; replaces the centralised Architecture Review Board. Structure source: templates/agile-governance-template.md (Cadence Overview, Debt Review Rules) + templates/oaa-adm-lite-template.md §Sprint 4+ Governance Cadence.",
+  "type": "object",
+  "required": ["cadence", "review_panel"],
+  "additionalProperties": false,
+  "properties": {
+    "cadence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["frequency", "activity", "owner"],
+        "additionalProperties": false,
+        "properties": {
+          "frequency": {
+            "type": "string",
+            "enum": ["bi-weekly", "weekly", "monthly", "quarterly", "ad-hoc"]
+          },
+          "activity": { "type": "string", "minLength": 1 },
+          "owner": { "type": "string", "minLength": 1 },
+          "gate": { "type": "string" }
+        }
+      }
+    },
+    "review_panel": {
+      "type": "object",
+      "required": ["composition"],
+      "additionalProperties": false,
+      "properties": {
+        "composition": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "meeting_cadence": {
+          "type": "string",
+          "enum": ["bi-weekly", "weekly", "monthly", "quarterly", "ad-hoc"]
+        },
+        "decision_authority": { "type": "string" }
+      }
+    },
+    "decision_paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["decision", "authority"],
+        "additionalProperties": false,
+        "properties": {
+          "decision": { "type": "string" },
+          "authority": { "type": "string" },
+          "escalation": { "type": "string" }
+        }
+      }
+    },
+    "debt_review_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "critical_max_sprints": { "type": "integer", "minimum": 1 },
+        "high_assign_within_sprints": { "type": "integer", "minimum": 1 },
+        "medium_low_review_frequency": {
+          "type": "string",
+          "enum": ["monthly", "quarterly"]
+        },
+        "accepted_risk_requires_signoff": { "type": "string" }
+      }
+    }
+  }
+}

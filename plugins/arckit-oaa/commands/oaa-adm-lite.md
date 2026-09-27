@@ -245,6 +245,8 @@ After writing the file, show a concise summary (NOT the full document):
 ### Shared Schemas
 - ✅ vision.yaml → schemas/vision.json
 
+The schemas ship with this plugin in `schemas/` (9 shared architecture schemas); validate artifacts with `python3 validate-architecture.py <artifact> --phase <phase>` — see `schemas/README.md`.
+
 - ✅ implementation-strategy.yaml → schemas/implementation-strategy.json
 
 ### O-AA Axioms Applied

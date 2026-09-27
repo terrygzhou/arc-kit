@@ -237,6 +237,8 @@ After writing the file, show a concise summary (NOT the full document):
 ### Shared Schemas
 - ✅ security-backlog.json → schemas/security-backlog.json
 
+The schemas ship with this plugin in `schemas/` (9 shared architecture schemas); validate artifacts with `python3 validate-architecture.py <artifact> --phase <phase>` — see `schemas/README.md`.
+
 - ✅ threat-model.yaml → schemas/threat-model.yaml
 
 - ✅ compliance-evidence.json → schemas/compliance-evidence.json

@@ -1,0 +1,91 @@
+# ArcKit OAA — Architecture Change Request (change-request.yaml)
+# JSON Schema (draft-07) written in YAML, matching the schema file names
+# declared in plugins/arckit-oaa/commands/agile-governance.md.
+#
+# Architecture change request shared with /arckit:architecture-change
+# (ADM-H track) and the OAA sprint-4+ governance loop. Carries the security
+# impact section required by templates/agile-security-template.md (ADM-H row).
+# Structure source: templates/agile-governance-template.md §6 +
+# templates/oaa-adm-lite-template.md §Sprint 4+.
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "https://arckit.org/schemas/architecture/change-request.yaml"
+title: "ArcKit OAA — Architecture Change Request"
+type: object
+required: [request]
+additionalProperties: false
+properties:
+  request:
+    type: object
+    required: [id, title, type, description, proposed_by]
+    additionalProperties: false
+    properties:
+      id:
+        type: string
+        minLength: 1
+      title:
+        type: string
+        minLength: 1
+      type:
+        type: string
+        enum: [model_upgrade, infrastructure_scale, compliance_update, data_pipeline, other]
+      description:
+        type: string
+        minLength: 1
+      sprint:
+        type: integer
+        minimum: 1
+      proposed_by:
+        type: string
+        minLength: 1
+  impact:
+    type: object
+    required: [architecture]
+    additionalProperties: false
+    properties:
+      architecture:
+        type: string
+        minLength: 1
+      compliance:
+        type: object
+        additionalProperties: false
+        properties:
+          affected_controls:
+            type: array
+            items:
+              type: string
+          impact:
+            type: string
+      # Security section required by the OAA agile-security ADM-H mapping
+      security:
+        type: object
+        additionalProperties: false
+        properties:
+          impact:
+            type: string
+          new_threats:
+            type: array
+            items:
+              type: string
+          control_changes:
+            type: array
+            items:
+              type: string
+      cost:
+        type: string
+  approval:
+    type: object
+    required: [approver, status]
+    additionalProperties: false
+    properties:
+      approver:
+        type: string
+        minLength: 1
+      status:
+        type: string
+        enum: [draft, under_review, approved, rejected, implemented]
+      decided_at:
+        type: string
+      conditions:
+        type: array
+        items:
+          type: string

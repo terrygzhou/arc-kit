@@ -2,8 +2,8 @@
 
 > **Template:** Agile Strategy Canvas (O-AA Dual Transformation Planning)
 > **Issue:** ${user_config.project_issue_prefix}-126 | **Command:** `/arckit:agile-strategy`
-> **Schema:** `agile-strategy-canvas.yaml`
-> **Validation:** `validate-agile-strategy.py`
+> **Schema:** `schemas/strategy-canvas.json`
+> **Validation:** `python3 validate-architecture.py <canvas>.yaml --phase canvas`
 > **O-AA Reference:** Ch. 11 (Agile Strategy)
 
 ## Intake Interview Questions
@@ -426,12 +426,12 @@ transformation_waves:
 
 ## YAML Schema Reference
 
-The structured version of this canvas uses the `agile-strategy-canvas.yaml` schema. See schema definition in `Architecture/schemas/agile-strategy-canvas.yaml`.
+The structured version of this canvas is validated against the shipped schema `schemas/strategy-canvas.json` (shared OAA schemas live in `schemas/`; see `schemas/README.md`).
 
 Validate your canvas with:
 
 ```bash
-python validate-agile-strategy.py path/to/your-canvas.yaml
+python3 validate-architecture.py path/to/your-canvas.yaml --phase canvas
 
 ```text
 

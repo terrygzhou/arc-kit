@@ -1,0 +1,192 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://arckit.org/schemas/architecture/strategy-canvas.json",
+  "title": "ArcKit OAA — Agile Strategy Canvas (strategy-canvas.yaml)",
+  "description": "Dual-transformation canvas: digital-technology + agile-organizational dimensions, axiom-traceable design principles, resilience mapping, and transformation wave plan. O-AA specific. Structure source: templates/agile-strategy-template.md (the 'agile-strategy-canvas.yaml' schema referenced by that template is this file).",
+  "type": "object",
+  "required": ["design_principles", "transformation_waves"],
+  "additionalProperties": false,
+  "properties": {
+    "technology": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current_state": { "type": "string" },
+        "target_state": { "type": "string" },
+        "migration_approach": { "type": "string" },
+        "technology_risks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "enabling_technologies": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current_product_model": { "type": "string" },
+        "target_product_model": { "type": "string" },
+        "product_outcomes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "value_streams": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "operating_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current_operating_model": { "type": "string" },
+        "target_operating_model": { "type": "string" },
+        "capability_gaps": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "platform_strategy": { "type": "string" }
+      }
+    },
+    "organizational_agility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current_state": { "type": "string" },
+        "target_state": { "type": "string" },
+        "decision_framework": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "team_level": { "type": "string" },
+            "guild_level": { "type": "string" },
+            "executive_level": { "type": "string" }
+          }
+        },
+        "governance_model": { "type": "string" }
+      }
+    },
+    "cultural_agility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current_culture": { "type": "string" },
+        "target_culture": { "type": "string" },
+        "change_initiatives": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "success_indicators": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "team_agility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current_team_model": { "type": "string" },
+        "target_team_model": { "type": "string" },
+        "team_composition": { "type": "string" },
+        "agile_practices": { "type": "string" },
+        "flow_metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "cycle_time_target": { "type": "string" },
+            "lead_time_target": { "type": "string" },
+            "wip_limit": { "type": "string" }
+          }
+        }
+      }
+    },
+    "design_principles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["principle", "axiom", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "principle": { "type": "string", "minLength": 1 },
+          "axiom": { "type": "string", "minLength": 1 },
+          "rationale": { "type": "string", "minLength": 1 },
+          "implications": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "exceptions": { "type": "string" }
+        }
+      }
+    },
+    "resilience_mapping": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["resilience_domain", "threat", "impact", "mitigation"],
+        "additionalProperties": false,
+        "properties": {
+          "resilience_domain": {
+            "type": "string",
+            "enum": ["technical", "organizational", "operational", "regulatory"]
+          },
+          "threat": { "type": "string" },
+          "impact": { "type": "string" },
+          "mitigation": { "type": "string" },
+          "recovery_target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rto": { "type": "string" },
+              "rpo": { "type": "string" }
+            }
+          },
+          "transformation_dimension": {
+            "type": "string",
+            "enum": [
+              "digital_technology",
+              "agile_organizational",
+              "digital_operating_model",
+              "dual"
+            ]
+          }
+        }
+      }
+    },
+    "transformation_waves": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["wave", "duration"],
+        "additionalProperties": false,
+        "properties": {
+          "wave": { "type": "string", "minLength": 1 },
+          "duration": { "type": "string", "minLength": 1 },
+          "digital_activities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "agile_activities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "resilience_milestones": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "governance_gates": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

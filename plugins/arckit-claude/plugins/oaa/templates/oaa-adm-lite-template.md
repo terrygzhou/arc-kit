@@ -188,11 +188,11 @@ vision:
 
 | Artifact | Schema | Validation |
 |---|---|---|
-| `business-architecture.yaml` | `schemas/business-architecture.json` | `python validate-architecture.py business-architecture.yaml --phase business` |
-| `data-architecture.yaml` | `schemas/data-architecture.json` | `python validate-architecture.py data-architecture.yaml --phase data` |
+| `business-architecture.yaml` | structured per template section Sprint 1 | Manual review; cross-reference with vision.yaml scope |
+| `data-architecture.yaml` | structured per template section Sprint 1 | Manual review; cross-reference with vision.yaml scope |
 | `capability-gap-analysis.md` | N/A (markdown) | Cross-reference with vision.yaml success criteria |
 
-### Data Architecture Structure (from `schemas/data-architecture.json`)
+### Data Architecture Structure (from the Sprint 1 template section)
 
 ```yaml
 data_assets:
@@ -263,11 +263,11 @@ applications:
 
 | Artifact | Schema | Validation |
 |---|---|---|
-| `technology-architecture.yaml` | `schemas/technology-architecture.json` | `python validate-architecture.py technology-architecture.yaml --phase technology` |
+| `technology-architecture.yaml` | structured per template section Sprint 2 | Manual review; cross-reference with vision.yaml constraints |
 | `data-flow-diagram.mmd` | Mermaid.js | Visual review |
 | `tech-stack-compliance.md` | N/A (markdown) | Cross-reference with vision.yaml regulatory controls |
 
-### Technology Architecture Structure (from `schemas/technology-architecture.json`)
+### Technology Architecture Structure (from the Sprint 2 template section)
 
 ```yaml
 technology_standards:
@@ -426,8 +426,8 @@ migration:
 
 | Artifact | Schema | Validation |
 |---|---|---|
-| `governance-report.yaml` | N/A (custom schema) | `python validate-architecture.py governance-report.yaml --phase governance` |
-| `change-request.yaml` | N/A (custom schema) | Automated impact analysis script |
+| `governance-report.yaml` | N/A (structure per template section Sprint 4+) | Manual review; cross-reference with governance-cadence.yaml |
+| `change-request.yaml` | `schemas/change-request.yaml` | `python3 validate-architecture.py change-request.yaml --phase change` |
 | `performance-baseline.csv` | N/A (CSV) | Automated collection from monitoring stack |
 | `architecture-health.md` | N/A (markdown) | Quarterly manual review |
 
@@ -484,10 +484,10 @@ compliance_artifacts:
 | Sprint | Phase | Primary Schema | Secondary Schema |
 |---|---|---|---|
 | 0 | ADM-P + A | `schemas/vision.json` | — |
-| 1 | ADM-B + C (data) | `schemas/business-architecture.json` | `schemas/data-architecture.json` |
-| 2 | ADM-C (tech) + D | `schemas/technology-architecture.json` | `schemas/compliance-mapping.json` |
+| 1 | ADM-B + C (data) | N/A (template-structured) | N/A (template-structured) |
+| 2 | ADM-C (tech) + D | N/A (template-structured) | N/A (template-structured) |
 | 3 | ADM-E + F | `schemas/implementation-strategy.json` | — |
-| 4+ | ADM-G + H | `schemas/compliance-mapping.json` | — |
+| 4+ | ADM-G + H | `schemas/governance-cadence.json` | `schemas/change-request.yaml` |
 
 ---
 
@@ -532,7 +532,7 @@ Example: [Sprint 3] ADM-E: WAVE-001 Foundation Infrastructure
 
 - ${user_config.references_dir} — organisation reference documents (ADR-001: Executable TOGAF ADM Workflow, ADR-002: Architecture Handoff Process, ADR-003: AI Governance Framework, O-AA Study Notes); include only documents that exist in the configured directory
 
-- Schema definitions: `schemas/vision.json`, `schemas/implementation-strategy.json`, `schemas/business-architecture.json`, `schemas/data-architecture.json`, `schemas/technology-architecture.json`
+- Shared schemas: the 9 shared architecture schemas ship with this plugin in `schemas/` (vision, implementation-strategy, product-architecture, strategy-canvas, security-backlog, compliance-evidence, governance-cadence, threat-model, change-request); validate artifacts with `python3 validate-architecture.py` (see `schemas/README.md`)
 
 - The Open Group: Open Agile Architecture (O-AA) Standard
 

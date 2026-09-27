@@ -305,7 +305,7 @@ python merge-governance.py \
   --output governance-report.yaml
 
 # 4. Architecture drift check
-python validate-architecture.py --check-drift --baseline technology-architecture.yaml
+python3 validate-architecture.py drift technology-architecture.yaml deployed-config.yaml
 
 ```text
 

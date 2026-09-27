@@ -1,0 +1,84 @@
+# ArcKit OAA — Per-Sprint Threat Model (threat-model-sprint-N.yaml)
+# JSON Schema (draft-07) written in YAML, matching the schema file names
+# declared in plugins/arckit-oaa/commands/agile-security.md.
+#
+# Per-sprint STRIDE threat model (agile-security "Run initial threat model:
+# STRIDE analysis for product architecture"). Shared with traditional
+# security workflows. Structure source: templates/agile-security-template.md
+# §Risk Assessment + G216 Security Playbook threat-modeling gates.
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "https://arckit.org/schemas/architecture/threat-model.yaml"
+title: "ArcKit OAA — Per-Sprint Threat Model (STRIDE)"
+type: object
+required: [sprint, system, threats]
+additionalProperties: false
+properties:
+  sprint:
+    type: integer
+    minimum: 1
+  system:
+    type: string
+    minLength: 1
+  assets:
+    type: array
+    items:
+      type: object
+      required: [asset, classification]
+      additionalProperties: false
+      properties:
+        asset:
+          type: string
+          minLength: 1
+        classification:
+          type: string
+          enum: [public, internal, confidential, regulated]
+  threats:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required: [id, asset, category, scenario, likelihood, impact, risk_level, mitigations, status]
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          minLength: 1
+        asset:
+          type: string
+          minLength: 1
+        # STRIDE: Spoofing, Tampering, Repudiation, Information disclosure,
+        # Denial of service, Elevation of privilege
+        category:
+          type: string
+          enum:
+            - spoofing
+            - tampering
+            - repudiation
+            - information_disclosure
+            - denial_of_service
+            - elevation_of_privilege
+        scenario:
+          type: string
+          minLength: 1
+        likelihood:
+          type: string
+          enum: [low, medium, high]
+        impact:
+          type: string
+          enum: [low, medium, high, critical]
+        risk_level:
+          type: string
+          enum: [low, medium, high, critical]
+        mitigations:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        owner:
+          type: string
+        target_sprint:
+          type: integer
+          minimum: 1
+        status:
+          type: string
+          enum: [open, in_progress, mitigated, accepted]

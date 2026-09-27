@@ -264,6 +264,8 @@ After writing the file, show a concise summary (NOT the full document):
 ### Shared Schemas
 - ✅ governance-cadence.json → schemas/governance-cadence.json
 
+The schemas ship with this plugin in `schemas/` (9 shared architecture schemas); validate artifacts with `python3 validate-architecture.py <artifact> --phase <phase>` — see `schemas/README.md`.
+
 - ✅ change-request.yaml → schemas/change-request.yaml (shared with Architecture Change)
 
 - ✅ compliance-evidence.json → schemas/compliance-evidence.json (shared with Agile Security)
