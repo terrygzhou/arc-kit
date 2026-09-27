@@ -25,6 +25,7 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Constraints:** What budget, timeline, jurisdictional/regulatory, and dependency constraints apply?
 - **Goals:** What success criteria or measurable outcomes define a successful architecture?
 - **Governance:** How will architectural decisions be governed and approved?
+- **Engagement scope:** What is the scope of this ADM engagement? Options: `Enterprise-wide` | `Business Unit` | `Project-specific` (default: `Business Unit`).
 
 ## Document Control
 

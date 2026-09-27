@@ -23,6 +23,10 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Gaps:** For each gap: what exactly is missing, and what is its business impact?
 - **Root causes:** What is causing each gap (capability, funding, skills, technology, process)?
 - **Mitigations:** What closes each gap, and which mitigation maps to which transition work package?
+- **Gap severity weighting:** How should gap severity be weighted? Options: `Balanced` | `Strategic-risk` | `Operational` (default: `Balanced`):
+  - **Balanced**: Equal weight to strategic impact and operational cost of the gap
+  - **Strategic-risk**: Heavier weighting on strategic impact — gaps that threaten business outcomes are prioritised regardless of effort
+  - **Operational**: Heavier weighting on effort/cost — gaps that can be closed quickly with high business value are prioritised
 
 ## Document Control
 

@@ -23,6 +23,16 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Context & tools:** What context sources and tools does the agent access?
 - **Failure handling:** How are failures, retries, and escalation to humans designed in?
 - **Evaluation:** How is agent behaviour evaluated (test set, rubric, human review)?
+- **Architecture pattern:** What agent architecture pattern best describes this agent? Options: `Single Agent` | `Chain` | `Multi-Agent` | `Hierarchical` (default: `Single Agent`):
+  - **Single Agent**: Single LLM core with tools — best for focused tasks, simple domains
+  - **Chain**: Sequential pipeline of specialized agents — best for multi-step reasoning, complex workflows
+  - **Multi-Agent**: Parallel workers with a coordinator — best for complex domains, parallelization
+  - **Hierarchical**: Supervisor + worker agents — best for coordinated multi-agent systems, dynamic task allocation
+- **Agent scope:** What is the primary scope of this agent? Options: `Task Automation` | `Knowledge Work` | `Creative` | `Decision Support` (skippable; no default):
+  - **Task Automation**: Automating repetitive workflows (data processing, report generation, routine decisions)
+  - **Knowledge Work**: Research, analysis, synthesis (document analysis, market research, decision support)
+  - **Creative**: Generation and ideation (content creation, design, brainstorming)
+  - **Decision Support**: Recommendation and evaluation (risk assessment, prioritization, planning)
 
 ## Document Control
 

@@ -23,6 +23,7 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Dependencies:** Which applications integrate with which, and through what patterns (API, batch, file)?
 - **Data flows:** Which applications produce or consume the key data assets?
 - **Pain points:** Where do application-level pain points, license risk, or security debt surface?
+- **Inventory scope:** What is the scope of this application inventory? Options: `All applications` | `Business Unit` | `Specific Project` (default: `All applications`).
 
 ## Document Control
 

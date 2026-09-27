@@ -23,6 +23,7 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Standards:** Which technology standards and platform rules must the design follow?
 - **Constraints:** What vendor, licensing, latency, jurisdiction, or budget constraints apply?
 - **Risk:** Where are the key technical risks (lock-in, performance, security, capacity)?
+- **Technology scope:** What is the scope of this technology architecture assessment? Options: `Enterprise-wide` | `Business Unit` | `Specific Platform` (default: `Business Unit`).
 
 ## Document Control
 

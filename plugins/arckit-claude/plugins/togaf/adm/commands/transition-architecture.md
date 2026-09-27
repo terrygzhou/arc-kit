@@ -69,28 +69,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 > **Tip**: Users can customise templates with `/arckit:customize transition-architecture`
 
-### 3. AskUserQuestion: Number of Transition Architectures
-
-Before generating the transition architecture, use the **AskUserQuestion** tool to determine the number of transition architectures (intermediate states between baseline and target):
-
-**AskUserQuestion**: "How many transition architectures (migration waves) should the plan cover?"
-
-- Options: `2 waves` | `3 waves (Recommended)` | `4 waves`
-- Default: `3 waves`
-
-**Wave profiles**:
-
-- **2 waves**: Simple transition — baseline → intermediate → target. Suitable for focused, short-duration programmes (≤12 months).
-- **3 waves (Recommended)**: Balanced transition — baseline → Architecture 2 → Architecture 3 → target. Most common for enterprise transformations (12–36 months).
-- **4 waves**: Granular transition — baseline → Architecture 2 → Architecture 3 → Architecture 4 → target. Suitable for complex, long-duration programmes (24–48 months) with many interdependencies.
-
-**Gathering rules** (apply to all questions):
-
-- Ask the most important question first; fill in secondary details from context or reasonable defaults.
-- **Maximum 2 rounds of questions.** After that, pick the best option from available context.
-- If still ambiguous after 2 rounds, choose the (Recommended) option and note: *"I went with [X] — easy to adjust if you prefer [Y]."*
-
-### 4. Gather Transition Context
+### 3. Gather Transition Context
 
 Read all available documents identified in the Prerequisites section. Build a mental model of:
 
@@ -101,11 +80,11 @@ Read all available documents identified in the Prerequisites section. Build a me
 - **Risk register** (from RISK if available): Existing risks that affect migration sequencing
 - **Stakeholder priorities** (from STKE if available): Which capability areas and timelines matter most
 
-### 5. Load Mermaid Syntax References
+### 4. Load Mermaid Syntax References
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` and `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/gantt.md` for official Mermaid syntax — node shapes, edge labels, gantt chart syntax, and styling options.
 
-### 6. Generate Transition Architecture
+### 5. Generate Transition Architecture
 
 Create a comprehensive Transition Architecture document following the template structure.
 
@@ -190,7 +169,7 @@ Create traceability links showing the complete chain:
 - **APPR decisions → Work packages**: Application migration decisions must be reflected in relevant WPs
 - **Traceability table**: Tabular cross-reference of source artifacts to TRANS sections
 
-### 7. UK Government Specifics
+### 6. UK Government Specifics
 
 If the user indicates this is a UK Government project, include:
 
@@ -202,7 +181,7 @@ If the user indicates this is a UK Government project, include:
 - **Cross-Government Services**: Reuse opportunities (GOV.UK Pay, Notify, Design System) — include in work package scope where applicable
 - **Digital Marketplace**: G-Cloud/DOS procurement alignment for vendor-sourced work packages
 
-### 8. MOD Specifics
+### 7. MOD Specifics
 
 If this is a Ministry of Defence project, include:
 
@@ -211,7 +190,7 @@ If this is a Ministry of Defence project, include:
 - **IAMM**: Security maturity milestones per transition wave
 - **JSP 936**: AI assurance requirements for AI/ML migration work packages (if applicable)
 
-### 9. Quality Gate
+### 8. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **TRANS** per-type checks pass. Fix any failures before proceeding.
 
@@ -225,7 +204,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 - **Risk register** has at least 3 entries with contingency plans
 - Every GAPA workstream is addressed by at least one work package
 
-### 10. Write the Transition Architecture File
+### 9. Write the Transition Architecture File
 
 **IMPORTANT**: The transition architecture document will be a substantial document (typically 350-600 lines). You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -237,7 +216,7 @@ projects/{P}/ARC-{P}-TRANS-v1.0.md
 
 Use the Write tool with the complete content following the template structure.
 
-### 11. Show Summary to User
+### 10. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

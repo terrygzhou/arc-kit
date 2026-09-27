@@ -56,6 +56,16 @@ Walk the effective template and collect every input the artefact needs:
   D1–D10) is the canonical coverage floor and its dimensions are likewise
   asked-always.
 
+- **Decision inputs (scope / weighting / parameters)** — inputs that shape
+  *how* the artefact is generated rather than *what* it contains (engagement
+  scope, severity weighting, migration-wave count, pattern / priority /
+  re-entry parameters) are interview inputs, not a hard gate. When the
+  effective template declares them in its authoritative question list, the
+  command asks them *in the interview* — skippable like any other input
+  (§4–§6) — and must not add a standalone out-of-band question step of its
+  own: a dedicated `AskUserQuestion` step that the user must answer before
+  the command proceeds reintroduces the hard gate this interview replaces.
+
 Group related items so that one question can collect a coherent set (e.g. all
 Document Control metadata) rather than one question per leaf.
 

@@ -66,16 +66,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 > **Tip**: Users can customise templates with `/arckit:customize application-inventory`
 
-### 3. Clarify Scope with User
-
-Before generating the inventory, ask the user about the scope of this assessment:
-
-**AskUserQuestion**: "What is the scope of this application inventory?"
-
-- Options: `All applications` | `Business Unit` | `Specific Project`
-- Default: `All applications`
-
-### 4. Gather Application Data
+### 3. Gather Application Data
 
 Collect application information from all available sources:
 
@@ -85,7 +76,7 @@ Collect application information from all available sources:
 - **From external documents**: Existing application catalogues, technology registers, portfolio assessments
 - **From user**: Direct input about known applications, strategic priorities, technology strategy
 
-### 5. Load Mermaid Syntax References
+### 4. Load Mermaid Syntax References
 
 Read the following Mermaid syntax references for diagrams:
 
@@ -93,7 +84,7 @@ Read the following Mermaid syntax references for diagrams:
 - `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/pie.md` — Technology distribution (pie chart)
 - `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` — Dependency map (flowchart)
 
-### 6. Generate Application Inventory
+### 5. Generate Application Inventory
 
 Create the Application Inventory document following the template structure.
 
@@ -189,7 +180,7 @@ Identify application-level risks:
 - Link REQ → Application requirements
 - Link PRIN → Technology alignment
 
-### 7. UK Government Specifics
+### 6. UK Government Specifics
 
 If the user indicates this is a UK Government project, include:
 
@@ -199,7 +190,7 @@ If the user indicates this is a UK Government project, include:
 - **Spending Control Alignment**: Application costs mapped to SR periods
 - **Cross-Government Services**: Identify opportunities for GOV.UK Pay, Notify, Verify, Design System
 
-### 8. MOD Specifics
+### 7. MOD Specifics
 
 If this is a Ministry of Defence project, include:
 
@@ -208,7 +199,7 @@ If this is a Ministry of Defence project, include:
 - **IAMM Level**: Information assurance maturity for each application
 - **SSE**: Single Source Estate compliance for commercial tools
 
-### 9. Quality Gate
+### 8. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **APP** per-type checks pass. Fix any failures before proceeding.
 
@@ -220,7 +211,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 4. **Capability Mapping**: Every application must be mapped to at least one business capability
 5. **Lifecycle Data**: Every application must have lifecycle phase and status documented
 
-### 10. Write the Output
+### 9. Write the Output
 
 **IMPORTANT**: The Application Inventory document will be a substantial document. You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -265,7 +256,7 @@ Before completing the document, populate document information fields:
 **AI Model**: [Actual model name]
 ```
 
-### 11. Show Summary to User
+### 10. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

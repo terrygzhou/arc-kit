@@ -54,37 +54,11 @@ $ARGUMENTS
   5. Also create `projects/{NNN}-{slug}/external/README.md` with a note to place external reference documents here
   6. Set `PROJECT_ID` = the 3-digit number, `PROJECT_PATH` = the new directory path
 
-### 3. Interactive Configuration
-
-Before generating the agent design, use the **AskUserQuestion** tool to gather key parameters. **Skip any question where the user has already provided a clear answer in their arguments.**
-
-**Gathering rules** (apply to all questions in this section):
-
-- Ask the most important question first; fill in secondary details from context or reasonable defaults.
-- **Maximum 2 rounds of questions.** After that, pick the best option from available context.
-- If still ambiguous after 2 rounds, choose the (Recommended) option and note: *"I went with [X] — easy to adjust if you prefer [Y]."*
-
-**Question 1** — header: `Pattern`, multiSelect: false
-> "What agent architecture pattern best describes this agent?"
-
-- **Single Agent (Recommended)**: Single LLM core with tools — best for focused tasks, simple domains
-- **Chain**: Sequential pipeline of specialized agents — best for multi-step reasoning, complex workflows
-- **Multi-Agent**: Parallel workers with a coordinator — best for complex domains, parallelization
-- **Hierarchical**: Supervisor + worker agents — best for coordinated multi-agent systems, dynamic task allocation
-
-**Question 2** — header: `Scope`, multiSelect: false
-> "What is the primary scope of this agent?"
-
-- **Task Automation**: Automating repetitive workflows (data processing, report generation, routine decisions)
-- **Knowledge Work**: Research, analysis, synthesis (document analysis, market research, decision support)
-- **Creative**: Generation and ideation (content creation, design, brainstorming)
-- **Decision Support**: Recommendation and evaluation (risk assessment, prioritization, planning)
-
-### 4. Load Mermaid Syntax References
+### 3. Load Mermaid Syntax References
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` and `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/c4.md` for official Mermaid syntax — flowchart node shapes, edge labels, and C4 component diagram syntax. Diagrams in this artefact MUST follow the reference syntax.
 
-### 5. Read the template
+### 4. Read the template
 
 **Run the intake interview**:
 
@@ -98,7 +72,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` and `
 
 > **Tip**: Users can customize templates with `/arckit:customize agent-design`
 
-### 6. Gather agent design information
+### 5. Gather agent design information
 
 **Agent identity and purpose**:
 
@@ -107,10 +81,10 @@ Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` and `
 - **Purpose**: One-sentence description of what the agent does
 - **Domain**: Domain of expertise (e.g., "financial analysis", "code review")
 
-**Architecture decisions** (from Questions or context):
+**Architecture decisions** (from intake: Architecture pattern / Agent scope, or context):
 
-- **Architecture pattern**: Single / Chain / Multi-Agent / Hierarchical (from Question 1)
-- **Scope**: Task Automation / Knowledge Work / Creative / Decision Support (from Question 2)
+- **Architecture pattern**: Single / Chain / Multi-Agent / Hierarchical (from intake: Architecture pattern)
+- **Scope**: Task Automation / Knowledge Work / Creative / Decision Support (from intake: Agent scope)
 - **LLM model**: Primary model (e.g., "Claude Sonnet 5 (session default)")
 - **Hosting**: Local / Cloud / Hybrid
 
@@ -144,7 +118,7 @@ Extract from REQ artifacts or define new:
 - **Integration tests**: End-to-end agent flow
 - **Security tests**: Prompt injection, jailbreak resistance
 
-### 7. Auto-Populate from Existing Artifacts
+### 6. Auto-Populate from Existing Artifacts
 
 **CRITICAL**: To create a high-quality, integrated agent design, extract data from existing ArcKit artifacts:
 
@@ -180,7 +154,7 @@ If `projects/{project_id}/ARC-*-STKE-*.md` exists:
 - **Operators** → Monitoring requirements, admin capabilities
 - **Governance** → Approval workflows, audit requirements
 
-### 8. Detect Version
+### 7. Detect Version
 
 Before generating the document ID, check if a previous version exists:
 
@@ -194,7 +168,7 @@ Before generating the document ID, check if a previous version exists:
 4. Use the determined version for document ID, filename, Document Control, and Revision History
 5. For v1.1+/v2.0+: Add a Revision History entry describing what changed from the previous version
 
-### 9. Construct Document Control Metadata
+### 8. Construct Document Control Metadata
 
 - **Document ID**: `ARC-{PROJECT_ID}-AAGR-v{VERSION}` (e.g., `ARC-001-AAGR-v1.0`)
 
@@ -210,7 +184,7 @@ Before generating the document ID, check if a previous version exists:
 - `generation_date`: Current date and time
 - `ai_model`: Your model name
 
-### 10. Generate Agent Architecture Specification
+### 9. Generate Agent Architecture Specification
 
 **CRITICAL INSTRUCTIONS FOR QUALITY**:
 
@@ -266,7 +240,7 @@ Before generating the document ID, check if a previous version exists:
    - All diagrams must use consistent styling
    - Include element descriptions in `Person()`, `Component()`, etc.
 
-### 11. Quality Checks
+### 10. Quality Checks
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **AAGR** per-type checks pass. Fix any failures before proceeding.
 
@@ -281,7 +255,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 - **Testing strategy**: At least 3 test types covered (Unit, Integration, Security)
 - **No placeholder text**: No remaining `[Name]`, `[Model]`, `[MCP servers]`, or `[Schema]` tokens
 
-### 12. Use Write tool to create the agent design file
+### 11. Use Write tool to create the agent design file
 
 - **CRITICAL**: Because agent designs are large documents (600-1200+ lines), you MUST use the Write tool to create the file
 - Do NOT output the full content in your response (this will exceed token limits)
@@ -327,7 +301,7 @@ The footer should be populated with:
 **Generation Context**: [Brief note about source documents used]
 ```
 
-### 13. Show summary to user (NOT full document)
+### 12. Show summary to user (NOT full document)
 
 ```markdown
 ## Agent Architecture Specification Created

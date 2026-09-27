@@ -69,22 +69,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 > **Tip**: Users can customise templates with `/arckit:customize gap-analysis`
 
-### 3. AskUserQuestion: Gap Severity Weighting
-
-Before generating the analysis, ask the user how to weight gap severity scoring:
-
-**AskUserQuestion**: "How should gap severity be weighted?"
-
-- Options: `Balanced` | `Strategic-risk` | `Operational`
-- Default: `Balanced`
-
-**Weighting profiles**:
-
-- **Balanced**: Equal weight to strategic impact and operational cost of the gap
-- **Strategic-risk**: Heavier weighting on strategic impact — gaps that threaten business outcomes are prioritised regardless of effort
-- **Operational**: Heavier weighting on effort/cost — gaps that can be closed quickly with high business value are prioritised
-
-### 4. Gather Gap Analysis Context
+### 3. Gather Gap Analysis Context
 
 Read all available documents identified in the Prerequisites section. Build a mental model of:
 
@@ -94,11 +79,11 @@ Read all available documents identified in the Prerequisites section. Build a me
 - **Risks** (from RISK if available): Existing risk exposure from capability gaps
 - **Stakeholder priorities** (from STKE if available): Which capability areas matter most
 
-### 5. Load Mermaid Syntax References
+### 4. Load Mermaid Syntax References
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` and `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/quadrantChart.md` for official Mermaid syntax — node shapes, edge labels, quadrant chart syntax, and styling options.
 
-### 6. Generate Gap Analysis
+### 5. Generate Gap Analysis
 
 Create a comprehensive Gap Analysis document following the template structure.
 
@@ -169,7 +154,7 @@ Map each gap to associated risks:
 - Link gaps to principles (from PRIN) if principle compliance is affected
 - Cross-reference to stakeholder drivers (from STKE)
 
-### 7. UK Government Specifics
+### 6. UK Government Specifics
 
 If the user indicates this is a UK Government project, include:
 
@@ -181,7 +166,7 @@ If the user indicates this is a UK Government project, include:
 - **Cross-Government Services**: Identify reuse opportunities (GOV.UK Pay, Notify, Design System)
 - **G-Cloud/DOS**: Procurement alignment for procurement-related gaps
 
-### 8. MOD Specifics
+### 7. MOD Specifics
 
 If this is a Ministry of Defence project, include:
 
@@ -190,7 +175,7 @@ If this is a Ministry of Defence project, include:
 - **IAMM**: Security maturity progression for security gaps
 - **JSP 936**: AI assurance requirements for AI/ML capability gaps (if applicable)
 
-### 9. Quality Gate
+### 8. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **GAPA** per-type checks pass. Fix any failures before proceeding.
 
@@ -202,7 +187,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 - Workstream mapping contains at least 2 workstreams
 - Workstream dependency diagram is present
 
-### 10. Write the Gap Analysis File
+### 9. Write the Gap Analysis File
 
 **IMPORTANT**: The gap analysis document will be a substantial document (typically 250-400 lines). You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -214,7 +199,7 @@ projects/{P}/ARC-{P}-GAPA-v1.0.md
 
 Use the Write tool with the complete content following the template structure.
 
-### 11. Show Summary to User
+### 10. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

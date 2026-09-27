@@ -23,6 +23,10 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Exit criteria:** What must be true at each milestone gate to proceed?
 - **Enablers:** What organizational enablers (training, funding, governance) are required in transition?
 - **Risk:** What is the top transition risk, and what is its mitigation?
+- **Transition waves:** How many transition architectures (migration waves) should the plan cover? Options: `2 waves` | `3 waves (Recommended)` | `4 waves` (default: `3 waves`):
+  - **2 waves**: Simple transition — baseline → intermediate → target. Suitable for focused, short-duration programmes (≤12 months).
+  - **3 waves (Recommended)**: Balanced transition — baseline → Architecture 2 → Architecture 3 → target. Most common for enterprise transformations (12–36 months).
+  - **4 waves**: Granular transition — baseline → Architecture 2 → Architecture 3 → Architecture 4 → target. Suitable for complex, long-duration programmes (24–48 months) with many interdependencies.
 
 ## Document Control
 

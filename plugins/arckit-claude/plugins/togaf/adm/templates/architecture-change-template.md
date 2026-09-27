@@ -23,6 +23,24 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Risk:** What is the risk of change, and what is the risk of doing nothing?
 - **Approver:** Who is accountable for approving this change?
 - **Reversibility:** Is the change reversible, and what is the rollback plan?
+- **Change type:** What type of architecture change is this? Options: `Evolutionary` | `Transformational` | `Corrective` (default: `Evolutionary`):
+  - **Evolutionary**: Incremental improvement to existing architecture — extends or enhances current capabilities without fundamental change
+  - **Transformational**: Fundamental change that restructures significant portions of the architecture — new capabilities, technology platforms, or operating models
+  - **Corrective**: Fix for architectural deficiencies, technical debt, or compliance failures — restores intended design
+- **Priority:** What is the priority level of this change? Options: `Critical` | `High` | `Medium` | `Low` (default: `Medium`):
+  - **Critical**: Must be implemented immediately — safety, security, or regulatory compliance
+  - **High**: Major business impact — core capability changes, significant investment
+  - **Medium**: Standard change — enhancement or improvement within planned cycles
+  - **Low**: Minor refinement — low-risk, low-cost improvements
+- **ADM Re-Entry:** Which ADM phases need to be re-entered for this change? (multi-select; skip if none)
+  - **Phase A (Architecture Vision)**: Change affects overall vision or scope
+  - **Phase B (Business Architecture)**: Change affects business processes or organisation
+  - **Phase C (Information Systems)**: Change affects data or application architecture
+  - **Phase D (Technology Architecture)**: Change affects technology infrastructure
+  - **Phase E (Opportunities & Solutions)**: Change affects solution options or migrations
+  - **Phase F (Migration Planning)**: Change affects migration sequencing
+  - **Phase G (Implementation Governance)**: Change affects implementation oversight
+  - **Phase H (Change Management)**: Change affects ongoing change control
 
 ## Document Control
 

@@ -24,6 +24,7 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Target state:** What is the target data model / data platform, and what gaps exist today vs. target?
 - **Retention & access:** What retention, access-control, and sovereignty constraints apply?
 - **Pain points:** Where are the highest-impact data quality, availability, or integration problems?
+- **Data scope:** What is the scope of this data architecture assessment? Options: `Enterprise-wide` | `Business Unit` | `Specific Domain` (default: `Business Unit`).
 
 ## Document Control
 

@@ -77,46 +77,7 @@ Change requests are **multi-instance** documents (like ADRs). Find the next avai
 
 > **Tip**: Users can customise templates with `/arckit:customize architecture-change`
 
-### 4. Interactive Configuration
-
-Before creating the change request, use the **AskUserQuestion** tool to gather key parameters. **Skip any question where the user has already provided a clear answer in their arguments.**
-
-**Gathering rules** (apply to all questions in this section):
-
-- Ask the most important question first; fill in secondary details from context or reasonable defaults.
-- **Maximum 2 rounds of questions.** After that, pick the best option from available context.
-- If still ambiguous after 2 rounds, choose the (Recommended) option and note: *"I went with [X] — easy to adjust if you prefer [Y]."*
-
-**Question 1** — header: `Change Type`, multiSelect: false
-> "What type of architecture change is this?"
-
-- **Evolutionary (Recommended)**: Incremental improvement to existing architecture — extends or enhances current capabilities without fundamental change
-- **Transformational**: Fundamental change that restructures significant portions of the architecture — new capabilities, technology platforms, or operating models
-- **Corrective**: Fix for architectural deficiencies, technical debt, or compliance failures — restores intended design
-
-**Question 2** — header: `Priority`, multiSelect: false
-> "What is the priority level of this change?"
-
-- **Critical**: Must be implemented immediately — safety, security, or regulatory compliance
-- **High**: Major business impact — core capability changes, significant investment
-- **Medium (Recommended)**: Standard change — enhancement or improvement within planned cycles
-- **Low**: Minor refinement — low-risk, low-cost improvements
-
-**Question 3** — header: `ADM Re-Entry`, multiSelect: true
-> "Which ADM phases need to be re-entered for this change?"
-
-- **Phase A (Architecture Vision)**: Change affects overall vision or scope
-- **Phase B (Business Architecture)**: Change affects business processes or organisation
-- **Phase C (Information Systems)**: Change affects data or application architecture
-- **Phase D (Technology Architecture)**: Change affects technology infrastructure
-- **Phase E (Opportunities & Solutions)**: Change affects solution options or migrations
-- **Phase F (Migration Planning)**: Change affects migration sequencing
-- **Phase G (Implementation Governance)**: Change affects implementation oversight
-- **Phase H (Change Management)**: Change affects ongoing change control
-
-Apply the user's selections to populate the Change Type, Priority, and ADM Re-Entry sections of the template.
-
-### 5. Gather Change Information from Context
+### 4. Gather Change Information from Context
 
 Read all available documents identified in the Prerequisites section. Build a mental model of:
 
@@ -125,8 +86,9 @@ Read all available documents identified in the Prerequisites section. Build a me
 - **Impact scope**: Which domains are affected (capability, application, technology, governance)
 - **Transition plans** (from TRANS): What existing plans this change might affect
 - **Governance context** (from BORD): Board precedent and approval thresholds
+- **Configuration values** (from the intake interview): Change Type, Priority, and ADM Re-Entry are interview inputs derived from the template's authoritative question list — defaults apply when a question is skipped — and populate the corresponding template sections.
 
-### 6. Generate Architecture Change Request
+### 5. Generate Architecture Change Request
 
 Create a comprehensive Architecture Change Request document following the template structure.
 
@@ -238,7 +200,7 @@ Create traceability links:
 - Link to requirements being addressed
 - Link to existing change requests (if related)
 
-### 7. Quality Gate
+### 6. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **ACHG** per-type checks pass. Fix any failures before proceeding.
 
@@ -251,7 +213,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 - Risk assessment table has at least 2 risks identified
 - Approval workflow has all 5 stages (Submission → Assessment → Board Review → Approval → Implementation)
 
-### 8. Write the Architecture Change Request File
+### 7. Write the Architecture Change Request File
 
 **IMPORTANT**: The architecture change request document will be a substantial document (typically 200-400 lines). You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -272,7 +234,7 @@ Use the Write tool with the complete content following the template structure.
 - `[ACHG_NUM]` → Next available number (001, 002, etc.)
 - `[COMMAND]` → "arckit.architecture-change"
 
-### 9. Show Summary to User
+### 8. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

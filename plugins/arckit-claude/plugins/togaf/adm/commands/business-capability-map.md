@@ -70,14 +70,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 > **Tip**: Users can customise templates with `/arckit:customize capability-map`
 
-### 3. Clarify Capability Depth with User
-
-**AskUserQuestion**: "What level of capability detail do you need?"
-
-- Options: `Level 1` (Domains only) | `Level 2` (Domains + Sub-capabilities) | `Level 3` (Full hierarchy)
-- Default: `Level 3`
-
-### 4. Generate Business Capability Map
+### 3. Generate Business Capability Map
 
 Create a comprehensive Business Capability Map following the template structure. The document should:
 
@@ -138,7 +131,7 @@ Create a comprehensive Business Capability Map following the template structure.
 - Link ADMP → BPCM → REQ → PRIN with document IDs.
 - Include all available source artifacts (ADMP mandatory, REQ/STKE/PRIN optional).
 
-### 5. UK Government Specifics
+### 4. UK Government Specifics
 
 If the user indicates this is a UK Government project, include:
 
@@ -150,7 +143,7 @@ If the user indicates this is a UK Government project, include:
 - **Cross-Government Services**: GOV.UK Pay, Notify, Design System
 - **G-Cloud/DOS**: Procurement alignment
 
-### 6. MOD Specifics
+### 5. MOD Specifics
 
 If this is a Ministry of Defence project, include:
 
@@ -159,11 +152,11 @@ If this is a Ministry of Defence project, include:
 - **IAMM**: Security maturity progression
 - **JSP 936**: AI assurance (if applicable)
 
-### 7. Load Mermaid Syntax References
+### 6. Load Mermaid Syntax References
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/mindmap.md` and `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` for official Mermaid syntax — mindmap node syntax, flowchart node shapes, edge labels, and styling options. Also read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/quadrantChart.md` for quadrant chart syntax.
 
-### 8. Mermaid Diagram Requirements
+### 7. Mermaid Diagram Requirements
 
 Include the following Mermaid diagrams:
 
@@ -177,7 +170,7 @@ Include the following Mermaid diagrams:
 - ✅ Flowchart: Node labels can use `<br/>`, edge labels cannot
 - ✅ Quadrant chart: Coordinate values between 0.0 and 1.0
 
-### 9. Quality Gate
+### 8. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **BPCM** per-type checks pass. Fix any failures before proceeding.
 
@@ -191,7 +184,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 - Traceability matrix links BPCM to ADMP, REQ, STKE, and PRIN
 - Capability IDs follow `C{N}.{M}.{K}` convention consistently throughout the document
 
-### 10. Write the Capability Map File
+### 9. Write the Capability Map File
 
 **IMPORTANT**: The capability map document will be a substantial document (typically 250-450 lines). You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -203,7 +196,7 @@ projects/{P}/ARC-{P}-BPCM-v1.0.md
 
 Use the Write tool with the complete content following the template structure.
 
-### 11. Show Summary to User
+### 10. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

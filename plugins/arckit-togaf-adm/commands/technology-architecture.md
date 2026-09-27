@@ -70,16 +70,7 @@ Identify the target project from the hook context. If the user specifies a proje
 
 > **Tip**: Users can customise templates with `/arckit:customize technology-architecture`
 
-### 3. Clarify Technology Scope with User
-
-Before generating the document, ask the user about the scope of the technology architecture:
-
-**AskUserQuestion**: "What is the scope of this technology architecture assessment?"
-
-- Options: `Enterprise-wide` | `Business Unit` | `Specific Platform`
-- Default: `Business Unit`
-
-### 4. Generate Technology Architecture Document
+### 3. Generate Technology Architecture Document
 
 Create the Technology Architecture document following the template structure. Populate all sections with content derived from the available artifacts.
 
@@ -169,7 +160,7 @@ Create a Mermaid flowchart or deployment diagram showing:
 - Link deployment strategy to STRAT (technology modernisation goals)
 - Link infrastructure to BPCM (capability performance requirements)
 
-### 5. UK Government Specifics
+### 4. UK Government Specifics
 
 If the user indicates this is a UK Government project, include:
 
@@ -183,7 +174,7 @@ If the user indicates this is a UK Government project, include:
 - **CloudFirst Policy**: Mandate for cloud-first procurement decisions
 - **Open Standards**: Government preference for open standards and interoperability
 
-### 6. MOD Specifics
+### 5. MOD Specifics
 
 If this is a Ministry of Defence project, include:
 
@@ -196,11 +187,11 @@ If this is a Ministry of Defence project, include:
 - **MOD Data Centre Programme**: Data centre consolidation and modernisation alignment
 - **Network Architecture**: MOD network strategy — DCS, JWICS, ACDS segregation
 
-### 7. Load Mermaid Syntax References
+### 6. Load Mermaid Syntax References
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/mermaid-syntax/references/flowchart.md` for official Mermaid syntax — node shapes, edge labels, and styling options for deployment diagrams.
 
-### 8. Quality Gate
+### 7. Quality Gate
 
 Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklist.md` and verify all **Common Checks** plus the **TECH** per-type checks pass. Fix any failures before proceeding.
 
@@ -213,7 +204,7 @@ Before writing the file, read `${CLAUDE_PLUGIN_ROOT}/references/quality-checklis
 - Technology standards include approved stack and prohibited technologies
 - Mermaid technology landscape diagram is present
 
-### 9. Write the Technology Architecture File
+### 8. Write the Technology Architecture File
 
 **IMPORTANT**: The Technology Architecture document will be a substantial document (typically 250-400 lines). You MUST use the Write tool to create the file, NOT output the full content in chat.
 
@@ -225,7 +216,7 @@ projects/{P}/ARC-{P}-TECH-v1.0.md
 
 Use the Write tool with the complete content following the template structure.
 
-### 10. Show Summary to User
+### 9. Show Summary to User
 
 After writing the file, show a concise summary (NOT the full document):
 

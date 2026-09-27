@@ -413,3 +413,144 @@ def test_skipped_mandatory_becomes_quoted_tbd_in_summary():
 def test_reference_template_exists():
     """The template the interview derives from actually ships in the plugin."""
     assert os.path.exists(os.path.join(TEMPLATES_DIR, "stakeholder-drivers-template.md"))
+
+
+# ---------------------------------------------------------------------------
+# 1c. WIRING — standalone user-input questions must flow through the interview
+#      (EYW-271)
+# ---------------------------------------------------------------------------
+# Bundled-overlay artefact commands must not hard-gate user input via a
+# standalone out-of-band step (a dedicated AskUserQuestion / "Interactive
+# Configuration" / "gather key parameters" step). Decision inputs (scope /
+# weighting / parameter choices) are fields on the effective template and are
+# asked ONLY through the template-driven intake interview (skippable ->
+# TBD/default). The MANDATORY prerequisite *artefact* hard stops
+# ("If missing: STOP...") stay hard and are untouched.
+
+STANDALONE_OVERLAY_COMMAND_DIRS = (
+    os.path.join(REPO_ROOT, "plugins", "arckit-togaf-adm", "commands"),
+    os.path.join(REPO_ROOT, "plugins", "arckit-oaa", "commands"),
+    os.path.join(REPO_ROOT, "plugins", "arckit-agent-architecture", "commands"),
+)
+
+# A numbered step whose title names a standalone user-input gate: the defect
+# class removed in EYW-271 ("### 3. AskUserQuestion: ...",
+# "### 4. Interactive Configuration", "gather key parameters").
+_GATE_HEADING_RE = re.compile(
+    r"^###\s+\d+\.\s+.*"
+    r"(?:AskUserQuestion|Interactive Configuration|gather key parameters|ask the user)",
+    re.MULTILINE | re.IGNORECASE,
+)
+
+
+def _all_bundled_overlay_commands():
+    out = []
+    for d in OVERLAY_DIRS + STANDALONE_OVERLAY_COMMAND_DIRS:
+        out.extend(os.path.join(d, f) for f in sorted(os.listdir(d)) if f.endswith(".md"))
+    return out
+
+
+def test_no_standalone_user_input_gates_in_bundled_overlays():
+    for path in _all_bundled_overlay_commands():
+        body = _read(path)
+        m = _GATE_HEADING_RE.search(body)
+        assert m is None, (
+            f"{path}: numbered step '{m.group(0).strip()}' hard-gates user input "
+            "outside the intake interview"
+        )
+        assert "**AskUserQuestion**" not in body, (
+            f"{path}: standalone AskUserQuestion tool reference remains"
+        )
+
+
+# The decision inputs moved from the removed hard gates into the effective
+# templates: template file -> (field, ...) declared inside its
+# "### Intake questions (...)" section.
+ADM_TEMPLATE_FIELDS = {
+    "adm-preliminary-template.md": ("Engagement scope",),
+    "application-inventory-template.md": ("Inventory scope",),
+    "capability-map-template.md": ("Capability depth",),
+    "data-architecture-template.md": ("Data scope",),
+    "gap-analysis-template.md": ("Gap severity weighting",),
+    "tech-architecture-template.md": ("Technology scope",),
+    "transition-architecture-template.md": ("Transition waves",),
+    "architecture-change-template.md": ("Change type", "Priority", "ADM Re-Entry"),
+}
+AGENT_TEMPLATE_FIELDS = {
+    "agent-design-template.md": ("Architecture pattern", "Agent scope"),
+}
+
+# The defaults the former hard gates applied; the interview now applies them
+# when a question is skipped. (Agent scope and ADM Re-Entry are skippable
+# with no default / multi-select, so they carry no default.)
+_FIELD_DEFAULTS = {
+    "Engagement scope": "Business Unit",
+    "Inventory scope": "All applications",
+    "Capability depth": "Level 3",
+    "Data scope": "Business Unit",
+    "Gap severity weighting": "Balanced",
+    "Technology scope": "Business Unit",
+    "Transition waves": "3 waves",
+    "Change type": "Evolutionary",
+    "Priority": "Medium",
+}
+
+
+def _template_intake_section(path):
+    """The template's '### Intake questions (...)' body, up to the next H2."""
+    body = _read(path)
+    m = re.search(r"^### Intake questions[^\n]*\n(.*?)(?=^## )",
+                  body, re.DOTALL | re.MULTILINE)
+    return m.group(1) if m else ""
+
+
+def test_moved_decision_inputs_live_in_the_effective_templates():
+    specs = (
+        (os.path.join(CLAUDE, "plugins", "togaf", "adm", "templates"), ADM_TEMPLATE_FIELDS),
+        (os.path.join(REPO_ROOT, "plugins", "arckit-togaf-adm", "templates"), ADM_TEMPLATE_FIELDS),
+        (os.path.join(CLAUDE, "plugins", "agent", "architecture", "templates"), AGENT_TEMPLATE_FIELDS),
+        (os.path.join(REPO_ROOT, "plugins", "arckit-agent-architecture", "templates"), AGENT_TEMPLATE_FIELDS),
+    )
+    for tdir, fields_by_file in specs:
+        for filename, fields in fields_by_file.items():
+            path = os.path.join(tdir, filename)
+            assert os.path.isfile(path), f"missing template {path}"
+            section = _template_intake_section(path)
+            assert section, f"{filename}: no '### Intake questions' section found"
+            for field in fields:
+                m = re.search(r"^.*\*\*" + re.escape(field) + r":\*\*.*$",
+                              section, re.MULTILINE)
+                assert m, f"{filename}: decision input '{field}' not declared in the intake section"
+                line = m.group(0).replace("`", "")
+                if field in _FIELD_DEFAULTS:
+                    assert "Options:" in line, f"{filename}: '{field}' lost its options"
+                    assert f"(default: {_FIELD_DEFAULTS[field]})" in line, \
+                        f"{filename}: '{field}' lost its default"
+
+
+def _all_intake_copies():
+    """The shared block plus every shipped copy (community plugins and the
+    nested bundled-overlay sub-plugin copies)."""
+    copies = [SHARED_BLOCK]
+    plugins_root = os.path.join(REPO_ROOT, "plugins")
+    for entry in sorted(os.listdir(plugins_root)):
+        ref = os.path.join(plugins_root, entry, "references", "intake-instructions.md")
+        if os.path.isfile(ref):
+            copies.append(ref)
+    for d in OVERLAY_DIRS:
+        ref = os.path.normpath(os.path.join(d, "..", "references", "intake-instructions.md"))
+        copies.append(ref)
+    return copies
+
+
+def test_all_intake_copies_document_decision_inputs_as_interview_inputs():
+    """Every intake-instructions.md copy stays byte-identical to the shared
+    block and makes explicit that scope / weighting / parameter decisions
+    are interview inputs (soft, skippable) — so the model does not
+    reintroduce a standalone hard-gate question."""
+    copies = _all_intake_copies()
+    assert len(copies) >= 15, f"expected at least 15 intake copies, got {len(copies)}"
+    bodies = [_read(p) for p in copies]
+    assert all(b == bodies[0] for b in bodies), "intake-instructions copies diverged"
+    assert "Decision inputs" in bodies[0], \
+        "shared intake block no longer documents decision inputs as interview inputs"

@@ -23,6 +23,7 @@ override it. Each question is **optional**: a skipped question renders as a
 - **Gaps:** Which capabilities are needed to reach the target state but are missing or weak?
 - **Value stream:** Which value-stream steps (customer journey stages) do the capabilities serve?
 - **Target state:** What are the target capability layers (strategic / business / shared / enabling) and their owners?
+- **Capability depth:** What level of capability detail do you need? Options: `Level 1` (Domains only) | `Level 2` (Domains + Sub-capabilities) | `Level 3` (Full hierarchy) (default: `Level 3`).
 
 ## Document Control
 
