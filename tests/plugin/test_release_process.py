@@ -231,7 +231,7 @@ def test_local_claude_standalone_plugin_paths_match_sources():
 
         local_path = REPO_ROOT / local_dir
         for path in local_path.rglob("*"):
-            if not path.is_file():
+            if not path.is_file() or "__pycache__" in path.parts:
                 continue
             relative = path.relative_to(local_path)
             target = source_path / relative
@@ -241,7 +241,11 @@ def test_local_claude_standalone_plugin_paths_match_sources():
             expected_files[target] = path
 
     plugin_root = standalone_root / "plugins"
-    actual_files = {path for path in plugin_root.rglob("*") if path.is_file()}
+    actual_files = {
+        path
+        for path in plugin_root.rglob("*")
+        if path.is_file() and "__pycache__" not in path.parts
+    }
 
     assert actual_files == set(expected_files)
 

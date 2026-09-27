@@ -31,6 +31,7 @@ PLUGIN_LAYOUT = (
 )
 IGNORED_NAMES = {
     ".git",
+    "__pycache__",
     "node_modules",
     ".npm",
     ".pnpm-store",
