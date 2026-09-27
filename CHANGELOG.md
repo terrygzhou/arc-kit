@@ -5,6 +5,20 @@ All notable changes to ArcKit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Post-build ArchiMate diagram consolidation** (EYW-348 f): `arckit build` now sweeps `projects/**/*.md` for inline PlantUML blocks after a full build and materialises them under each project's `diagrams/` folder as `.puml` sidecars plus self-contained `.svg` renders (pinned jar search: explicit → `PLANTUML_JAR` → newest `~/.local/share/arckit/tools/plantuml-*.jar`), with a `manifest.json` making re-runs idempotent. Missing jar/Java degrades gracefully (`.puml` written, SVG recorded `pending`); rendered SVGs are audited and non-W3C external URLs are flagged as self-containment violations. Skippable with `--no-diagrams`.
+
+### Fixed
+
+- **Local-LLM builds aborted mid-target by the hard tool-iteration cap of 20** (EYW-348 a): the cap is now configurable — default raised to 96, overridable via `llm.max_tool_iterations` in the ArcKit config and (highest precedence) the `ARCKIT_MAX_TOOL_ITERATIONS` env var; invalid values warn and fall back.
+- **Targets declared `complete` on model stop even without the declared output artifact** (EYW-348 b): a target with a declared output now only completes when the expected artifact exists on disk; a stopped-but-quiet model fails the target (`--resume` re-runs it) instead of a phantom completion. Advisory targets (no declared output) still complete on a clean stop.
+- **Empty `input_artifacts` on resume bloated context into degenerate re-read loops** (EYW-348 c): dependency resolution now expands placeholders cumulatively, checks state paths raw and project-relative, falls back to recipe-disk resolution, and finally to a `projects/**/*.md` basename sweep; an unresolvable required dependency now prints a loud warning instead of silently running the target without input context.
+- **Resume re-derived `P_<ID>` placeholders back to `{P}-{ID}`, clobbering build-config/state values** so artifacts landed in per-phase folders (EYW-348 d): auto-derivation now only fills placeholder keys never explicitly supplied (persisted state, build config, or user override) and only when the `{P}` base value actually changed.
+- **SIGTERM mid-wave killed piped builds** (EYW-348 e): `arckit build` now handles SIGTERM/SIGINT gracefully — the in-flight wave finishes, state is persisted (per-wave git commit already did), and the build exits 143 with a `--resume` hint; a second signal hard-exits. Log-file redirection still recommended for harnesses that kill the whole process group.
+
 ## [6.10.1] — 2026-09-27
 
 ### Fixed

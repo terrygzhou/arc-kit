@@ -55,6 +55,7 @@ class LLMConfig:
     max_tokens: int = 128000
     temperature: float = 0.0
     context_window: int = 128000  # model total context window (prompt + completion)
+    max_tool_iterations: int = 96  # hard cap on tool-use loop per target
 
 
 @dataclass
@@ -206,6 +207,27 @@ def resolve_config(
     except (TypeError, ValueError):
         context_window = 128000
 
+    # --- Tool-iteration cap ---
+    # Resolution: ARCKIT_MAX_TOOL_ITERATIONS env > config llm.max_tool_iterations
+    # > default. Local 27B-class models routinely need well over 20 tool
+    # round-trips per target, so the default is generous; raise it further
+    # (or lower it for cost-bound cloud models) via either source.
+    max_tool_iterations = 96
+    try:
+        max_tool_iterations = int(llm_cfg.get("max_tool_iterations", 96))
+    except (TypeError, ValueError):
+        max_tool_iterations = 96
+    env_cap = _resolve_env("ARCKIT_MAX_TOOL_ITERATIONS")
+    if env_cap:
+        try:
+            max_tool_iterations = int(env_cap)
+        except ValueError:
+            logger.warning(
+                "Ignoring invalid ARCKIT_MAX_TOOL_ITERATIONS=%r; using %d",
+                env_cap,
+                max_tool_iterations,
+            )
+
     return LLMConfig(
         provider=provider,
         base_url=base_url,
@@ -214,6 +236,7 @@ def resolve_config(
         max_tokens=max_tokens,
         temperature=temperature,
         context_window=context_window,
+        max_tool_iterations=max_tool_iterations,
     )
 
 
@@ -504,6 +527,50 @@ def _build_user_prompt(target, input_artifacts: dict[str, str]) -> str:
 # ---------------------------------------------------------------------------
 
 
+def _expected_output_paths(target, project_path: Path) -> list[str]:
+    """Compute candidate on-disk paths for a target's declared output.
+
+    Mirrors the "Expected Output" contract handed to the model: a ``path``
+    entry is taken verbatim; a ``project`` entry expands to the
+    conventional ``projects/{project}/ARC-001-{TYPE}-v1.0.md`` plus a
+    project-root-name fallback. Relative paths resolve against
+    ``project_path``. Returns an empty list when the target declares no
+    output.
+    """
+    if not target.output:
+        return []
+    expected: list[str] = []
+    artifact = f"ARC-001-{target.output.get('type', 'OUT')}-v1.0.md"
+    if "path" in target.output:
+        expected.append(target.output["path"])
+    elif "project" in target.output:
+        expected.append(f"projects/{target.output['project']}/{artifact}")
+        # Fallback: project ID only
+        if project_path.name:
+            expected.append(f"projects/{project_path.name}/{artifact}")
+
+    resolved: list[str] = []
+    for path in expected:
+        if not Path(path).is_absolute():
+            path = str(project_path / path)
+        resolved.append(path)
+    return resolved
+
+
+def _hash_file(path: str) -> str | None:
+    """SHA-256 of a file, or None when it cannot be read."""
+    try:
+        out_path = Path(path)
+        if not out_path.is_file():
+            return None
+        h = hashlib.sha256()
+        for chunk in out_path.open("rb"):
+            h.update(chunk)
+        return h.hexdigest()
+    except Exception:
+        return None
+
+
 async def execute_target(
     target,
     config: LLMConfig,
@@ -533,26 +600,13 @@ async def execute_target(
     result = ExecutionResult(target_id=target.id, status="failed")
 
     # Pre-execution: check if output file already exists
-    if target.output:
-        expected_paths: list[str] = []
-        artifact = f"ARC-001-{target.output.get('type', 'OUT')}-v1.0.md"
-        if "path" in target.output:
-            expected_paths.append(target.output["path"])
-        elif "project" in target.output:
-            expected_paths.append(f"projects/{target.output['project']}/{artifact}")
-            # Fallback: project ID only
-            if project_path.name:
-                expected_paths.append(f"projects/{project_path.name}/{artifact}")
-
-        for path in expected_paths:
-            if not Path(path).is_absolute():
-                path = str(project_path / path)
-            if Path(path).is_file():
-                result.status = "success"
-                result.output_path = path
-                result.tokens_used = 0
-                logger.info(f"Target {target.id}: skipped (file exists: {path})")
-                return result
+    for path in _expected_output_paths(target, project_path):
+        if Path(path).is_file():
+            result.status = "success"
+            result.output_path = path
+            result.tokens_used = 0
+            logger.info(f"Target {target.id}: skipped (file exists: {path})")
+            return result
 
     try:
         # Step 1: Build system prompt from skill file
@@ -572,7 +626,7 @@ async def execute_target(
         written_paths: list[str] = []
 
         # Step 4: Tool-use loop
-        max_iterations = 20
+        max_iterations = config.max_tool_iterations
         for _iteration in range(max_iterations):
             response = await call_llm(messages, TOOLS, config)
 
@@ -597,21 +651,39 @@ async def execute_target(
                 # Final response — no more tool calls
                 result.tokens_used = total_tokens
                 result.tool_calls_count = tool_calls_count
-                result.status = "success"
 
-                # Extract output path from last Write result
-                if written_paths:
-                    result.output_path = written_paths[-1]
-                    # Compute SHA-256
-                    try:
-                        out_path = Path(written_paths[-1])
-                        if out_path.is_file():
-                            h = hashlib.sha256()
-                            for chunk in out_path.open("rb"):
-                                h.update(chunk)
-                            result.output_sha256 = h.hexdigest()
-                    except Exception:
-                        pass
+                # A target that declares an output is only complete when the
+                # declared artifact actually exists on disk — a stopped-but-
+                # quiet model must not be able to close the target with
+                # nothing delivered.
+                if target.output:
+                    expected_paths = _expected_output_paths(target, project_path)
+                    existing_paths = [
+                        p for p in expected_paths if Path(p).is_file()
+                    ]
+                    if not existing_paths:
+                        result.status = "failed"
+                        result.error = (
+                            f"Model stopped but the declared output artifact "
+                            f"was not found (expected: "
+                            f"{', '.join(expected_paths)}). "
+                            f"Re-run the target to produce it."
+                        )
+                        logger.warning(
+                            f"Target {target.id}: stopped without producing "
+                            f"the declared output artifact"
+                        )
+                        return result
+
+                    result.status = "success"
+                    result.output_path = existing_paths[0]
+                    result.output_sha256 = _hash_file(existing_paths[0])
+                else:
+                    result.status = "success"
+                    # Extract output path from last Write result
+                    if written_paths:
+                        result.output_path = written_paths[-1]
+                        result.output_sha256 = _hash_file(written_paths[-1])
 
                 logger.info(
                     f"Target {target.id}: success (tokens={total_tokens}, "

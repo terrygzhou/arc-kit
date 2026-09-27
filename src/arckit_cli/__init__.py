@@ -12,11 +12,13 @@ A toolkit for enterprise architects to manage:
 """
 
 import asyncio
+import signal
 import os
 import re
 import subprocess
 import sys
 import time
+import threading
 import zipfile
 import tempfile
 import shutil
@@ -1692,6 +1694,10 @@ def build(
     config: str = typer.Option(
         None, "--config", help="Path to build-config.yaml with structured placeholder values"
     ),
+    no_diagrams: bool = typer.Option(
+        False, "--no-diagrams",
+        help="Skip post-build PlantUML diagram consolidation",
+    ),
 ):
     """Execute an ArcKit recipe against a project (DAG → waves → LLM execution)."""
 
@@ -1842,6 +1848,35 @@ def build(
     build_start = time.monotonic()
     all_results: list[dict] = []  # Per-target build results for summary
 
+    # ── 9a. Graceful stop on SIGTERM/SIGINT (EYW-348 defect e) ─────────
+    # Harnesses that pipe build stdout through tee|tail kill the whole
+    # process group on stop/timeout, so arckit can receive SIGTERM
+    # mid-wave. First signal: let the in-flight wave finish, persist
+    # state, and exit cleanly (resume with --resume). State is saved
+    # per-wave, so a hard kill also leaves a resumable build.
+    stop_requested = threading.Event()
+    _signal_counts: dict[int, int] = {}
+
+    def _on_build_signal(signum, frame):  # noqa: ARG001 — signal ABI
+        stop_requested.set()
+        _signal_counts[signum] = _signal_counts.get(signum, 0) + 1
+        if _signal_counts[signum] >= 2:
+            # Double-tap: the operator wants out now. Per-wave state
+            # persistence already keeps the build resumable.
+            console.print(
+                "\n[red]Second signal received — hard exit "
+                "(state is saved per-wave; resume with --resume)[/red]"
+            )
+            os._exit(143)
+        console.print(
+            f"\n[yellow]{signal.Signals(signum).name} received — finishing "
+            "the current wave, state will be saved "
+            "(resume with --resume)[/yellow]"
+        )
+
+    for _sig in (signal.SIGTERM, signal.SIGINT):
+        signal.signal(_sig, _on_build_signal)
+
     # Persistent placeholder values — collected once, reused across all waves
     # Map: placeholder → (base_label, default)
     _PLACEHOLDER_BASES: dict[str, tuple[str, str]] = {
@@ -1890,9 +1925,16 @@ def build(
         "P": "001",
         "NAME": project_root.name,
     }
+    # Placeholders that must never be re-derived: values supplied by
+    # persisted state (--resume), the build-config file, or an explicit
+    # user override. Auto-derivation ({P_<ID>} from {P}) only fills keys
+    # that were never explicitly supplied, so resume/config values are
+    # not clobbered back to '{P}-{ID}' (EYW-348 defect d).
+    _protected_placeholders: set[str] = set()
     # Merge with previously collected values from state
     if state.wave_values:
         wave_values.update(state.wave_values)
+        _protected_placeholders.update(state.wave_values.keys())
 
     # ── Load build config (if available) ──────────────────────────────
     # Config values override seeds but NOT --resume state values.
@@ -1908,6 +1950,7 @@ def build(
                                      "P_TRANS", "P_BORD", "P_ACHG")]
             if cfg_main:
                 console.print(f"  Placeholders from config: {', '.join(cfg_main)}")
+            _protected_placeholders.update(config_values.keys())
             wave_values.update(config_values)
         elif config:
             console.print(f"  [yellow]Config not found: {config}[/yellow]")
@@ -1917,14 +1960,26 @@ def build(
                   "APPR", "GAPA", "TRANS", "BORD", "ACHG"]
     # Track user overrides — overridden keys never re-derived
     _user_overrides: set[str] = set()
+    _last_base_p: list[str | None] = [None]
 
     def _derive_p_placeholders():
-        """Auto-derive {P_<ID>} from {P}. Re-derives each wave unless user explicitly overrode."""
+        """Auto-derive {P_<ID>} from {P}.
+
+        Fills keys that were never explicitly supplied (state, build
+        config, or user override — see ``_protected_placeholders`` and
+        ``_user_overrides``) and re-derives them only when the {P} value
+        itself changes between waves.
+        """
         base_p = wave_values.get("P") or project_root.name
+        p_changed = base_p != _last_base_p[0]
+        _last_base_p[0] = base_p
         for phase_id in _PHASE_IDS:
             key = f"P_{phase_id}"
-            if key not in _user_overrides:
-                wave_values[key] = f"{base_p}-{phase_id}"
+            if key in _protected_placeholders or key in _user_overrides:
+                continue
+            if not p_changed and key in wave_values:
+                continue
+            wave_values[key] = f"{base_p}-{phase_id}"
 
     # Initial derivation (from seed or state)
     _derive_p_placeholders()
@@ -2186,23 +2241,48 @@ def build(
 
             # ── Gather input artifacts from deps (state + disk) ──
             def _get_dep_file_path(dep_id: str) -> str | None:
-                # Check state first
+                # 1. State-recorded output path (placeholder-expanded,
+                #    cumulatively — each substitution builds on the last)
                 dep_state = state.targets.get(dep_id)
                 if dep_state and dep_state.output_path:
-                    p = Path(dep_state.output_path)
+                    ps = str(dep_state.output_path)
                     for k, v in wave_values.items():
-                        ps = str(p)
-                        ps = ps.replace("{" + k + "}", v)
-                        if not Path(ps).is_absolute():
-                            ps = str(project_root / ps)
-                        if Path(ps).is_file():
-                            return ps
-                # Fallback: search disk via recipe
+                        ps = ps.replace("{" + k + "}", str(v))
+                    if Path(ps).is_file():
+                        return ps
+                    if not Path(ps).is_absolute():
+                        ps = str(project_root / ps)
+                    if Path(ps).is_file():
+                        return ps
+
+                # 2. Recipe-disk resolution (conventional + fixture paths)
                 for cand in recipe_obj.targets:
                     if cand.id == dep_id:
                         path = _check_target_file_exists(cand)
                         if path:
                             return path
+
+                # 3. Last resort: artifact basename under any projects/ dir.
+                #    Recovers when placeholder values drifted between runs
+                #    (e.g. an older build clobbered P_<ID> values into
+                #    state) instead of leaving input_artifacts empty.
+                for cand in recipe_obj.targets:
+                    if cand.id != dep_id or not cand.output:
+                        continue
+                    if "project" in cand.output or "type" in cand.output:
+                        basename = (
+                            f"ARC-001-{cand.output.get('type', 'OUT')}-v1.0.md"
+                        )
+                    elif "path" in cand.output:
+                        basename = Path(str(cand.output["path"])).name
+                    else:
+                        continue
+                    projects_dir = project_root / "projects"
+                    if not projects_dir.is_dir():
+                        break
+                    matches = sorted(projects_dir.rglob(basename))
+                    if matches:
+                        return str(matches[0])
                 return None
 
             input_artifacts: dict[str, str] = {}
@@ -2213,6 +2293,18 @@ def build(
                 if dep_path and Path(dep_path).is_file():
                     raw = Path(dep_path).read_text(encoding="utf-8", errors="replace")
                     input_artifacts[dep_id] = _summarize_artifact(raw)
+
+            # Loud warning when a required dep's artifact cannot be
+            # resolved: the target would run without input context, which
+            # is how degenerate re-read loops burn the tool budget
+            # (EYW-348 defect c).
+            missing = [d for d in t.deps if d not in input_artifacts]
+            if missing:
+                console.print(
+                    f"  [yellow]⚠ {t.id}: dependency artifact not found for "
+                    f"{', '.join(missing)} — target will run without input "
+                    f"context (check the dependency target's output path)[/yellow]"
+                )
 
             tasks_for_wave.append((t, skill_path, input_artifacts))
 
@@ -2230,8 +2322,10 @@ def build(
             # Determine output path for state tracking
             output_path = result.output_path or ""
             input_files: list[str] = []
+            declared_output = False
             for t in active_targets:
                 if t.id == result.target_id and t.output:
+                    declared_output = True
                     # Handle output formats: {"path": "..."} or {"project": "...", "type": "..."}
                     if "path" in t.output:
                         output_path = t.output["path"]
@@ -2257,18 +2351,34 @@ def build(
 
                 if resolved_path:
                     mark_target_complete(state, result.target_id, resolved_path, input_files)
+                    status_icon = "[green]✓[/green]"
+                    status_label = "complete"
                 else:
-                    # Output path unresolved (e.g. template placeholders not expanded)
-                    # Mark complete with result's own path to avoid crash
-                    from arckit_cli.state import TargetState as _TS
-                    import datetime as _dt
-                    state.targets[result.target_id] = _TS(
-                        status="complete",
-                        output_path=output_path or result.output_path,
-                        completed_at=_dt.datetime.now(_dt.timezone.utc).isoformat(),
-                    )
-                status_icon = "[green]✓[/green]"
-                status_label = "complete"
+                    # No declared artifact found on disk. A target that
+                    # declares an output must not close without it —
+                    # record a failure so --resume re-runs the target
+                    # instead of a phantom completion (EYW-348 defect b).
+                    if declared_output:
+                        mark_target_failed(
+                            state, result.target_id,
+                            f"target reported success but the declared "
+                            f"output artifact was not found "
+                            f"(expected: {output_path or result.output_path})",
+                        )
+                        status_icon = "[red]✗[/red]"
+                        status_label = "failed"
+                    else:
+                        # No declared output (advisory target): a clean
+                        # model stop is a valid completion.
+                        from arckit_cli.state import TargetState as _TS
+                        import datetime as _dt
+                        state.targets[result.target_id] = _TS(
+                            status="complete",
+                            output_path=result.output_path,
+                            completed_at=_dt.datetime.now(_dt.timezone.utc).isoformat(),
+                        )
+                        status_icon = "[green]✓[/green]"
+                        status_label = "complete"
             else:
                 mark_target_failed(
                     state, result.target_id, result.error or "unknown error"
@@ -2288,13 +2398,17 @@ def build(
 
             console.print(
                 f"    {status_icon} {result.target_id}: "
-                            f"[{'green' if result.status == 'success' else 'red'}]"
-                            f"{status_label}[/{'green' if result.status == 'success' else 'red'}]"
+                            f"[{'green' if status_label == 'complete' else 'red'}]"
+                            f"{status_label}[/{'green' if status_label == 'complete' else 'red'}]"
                             f" ({result.tokens_used:,} tokens)"
             )
 
-            if result.status != "success":
-                console.print(f"      [red]Error: {result.error}[/red]")
+            if status_label == "failed":
+                fail_error = (
+                    result.error
+                    or "declared output artifact not found on disk"
+                )
+                console.print(f"      [red]Error: {fail_error}[/red]")
                 # Halt on failure by default
                 save_state(str(project_root), state)
                 console.print(
@@ -2323,6 +2437,49 @@ def build(
                 console.print(
                     f"  [yellow]Warning:[/yellow] Git commit failed (wave {wave_number})"
                 )
+
+        # Graceful-stop checkpoint: this wave's state is persisted, so a
+        # stop here is cleanly resumable.
+        if stop_requested.is_set():
+            console.print(
+                f"\n[bold]Build stopped by signal after wave {wave_number} — "
+                f"state saved. Resume with:\n"
+                f"  arckit build {project} --resume[/bold]"
+            )
+            raise typer.Exit(143)
+
+    # ── 9b. Post-build diagram consolidation (EYW-348 defect f) ───────
+    # Sweep doc-inline ArchiMate PlantUML blocks into .puml sidecars and
+    # render self-contained .svg files under each project's diagrams/
+    # folder. Views whose generation step deferred SVG delivery (pinned
+    # jar unavailable) are completed here; re-runs are idempotent.
+    if not no_diagrams:
+        from arckit_cli.diagrams import consolidate_project_diagrams
+        console.print()
+        console.print("[bold]Post-build diagram consolidation...[/bold]")
+        diagram_summary = consolidate_project_diagrams(project_root)
+        console.print(
+            f"  {diagram_summary['docs_scanned']} docs scanned, "
+            f"{diagram_summary['blocks_found']} inline PlantUML blocks, "
+            f"{diagram_summary['puml_written']} .puml written, "
+            f"{diagram_summary['rendered']} .svg rendered, "
+            f"{diagram_summary['unchanged']} unchanged, "
+            f"{diagram_summary['pending']} pending"
+        )
+        for svg_path, refs in diagram_summary["external_refs"].items():
+            console.print(
+                f"  [yellow]⚠ {svg_path} references non-W3C external URLs "
+                f"(self-containment violation): {', '.join(refs)}[/yellow]"
+            )
+        if diagram_summary["pending"]:
+            console.print(
+                "  [yellow]⚠ Pending SVGs: pinned PlantUML jar or Java not "
+                "available — set PLANTUML_JAR (or install Java) and re-run "
+                "to complete the renders[/yellow]"
+            )
+    else:
+        console.print("[dim]Skipping post-build diagram consolidation "
+                      "(--no-diagrams)[/dim]")
 
     # ── 10. Post-build hooks ────────────────────────────────────────────
     if recipe_obj.post_build_hooks:
