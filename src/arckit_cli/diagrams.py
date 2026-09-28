@@ -100,11 +100,17 @@ def _external_refs(svg_text: str) -> list[str]:
 
 
 def _render_puml(puml: Path, jar: str, java: str) -> bool:
-    """Render ``puml`` to a sibling ``.svg`` with the pinned jar."""
+    """Render ``puml`` to a sibling ``.svg`` with the pinned jar.
+
+    ``-tsvg`` is mandatory: PlantUML's default output is PNG, so without
+    it the ``.svg`` sidecar is never produced and the sweep's success
+    check (``svg_path.is_file()``) silently fails, deferring every
+    render to a later run (gloryev EYW-345 incident).
+    """
     svg = puml.with_suffix(".svg")
     try:
         proc = subprocess.run(
-            [java, "-jar", jar, str(puml)],
+            [java, "-jar", jar, "-tsvg", str(puml)],
             capture_output=True,
             text=True,
             timeout=_RENDER_TIMEOUT_S,
@@ -149,6 +155,16 @@ def consolidate_project_diagrams(
         "pending": 0,
         "unchanged": 0,
         "external_refs": {},
+        # Linking step (EYW-345): docs_without_blocks counts scanned
+        # docs that gained no sidecars (coverage gaps, e.g. ADMP/BPCM/
+        # STKE types without ArchiMate views); stale_folders lists
+        # project subdirs that hold .md artefacts but zero inline
+        # PlantUML blocks (per-phase folders left stale by a clobbered
+        # build); orphaned counts sidecars whose source document has
+        # been deleted since the last run.
+        "docs_without_blocks": 0,
+        "stale_folders": [],
+        "orphaned": 0,
     }
 
     projects_dir = Path(project_root) / "projects"
@@ -159,6 +175,21 @@ def consolidate_project_diagrams(
     java = shutil.which("java")
     can_render = bool(jar and java)
 
+    # Detect project subdirs (stale per-phase folders, e.g. 001-DATA-bar)
+    # that hold artefacts but no inline PlantUML blocks — a sign that an
+    # older build with clobbered {P_<ID>} values wrote into them, while
+    # the canonical folder is the one the current build actually uses.
+    _folders_with_blocks: set[Path] = set()
+    _all_project_folders: set[Path] = set()
+    for md in projects_dir.rglob("*.md"):
+        # Walk up to the first subdir of projects/ that contains this doc.
+        folder = md.parent
+        while folder != projects_dir and folder.is_dir():
+            _all_project_folders.add(folder)
+            folder = folder.parent
+    # (folders_with_blocks gets populated during the main loop below;
+    #  the stale check runs after)
+
     for doc in sorted(projects_dir.rglob("*.md")):
         try:
             doc_text = doc.read_text(encoding="utf-8", errors="replace")
@@ -166,9 +197,14 @@ def consolidate_project_diagrams(
             continue
         blocks = list(_PLANTUML_BLOCK_RE.finditer(doc_text))
         if not blocks:
+            # Track docs without inline PlantUML blocks for the coverage
+            # report — the build summary can surface types that never
+            # got a diagram (e.g. ADMP/BPCM/STKE in the gloryev incident).
+            summary["docs_without_blocks"] += 1
             continue
         summary["docs_scanned"] += 1
         summary["blocks_found"] += len(blocks)
+        _folders_with_blocks.add(doc.parent)
 
         diagrams_dir = doc.parent / "diagrams"
         manifest_path = diagrams_dir / "manifest.json"
@@ -218,6 +254,7 @@ def consolidate_project_diagrams(
                 manifest["blocks"][key] = {
                     **entry,
                     "status": "rendered",
+                    "source_doc": str(doc.relative_to(projects_dir)),
                 }
                 continue
 
@@ -246,6 +283,7 @@ def consolidate_project_diagrams(
                 "svg": f"{name}.svg",
                 "sha256": sha,
                 "status": entry_status,
+                "source_doc": str(doc.relative_to(projects_dir)),
                 "updated_at": datetime.now(timezone.utc).isoformat(),
             }
             changed = True
@@ -256,5 +294,33 @@ def consolidate_project_diagrams(
             manifest_path.write_text(
                 json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
             )
+
+    # A folder is "stale" when it holds .md files but none of them
+    # contributed an inline PlantUML block — i.e. it was left behind by
+    # a prior build that used clobbered {P_<ID>} values.
+    stale = sorted(
+        str(f.relative_to(project_root))
+        for f in _all_project_folders
+        if f not in _folders_with_blocks
+        and any(f.glob("*.md"))
+    )
+    summary["stale_folders"] = stale
+
+    # Orphaned sidecars: entries in the manifest whose source document
+    # no longer exists.
+    orphaned_count = 0
+    for doc in projects_dir.rglob("manifest.json"):
+        diagrams_dir = doc.parent
+        try:
+            manifest = json.loads(doc.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        for _key, entry in manifest.get("blocks", {}).items():
+            src_doc = entry.get("source_doc")
+            if src_doc:
+                src_path = projects_dir / src_doc
+                if not src_path.is_file():
+                    orphaned_count += 1
+    summary["orphaned"] = orphaned_count
 
     return summary

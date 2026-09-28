@@ -2466,6 +2466,30 @@ def build(
             f"{diagram_summary['unchanged']} unchanged, "
             f"{diagram_summary['pending']} pending"
         )
+        # Linking / coverage step (EYW-345): surface docs that gained no
+        # diagrams, stale per-phase folders, and orphaned sidecars so the
+        # human can decide to prune or regenerate.
+        if diagram_summary.get("docs_without_blocks"):
+            console.print(
+                f"  [yellow]⚠ {diagram_summary['docs_without_blocks']} docs "
+                "have no inline PlantUML blocks — check that every "
+                "artefact type that should carry an ArchiMate view does "
+                "(e.g. ADMP/BPCM/STKE gaps noted in EYW-345)[/yellow]"
+            )
+        for stale_dir in diagram_summary.get("stale_folders", []):
+            console.print(
+                f"  [yellow]⚠ stale project folder {stale_dir} holds "
+                "artefacts but no inline PlantUML blocks — likely left "
+                "behind by an older build with clobbered {P_<ID>} values; "
+                "consolidate into the canonical folder and re-run the "
+                "diagram sweep[/yellow]"
+            )
+        if diagram_summary.get("orphaned"):
+            console.print(
+                f"  [yellow]⚠ {diagram_summary['orphaned']} diagram "
+                "sidecars are orphaned (source document no longer exists) "
+                "— prune manually if stale[/yellow]"
+            )
         for svg_path, refs in diagram_summary["external_refs"].items():
             console.print(
                 f"  [yellow]⚠ {svg_path} references non-W3C external URLs "
