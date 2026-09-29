@@ -86,3 +86,37 @@ def test_sweep_links_survive_source_doc_removal(tmp_path, monkeypatch):
     # Orphaned sidecars are reported, not deleted (rendered output is an
     # intentional deliverable — the human decides to prune).
     assert summary["orphaned"] == 1
+
+
+def test_sweep_flags_duplicate_sidecar_names_across_folders(tmp_path, monkeypatch):
+    """The same heading-derived sidecar name landing in two build folders
+    (canonical + stale per-phase split, gloryev EYW-345/348 pattern) must be
+    surfaced in the summary so the build log can disambiguate which folder is
+    canonical — duplicated .puml/.svg sidecars are the 'duplicated PlantUML
+    diagrams' symptom of an un-merged stale build."""
+    root = tmp_path / "projects"
+    canonical = root / "001-Foo"
+    stale = root / "001-FOO-bar"
+    canonical.mkdir(parents=True)
+    stale.mkdir(parents=True)
+    heading = "## PlantUML ArchiMate View\n```plantuml\n@startuml\nx\n@enduml\n```\n"
+    (canonical / "ARC-001-TECH-v1.0.md").write_text(heading, encoding="utf-8")
+    (stale / "ARC-001-TECH-v1.0.md").write_text(heading, encoding="utf-8")
+    monkeypatch.setattr(diagrams, "find_plantuml_jar", lambda explicit=None: None)
+
+    summary = diagrams.consolidate_project_diagrams(tmp_path)
+
+    # Both folders materialise the identically-named sidecar…
+    assert (canonical / "diagrams" / "plantuml-archimate-view.puml").is_file()
+    assert (stale / "diagrams" / "plantuml-archimate-view.puml").is_file()
+    # …and the sweep must report the collision so the build summary can
+    # surface it instead of leaving two silent duplicates.
+    assert summary["duplicate_sidecars"], (
+        f"duplicate sidecar names across folders must be reported, got {summary!r}"
+    )
+    assert "plantuml-archimate-view.puml" in summary["duplicate_sidecars"]
+    # Both folders must be named so the log can point at the canonical one.
+    assert summary["duplicate_sidecars"]["plantuml-archimate-view.puml"] == [
+        str(stale.relative_to(tmp_path) / "diagrams"),
+        str(canonical.relative_to(tmp_path) / "diagrams"),
+    ]

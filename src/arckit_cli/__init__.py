@@ -2484,6 +2484,17 @@ def build(
                 "consolidate into the canonical folder and re-run the "
                 "diagram sweep[/yellow]"
             )
+        for dup_name, folders in diagram_summary.get(
+            "duplicate_sidecars", {}
+        ).items():
+            console.print(
+                f"  [yellow]⚠ duplicate diagram sidecar {dup_name} "
+                f"materialised in {len(folders)} folders "
+                f"({', '.join(folders)}) — likely a canonical vs stale "
+                "per-phase build split; the SVG links in the artefacts "
+                "cannot disambiguate which is canonical, so consolidate "
+                "the stale folder and re-run the diagram sweep[/yellow]"
+            )
         if diagram_summary.get("orphaned"):
             console.print(
                 f"  [yellow]⚠ {diagram_summary['orphaned']} diagram "

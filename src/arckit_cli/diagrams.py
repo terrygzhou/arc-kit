@@ -165,6 +165,11 @@ def consolidate_project_diagrams(
         "docs_without_blocks": 0,
         "stale_folders": [],
         "orphaned": 0,
+        # duplicate_sidecars: sidecar names that materialised in more than
+        # one diagrams/ folder (canonical + stale per-phase build split).
+        # Surfaced so the build summary can disambiguate which generation
+        # is canonical instead of leaving two silent duplicates.
+        "duplicate_sidecars": {},
     }
 
     projects_dir = Path(project_root) / "projects"
@@ -189,6 +194,11 @@ def consolidate_project_diagrams(
             folder = folder.parent
     # (folders_with_blocks gets populated during the main loop below;
     #  the stale check runs after)
+
+    # Sidecar names materialised per diagrams/ folder, for the cross-folder
+    # duplicate report below (heading-derived names are uniform across the
+    # demanded template sections, so canonical + stale builds collide).
+    _sidecar_names: dict[str, list[str]] = {}
 
     for doc in sorted(projects_dir.rglob("*.md")):
         try:
@@ -294,6 +304,15 @@ def consolidate_project_diagrams(
             manifest_path.write_text(
                 json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
             )
+        # Record this doc's sidecar names under its diagrams folder so the
+        # cross-folder duplicate report below can catch the canonical +
+        # stale per-phase build split (uniform heading-derived names).
+        folder_key = str(diagrams_dir.relative_to(project_root))
+        names_here = _sidecar_names.setdefault(folder_key, [])
+        for entry in manifest["blocks"].values():
+            puml_name = entry.get("puml")
+            if puml_name and puml_name not in names_here:
+                names_here.append(puml_name)
 
     # A folder is "stale" when it holds .md files but none of them
     # contributed an inline PlantUML block — i.e. it was left behind by
@@ -322,5 +341,17 @@ def consolidate_project_diagrams(
                 if not src_path.is_file():
                     orphaned_count += 1
     summary["orphaned"] = orphaned_count
+
+    # Cross-folder duplicate report: a sidecar name present in more than
+    # one diagrams/ folder (e.g. canonical + stale per-phase split).
+    name_to_folders: dict[str, list[str]] = {}
+    for folder, names in _sidecar_names.items():
+        for n in names:
+            name_to_folders.setdefault(n, []).append(folder)
+    summary["duplicate_sidecars"] = {
+        n: sorted(folders)
+        for n, folders in sorted(name_to_folders.items())
+        if len(folders) > 1
+    }
 
     return summary
