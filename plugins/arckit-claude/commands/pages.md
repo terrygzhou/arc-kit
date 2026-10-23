@@ -219,6 +219,7 @@ Only include these known artifact types. Match by type code pattern `ARC-{PID}-{
 | | DIAG | `ARC-*-DIAG-*.md` | Architecture Diagrams |
 | | DFD | `ARC-*-DFD-*.md` | Data Flow Diagram |
 | | ARCH | `ARC-*-ARCH-*.md` | ArchiMate View |
+| | SOLN | `ARC-*-SOLN-*.md` | Solution Design |
 | | ADR | `ARC-*-ADR-*.md` | Architecture Decision Records |
 | | WDOC | `ARC-*-WDOC-*.md` | Wardley Doctrine Assessment |
 | | WGAM | `ARC-*-WGAM-*.md` | Wardley Gameplay Analysis |

@@ -1,6 +1,6 @@
 ---
 name: plantuml-syntax
-description: "This skill should be used when the user asks about PlantUML syntax for C4-PlantUML, sequence, class, activity, state, ER, component, deployment, or use case diagrams, rendering errors, layout conflicts, skinparams, or themes."
+description: "This skill should be used when the user asks about PlantUML syntax for C4-PlantUML, sequence, class, activity, state, ER, component, deployment, use case, or object diagrams, rendering errors, layout conflicts, skinparams, or themes."
 paths:
   - "**/*.puml"
   - "**/*.plantuml"
@@ -21,14 +21,15 @@ Select the appropriate diagram type and read the corresponding reference file:
 | Type | Reference | ArcKit Commands Using It |
 | ---- | --------- | ------------------------ |
 | C4-PlantUML | [c4-plantuml.md](references/c4-plantuml.md) | `/arckit:diagram` (C4 Context, Container, Component) |
-| Sequence Diagram | [sequence-diagrams.md](references/sequence-diagrams.md) | `/arckit:diagram` (Sequence mode) |
-| Class Diagram | [class-diagrams.md](references/class-diagrams.md) | — |
+| Sequence Diagram | [sequence-diagrams.md](references/sequence-diagrams.md) | `/arckit:diagram` (Sequence mode), `/arckit:solution-design` |
+| Class Diagram | [class-diagrams.md](references/class-diagrams.md) | `/arckit:solution-design` |
 | Activity Diagram | [activity-diagrams.md](references/activity-diagrams.md) | — |
 | State Diagram | [state-diagrams.md](references/state-diagrams.md) | — |
 | ER Diagram | [er-diagrams.md](references/er-diagrams.md) | — |
-| Component Diagram | [component-diagrams.md](references/component-diagrams.md) | — |
-| Use Case Diagram | [use-case-diagrams.md](references/use-case-diagrams.md) | — |
-| Deployment Diagram | [deployment-diagrams.md](references/deployment-diagrams.md) | — |
+| Component Diagram | [component-diagrams.md](references/component-diagrams.md) | `/arckit:solution-design` |
+| Use Case Diagram | [use-case-diagrams.md](references/use-case-diagrams.md) | `/arckit:solution-design` |
+| Deployment Diagram | [deployment-diagrams.md](references/deployment-diagrams.md) | `/arckit:solution-design` |
+| Object Diagram | [object-diagrams.md](references/object-diagrams.md) | `/arckit:solution-design` |
 | ArchiMate Layer View | [archimate.md](references/archimate.md) | `/arckit:archimate` |
 | BMM Motivation / Strategy View | [archimate.md](references/archimate.md) § BMM Projection | `/arckit:bmm` |
 

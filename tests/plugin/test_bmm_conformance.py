@@ -22,7 +22,7 @@ every point that fails silently when missed gets a guard here.
   - every tracked quality-checklist.md copy carries the BMM section
   - strategy.md / sobc.md traceability clauses (Option C slice)
   - docs/guides/bmm.md (+ plugin-tree copy, site link, llms.txt, OAA pointer)
-  - 77 .md files in plugins/arckit-claude/commands/
+  - 78 .md files in plugins/arckit-claude/commands/
 """
 
 import glob
@@ -458,6 +458,6 @@ def test_oaa_mapping_pointer_mentions_bmm():
 # --- command count ----------------------------------------------------------------
 
 
-def test_commands_directory_has_77_md_files():
+def test_commands_directory_has_78_md_files():
     count = len(list(COMMANDS_DIR.glob("*.md")))
-    assert count == 77, f"expected 77 command files, found {count}"
+    assert count == 78, f"expected 78 command files, found {count}"

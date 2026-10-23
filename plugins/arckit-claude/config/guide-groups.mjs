@@ -114,6 +114,7 @@ add(GUIDE_SECTIONS.CORE, 'Architecture', 'experimental', [
   'dfd',
   'framework',
   'platform-design',
+  'solution-design',
 ]);
 add(GUIDE_SECTIONS.CORE, 'Wardley Mapping', 'experimental', [
   'wardley',
