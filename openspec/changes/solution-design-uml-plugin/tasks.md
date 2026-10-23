@@ -49,5 +49,6 @@
 - [ ] 9.1 Test in a test repo: run `/arckit:solution-design 001` on a real project with an existing `ARC-001-REQ` artefact; verify all six diagram sections are populated with `plantuml`-fenced blocks, the "View this diagram" callout appears under each section, and no 32K truncation occurred
 - [ ] 9.2 Test companion DIAG artefact generation: run `/arckit:solution-design 001` with the user requesting DIAG artefacts; verify one `ARC-001-DIAG-NNN-v1.0.md` file is written to `projects/001/diagrams/` with the correct next sequence number
 - [ ] 9.3 Test the Codex target: scaffold a test repo with `arckit init test-solution --ai codex --no-git`; confirm `.agents/skills/arckit-solution-design/SKILL.md` exists, is invocable as `$arckit-solution-design`, and that the `plantuml-syntax` skill's `references/` folder includes `object-diagrams.md`
+- [ ] 9.3a Update `tests/codex/test_codex_extension.py` `PLUGIN_SOURCES` to include `commands/solution-design.md` and `templates/solution-design-template.md`; run `pytest tests/codex` and confirm the new entries are validated
 - [ ] 9.4 Run `python3 scripts/check-guide-parity.py` (verify no drift) and `npx markdownlint-cli2 "**/*.md"` (Markdown style gate); verify both pass
 - [ ] 9.5 Commit with conventional `feat:` prefix and open PR against `main`

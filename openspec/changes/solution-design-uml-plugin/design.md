@@ -96,6 +96,7 @@ See `proposal.md` for motivation. Key constraints that shape this design:
 | 32K token truncation on the SOLN document | The command body explicitly instructs the Write tool (not streaming output); the six diagram blocks are generated one at a time. |
 | GitHub does not render PlantUML inline | The guide and template both state the viewing workflow (ArcKit Pages, PlantUML server, VS Code, CLI) — same as `/arckit:diagram`'s PlantUML output. |
 | Drift between `docs/guides/` and `plugins/arckit-claude/docs/guides/` | `check-guide-parity.py --sync` is run as part of the task checklist; CI gate catches future drift. |
+| `tests/codex/test_codex_extension.py` `PLUGIN_SOURCES` not updated to include the new command and template | The Codex test mirrors the plugin source list; without the new entries, the generated Codex structure is not validated. Mitigation: the 9.3 task explicitly adds both entries; the test is run as a gate before merge. |
 
 ## Migration Plan
 

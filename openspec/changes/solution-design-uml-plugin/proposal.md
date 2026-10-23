@@ -25,6 +25,7 @@ ArcKit has no first-class way to produce a UML 2.5.1 solution design document wi
 
 ## Impact
 
+- `tests/codex/test_codex_extension.py` — `PLUGIN_SOURCES` gains `commands/solution-design.md` and `templates/solution-design-template.md` (mirrors the plugin source list; Codex test validates generated structure)
 - `plugins/arckit-claude/commands/solution-design.md` — new file
 - `plugins/arckit-claude/templates/solution-design-template.md` — new file
 - `.arckit/templates/solution-design-template.md` — new file (dual-tree rule)
