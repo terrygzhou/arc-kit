@@ -78,6 +78,7 @@ export const DOC_TYPES = {
   'ARCH':      { name: 'ArchiMate View',                 category: 'Architecture' },
   'ADR':       { name: 'Architecture Decision Records',    category: 'Architecture' },
   'PLAT':      { name: 'Platform Design',                  category: 'Architecture' },
+  'SOLN':      { name: 'Solution Design',                  category: 'Architecture' },
   // TOGAF ADM overlay (community)
   'ADMP':      { name: 'ADM Preliminary / Architecture Vision', category: 'Architecture' },
   'BPCM':      { name: 'Business Capability Map',          category: 'Architecture' },
@@ -294,6 +295,7 @@ export const MULTI_INSTANCE_TYPES = new Set([
   'WGAM', 'WCLM', 'WVCH',
   'GOVR', 'GCSR', 'GLND', 'GRNT',
   'CDAU',
+  'SOLN',
 ]);
 
 // Type code -> required subdirectory
