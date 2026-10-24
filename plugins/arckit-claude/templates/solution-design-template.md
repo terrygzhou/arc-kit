@@ -15,6 +15,14 @@
 
 ---
 
+## Overview
+
+- **Problem**: [2-3 sentences describing the problem this solution addresses]
+- **Scope**: [What is in scope and what is explicitly out of scope for this solution design]
+- **Key constraints and assumptions**: [From PRIN, SOBC, and external documents, with citation markers where applicable]
+
+---
+
 ## Use Case Diagram
 
 Shows the system's actors and the use cases they interact with in this solution design context.
@@ -193,6 +201,30 @@ O1 -> O3 : {relation_2}
 - **VS Code**: Install PlantUML extension (jebbs.plantuml)
 - **CLI**: `java -jar plantuml.jar diagram.puml`
 - **Export**: Use PlantUML Server to export as PNG/SVG/PDF
+
+---
+
+## Requirements Traceability
+
+Maps each requirement to the design element that satisfies it. Flag unmapped requirements as open items.
+
+| Requirement ID | Requirement | Design Element | Diagram / Section | Status |
+|----------------|-------------|----------------|-------------------|--------|
+| BR-xxx | [Business requirement] | [Component / Use case / Class / Deployment node] | [e.g. Component Diagram] | Mapped / Open |
+| FR-xxx | [Functional requirement] | [Component / Sequence / Use case] | [e.g. Sequence Diagram] | Mapped / Open |
+| NFR-xxx | [Non-functional requirement] | [Deployment node / Component] | [e.g. Deployment Diagram] | Mapped / Open |
+| INT-xxx | [Integration requirement] | [External system / Integration point] | [e.g. Component Diagram] | Mapped / Open |
+| DR-xxx | [Data requirement] | [Domain class / Data store] | [e.g. Class Diagram] | Mapped / Open |
+
+---
+
+## Design Rationale
+
+For each major decision, state the decision, the alternatives considered, and why the chosen option was selected. Cross-reference existing ADRs and flag conflicts for the user to resolve.
+
+| # | Decision | Alternatives Considered | Rationale | Related ADR |
+|---|----------|-------------------------|-----------|-------------|
+| 1 | [Decision, e.g. "Use a managed queue for integration"] | [Alternatives] | [Why the chosen option] | [ARC-xxx-ADR-xxx or "New"] |
 
 ---
 
