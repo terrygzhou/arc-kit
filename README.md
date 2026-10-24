@@ -767,6 +767,7 @@ These commands use the [govreposcrape MCP](https://github.com/MHCLG/govreposcrap
 | Command | Description | Status |
 |---------|-------------|--------|
 |  `/arckit:diagram`  |  Generate architecture diagrams using Mermaid for visual documentation  |  🟢 Live  |
+|  `/arckit:solution-design`  |  Generate a UML 2.5.1 solution design document with six embedded PlantUML diagram views  |  🟣 Experimental  |
 |  `/arckit:dfd`  |  Generate Yourdon-DeMarco Data Flow Diagrams (DFDs) with structured analysis notation  |  🟣 Experimental  |
 |  `/arckit:hld-review`  |  Review High-Level Design (HLD) against architecture principles and requirements  |  🔵 Beta  |
 |  `/arckit:dld-review`  |  Review Detailed Design (DLD) for implementation readiness  |  🔵 Beta  |
@@ -969,7 +970,7 @@ This runs `/arckit:health` every 30 minutes, surfacing stale research, forgotten
 
 - **Issues**: [GitHub Issues](https://github.com/terrygzhou/arc-kit/issues)
 - **Releases**: [GitHub Releases](https://github.com/terrygzhou/arc-kit/releases)
-- **Latest Version**: [v6.10.2](https://github.com/terrygzhou/arc-kit/releases/tag/v6.10.2)
+- **Latest Version**: [v6.10.3](https://github.com/terrygzhou/arc-kit/releases/tag/v6.10.3)
 
 ---
 

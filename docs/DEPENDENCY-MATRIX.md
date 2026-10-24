@@ -170,6 +170,9 @@ Most commands in this tier require or strongly recommend ARC-*-REQ-*.md:
   - Note: Architecture Decision Records; principles recommended but can create decisions without them
 - **data-mesh-contract** → Depends on: principles (M), data-model (R), stakeholders (R)
   - Note: Federated data product contracts for mesh architectures; requires principles for governance standards
+- **solution-design** → Depends on: requirements (M), stakeholders (R), principles (R), data-model (R)
+  - Note: Generates a UML 2.5.1 solution design document (SOLN artefact, multi-instance) with six embedded PlantUML diagram views; stops if the requirements artefact is missing
+  - Feeds: hld-review, dld-review, traceability, sow, diagram
 
 ### Tier 7: Procurement (Depends on Requirements)
 
