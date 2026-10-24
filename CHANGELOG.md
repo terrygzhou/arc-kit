@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.11.0] — 2026-10-25
+
 ### Added
 
 - **`/arckit:solution-design` command with the `SOLN` doc-type (OpenSpec `solution-design-uml-plugin`).** Generates a governed UML 2.5.1 solution design document — a multi-instance `ARC-NNN-SOLN-vN.N.md` artefact combining narrative Design Rationale, a BR/FR/NFR/INT/DR → design-element Requirements Traceability table, and six embedded PlantUML diagram views (Use Case, Sequence, Component, Deployment, Class, Object). Requirements are **mandatory** (the command stops and suggests `/arckit:requirements` when the `REQ` artefact is absent); STKE, PRIN, ADR, DATA, SOBC and RSCH are recommended/optional inputs. A single interactive configuration round (diagram subset + PlantUML style) supports a `sequence,class`-style subset argument, and unselected diagram types are kept as placeholders so a later re-run fills them in without regenerating populated sections. PlantUML is the sole notation — Mermaid is not offered because it has no object-diagram grammar or first-class UML use-case/component references. Optional companion `ARC-NNN-DIAG-NNN-v1.0.md` sidecars under `projects/NNN/diagrams/` are generated when a single diagram type is selected or explicitly requested, via `generate-document-id.sh --next-num`.
