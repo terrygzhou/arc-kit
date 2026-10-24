@@ -2,7 +2,7 @@
 
 **The Enterprise Architecture Governance Harness for Gemini CLI**
 
-ArcKit provides 75 slash commands across strategy, architecture, delivery, assurance, and interoperability — including UK Government compliance — all from within Gemini CLI.
+ArcKit provides 76 slash commands across strategy, architecture, delivery, assurance, and interoperability — including UK Government compliance — all from within Gemini CLI.
 
 ## Installation
 

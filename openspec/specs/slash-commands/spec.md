@@ -1,7 +1,7 @@
 # slash-commands Specification
 
 ## Purpose
-The ArcKit Claude Code plugin exposes 75 slash commands named `/arckit:<name>` from `plugins/arckit-claude/commands/*.md`. This spec captures the command frontmatter contract, doc-type declaration rule, lifecycle status, execution contract, artifact naming, and artifact-stamping conventions that govern how a command runs and what it produces.
+The ArcKit Claude Code plugin exposes 76 slash commands named `/arckit:<name>` from `plugins/arckit-claude/commands/*.md`. This spec captures the command frontmatter contract, doc-type declaration rule, lifecycle status, execution contract, artifact naming, and artifact-stamping conventions that govern how a command runs and what it produces.
 
 ## Requirements
 
