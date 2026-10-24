@@ -5,6 +5,20 @@ All notable changes to ArcKit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`/arckit:solution-design` command with the `SOLN` doc-type (OpenSpec `solution-design-uml-plugin`).** Generates a governed UML 2.5.1 solution design document — a multi-instance `ARC-NNN-SOLN-vN.N.md` artefact combining narrative Design Rationale, a BR/FR/NFR/INT/DR → design-element Requirements Traceability table, and six embedded PlantUML diagram views (Use Case, Sequence, Component, Deployment, Class, Object). Requirements are **mandatory** (the command stops and suggests `/arckit:requirements` when the `REQ` artefact is absent); STKE, PRIN, ADR, DATA, SOBC and RSCH are recommended/optional inputs. A single interactive configuration round (diagram subset + PlantUML style) supports a `sequence,class`-style subset argument, and unselected diagram types are kept as placeholders so a later re-run fills them in without regenerating populated sections. PlantUML is the sole notation — Mermaid is not offered because it has no object-diagram grammar or first-class UML use-case/component references. Optional companion `ARC-NNN-DIAG-NNN-v1.0.md` sidecars under `projects/NNN/diagrams/` are generated when a single diagram type is selected or explicitly requested, via `generate-document-id.sh --next-num`.
+- **`SOLN` doc-type registration** (multi-instance): added to `DOC_TYPES` + `MULTI_INSTANCE_TYPES` in `config/doc-types.mjs` and to the `MULTI_INSTANCE_TYPES` lists in both `scripts/bash/generate-document-id.sh` copies; `pages.md` known-artifact-types gains the `ARC-*-SOLN-*.md` row.
+- **PlantUML object-diagram reference**: new `skills/plantuml-syntax/references/object-diagrams.md` (declarations, attribute state, stereotypes, link types, grouping, gotchas) and an Object Diagram row in the `plantuml-syntax` SKILL.md table; the Use Case, Sequence, Class, Component and Deployment rows now cite `/arckit:solution-design`.
+- **Solution design guide**: `docs/guides/solution-design.md` (+ byte-identical plugin-tree copy), the `docs/guides.html` site entry, and the `guide-groups.mjs` Architecture/experimental entry.
+- **`solution-design-template.md`**: Overview, Revision History, the six `plantuml`-fenced diagram sections (each with a "View this diagram" callout), Requirements Traceability, Design Rationale, Summary, and External References (Document Register / Citations / Unreferenced Documents) — dual-tree copies in `plugins/arckit-claude/templates/` and `.arckit/templates/`.
+
+### Fixed
+
+- **DIAG sidecar generator invocation** in `solution-design.md` now uses `${CLAUDE_PLUGIN_ROOT}/scripts/bash/generate-document-id.sh` with the correct `PROJECT_ID DOC_TYPE --next-num DIR` argument order (was a workspace-rooted `.arckit/` path with transposed arguments), matching the `archimate`/`bmm` convention.
+
 ## [6.10.2] — 2026-09-29
 
 ### Added

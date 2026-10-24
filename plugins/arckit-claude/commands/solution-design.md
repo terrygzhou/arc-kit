@@ -121,7 +121,7 @@ The arguments may include:
    - **Maximum 2 rounds of questions.** After that, pick the best option from available context.
    - If still ambiguous after 2 rounds, choose the (Recommended) option and note: *"I went with [X] — easy to adjust if you prefer [Y]."*
 
-   If the user answers Question 1 with a **single** type, or explicitly asks for companion standalone diagram artefacts, also write one `ARC-{PROJECT_ID}-DIAG-{NNN}-v1.0.md` per populated diagram type to `projects/{PROJECT_ID}/diagrams/` using `bash .arckit/scripts/bash/generate-document-id.sh --next-num projects/{PROJECT_ID}/diagrams ARC-{PROJECT_ID}-DIAG` for the next available DIAG sequence.
+   If the user answers Question 1 with a **single** type, or explicitly asks for companion standalone diagram artefacts, also write one `ARC-{PROJECT_ID}-DIAG-{NNN}-v1.0.md` per populated diagram type to `projects/{PROJECT_ID}/diagrams/` using `bash "${CLAUDE_PLUGIN_ROOT}/scripts/bash/generate-document-id.sh" {PROJECT_ID} DIAG --next-num "{PROJECT_PATH}/diagrams"` for the next available DIAG sequence.
 
 5. **Read the template** (with user override support):
    - **First**, check if `.arckit/templates/solution-design-template.md` exists in the project root
