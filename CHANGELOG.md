@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Release-flow docs: one tag at a time.** `docs/RELEASING.md` now warns that batch-pushing several `v*` tags (or a `git push --tags` that carries more than one) creates GitHub Releases that share a `published_at` timestamp, which can pin the "Latest release" banner on the repo page to an older release — the banner is not semver-ordered. The 6.11.0 backfill of `v6.10.1`/`v6.10.2` hit exactly this (banner stuck on 6.10.2). The release flow now says: push one tag at a time with a pause, run `push-extensions.sh` once per tag, and, if the banner ever points the wrong way, delete and re-create the intended tag to force a fresh `published_at`. Also documented that `.github/workflows/release.yml` is **not** tag-push triggered — it fires on `release: published` and `workflow_dispatch` only.
+
 ## [6.11.0] — 2026-10-25
 
 ### Added
