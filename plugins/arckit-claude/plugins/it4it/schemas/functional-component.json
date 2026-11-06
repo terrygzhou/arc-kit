@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "arckit-it4it/schemas/functional-component.json",
+  "title": "IT4IT Functional Component",
+  "description": "A capability unit in the IT4IT architecture that controls specific key data objects (S261, Ch. 6-10). Shared across the four functional-group commands. Reference-only — S261 is a snapshot, not an approved standard.",
+  "type": "object",
+  "required": ["id", "function", "components", "conformance_notes"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Document ID, e.g. ARC-002-ITSF-v1.0"
+    },
+    "function": {
+      "type": "string",
+      "enum": [
+        "Strategy",
+        "Portfolio",
+        "Develop",
+        "Test",
+        "Consume",
+        "Fulfill",
+        "Support",
+        "Assure"
+      ],
+      "description": "S261 function group this component belongs to"
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Functional components in scope",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "purpose": { "type": "string" },
+          "primary_kdos": { "type": "array", "items": { "type": "string" } },
+          "key_attributes": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "key_data_objects": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "KDOs controlled or consumed by these components"
+    },
+    "cardinalities": {
+      "type": "array",
+      "description": "KDO relationship cardinalities per the S261 catalog",
+      "items": {
+        "type": "object",
+        "required": ["left", "right", "cardinality"],
+        "properties": {
+          "left": { "type": "string" },
+          "right": { "type": "string" },
+          "cardinality": { "type": "string", "enum": ["1:1", "1:m", "n:m"] },
+          "gap": { "type": "string", "description": "Record deviations as gaps, not choices" }
+        }
+      }
+    },
+    "states": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "State machine for lifecycle KDOs (e.g. proposal states)"
+    },
+    "system_of_record": {
+      "type": "object",
+      "description": "KDO -> authoritative system map",
+      "additionalProperties": { "type": "string" }
+    },
+    "quality_gates": {
+      "type": "array",
+      "description": "Develop & Test: gates with entry/exit criteria",
+      "items": {
+        "type": "object",
+        "required": ["gate"],
+        "properties": {
+          "gate": { "type": "string" },
+          "entry_criteria": { "type": "string" },
+          "exit_criteria": { "type": "string" }
+        }
+      }
+    },
+    "conformance_notes": {
+      "type": "string",
+      "description": "Must state S261 is referenced as a reference architecture; no conformance claim"
+    }
+  }
+}

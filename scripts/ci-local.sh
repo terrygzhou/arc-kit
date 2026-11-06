@@ -43,6 +43,7 @@ run "guide site-link check"      python3 scripts/check-guide-site-links.py
 run "colon notation check"       python3 scripts/standardise-colon.py --check
 run "OAA axiom guard"            python3 scripts/check_oaa_axioms.py
 run "architecture schema gate"  python3 plugins/arckit-oaa/validate-architecture.py gate
+run "IT4IT schema gate"         python3 plugins/arckit-it4it/validate-architecture.py gate
 # --- diagram sidecar checks (D2 + archify; SKIPs when toolchains are absent) ---
 run "diagram sidecar checks" bash scripts/diagrams.sh check
 

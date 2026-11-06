@@ -55,6 +55,7 @@ EXPECTED_CLAUDE_MARKETPLACE_SOURCES = {
     ),
     "arckit-togaf-adm": ("./plugins/togaf/adm", "plugins/arckit-togaf-adm", "MIT"),
     "arckit-oaa": ("./plugins/oaa", "plugins/arckit-oaa", "MIT"),
+    "arckit-it4it": ("./plugins/it4it", "plugins/arckit-it4it", "MIT"),
     "arckit-agent-architecture": (
         "./plugins/agent/architecture",
         "plugins/arckit-agent-architecture",
