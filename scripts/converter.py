@@ -252,6 +252,7 @@ PLUGIN_SOURCES = [
     "plugins/arckit-uk-nhs",
     "plugins/arckit-togaf-adm",
     "plugins/arckit-oaa",
+    "plugins/arckit-it4it",
     "plugins/arckit-agent-architecture",
     "plugins/arckit-claude",  # core last
 ]

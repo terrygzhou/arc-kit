@@ -361,6 +361,27 @@
       "category": "productivity"
     },
     {
+      "name": "arckit-it4it",
+      "source": "./plugins/it4it",
+      "description": "Open Group IT4IT Standard v3.1 (S261) — reference architecture for IT as product-based investment. 6 commands: Value Network, Value Stream, Strategy to Portfolio, Develop & Test, Consume & Fulfil, Operate & Assure. [COMMUNITY]",
+      "version": "6.11.0",
+      "author": {
+        "name": "ArcKit Contributors"
+      },
+      "homepage": "https://github.com/terrygzhou/arc-kit",
+      "repository": "https://github.com/terrygzhou/arc-kit",
+      "license": "MIT",
+      "keywords": [
+        "architecture",
+        "it4it",
+        "value-stream",
+        "digital-product",
+        "itsm",
+        "open-group"
+      ],
+      "category": "productivity"
+    },
+    {
       "name": "arckit-agent-architecture",
       "source": "./plugins/agent/architecture",
       "description": "AI Agent Architecture — Governance, design, and security for autonomous AI agent programs. 6 commands. [COMMUNITY]",
