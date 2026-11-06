@@ -4,7 +4,7 @@
   "title": "IT4IT Functional Component",
   "description": "A capability unit in the IT4IT architecture that controls specific key data objects (S261, Ch. 6-10). Shared across the four functional-group commands. Reference-only — S261 is a snapshot, not an approved standard.",
   "type": "object",
-  "required": ["id", "function", "components"],
+  "required": ["id", "function", "components", "conformance_notes"],
   "properties": {
     "id": {
       "type": "string",

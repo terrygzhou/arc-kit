@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`arckit-it4it` overlay plugin (IT4IT v3.1 / S261 reference architecture, OpenSpec `it4it-overlay`).** Six community-overlay slash commands (`/arckit-it4it:value-network`, `value-stream`, `strategy-portfolio`, `develop-test`, `consume-fulfil`, `operate-assure` — one per IT4IT functional group), two JSON reference schemas (`value-stream.json`, `functional-component.json`), a full `it4it-full.yaml` recipe, and an embedded `validate-architecture.py` CI gate. Shipped as a standalone plugin (`plugins/arckit-it4it/`) and a byte-identical nested sub-plugin copy (`plugins/arckit-claude/plugins/it4it/`). IT4IT is S261 — a snapshot, not an approved standard — so no conformance claim is made; the plugin ships reference-only and is not part of the core converter pipeline.
+
 ## [6.11.0] — 2026-10-25
 
 ### Added

@@ -4,7 +4,7 @@
   "title": "IT4IT Value Stream",
   "description": "One value stream of the IT4IT Value Network (S261, Ch. 5). Reference-only — S261 is a snapshot, not an approved standard.",
   "type": "object",
-  "required": ["id", "stream", "trigger", "stakeholder", "stages"],
+  "required": ["id", "stream", "trigger", "stakeholder", "stages", "conformance_notes"],
   "properties": {
     "id": {
       "type": "string",
