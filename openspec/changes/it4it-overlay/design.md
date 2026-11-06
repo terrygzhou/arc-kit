@@ -129,3 +129,19 @@ hard-gate intake; one buildable recipe; CI gates green.
 **Non-Goals:** no ArchiMate model file generation; no vendor refinements
 (non-normative in the standard); no conformance claims (Snapshot status);
 no changes to `template-driven-intake`; no new core-plugin commands.
+
+## Shipped reference files
+
+The plugin ships seven reference files in `plugins/arckit-it4it/references/`
+(each copied to `plugins/arckit-claude/plugins/it4it/references/` via
+`sync-shared-assets.py`):
+
+| File | Purpose |
+|---|---|
+| `citation-instructions.md` | S261 "reference, not conformance" rule |
+| `quality-checklist.md` | Artefact quality gates |
+| `intake-instructions.md` | Hard-gate intake interview |
+| `intake-discovery-dimensions.md` | Discovery question dimensions |
+| `value-streams-reference.md` | Seven value streams — scenario, trigger, stages, stakeholders |
+| `functional-components-reference.md` | Functional components and KDOs |
+| `bmm-reference.md` | OMG BMM 1.3 element catalogue and when-to-use |

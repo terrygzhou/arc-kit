@@ -18,7 +18,7 @@
 - [x] 2.7 Author `plugins/arckit-it4it/commands/it4it-consume-fulfil.md` (Ch 8) — MANDATORY `PRIN`, output `ARC-{P}-ITCF-v1.0.md`
 - [x] 2.8 Author `plugins/arckit-it4it/commands/it4it-operate-assure.md` (Ch 9 + Ch 10 Supporting Functions cross-reference) — MANDATORY `PRIN`, output `ARC-{P}-ITOA-v1.0.md`
 - [x] 2.9 Author six templates in `plugins/arckit-it4it/templates/` (one per command) + `templates/_partials/` copies for shared blocks referenced via `${CLAUDE_PLUGIN_ROOT}`
-- [x] 2.10 Author `plugins/arckit-it4it/references/`: `citation-instructions.md` (S261 "reference, not conformance" rule), `quality-checklist.md`, `intake-instructions.md`, `intake-discovery-dimensions.md`, `value-streams-reference.md` (seven streams — scenario, trigger, stages, stakeholders), `functional-components-reference.md`
+- [x] 2.10 Author `plugins/arckit-it4it/references/`: `citation-instructions.md` (S261 "reference, not conformance" rule), `quality-checklist.md`, `intake-instructions.md`, `intake-discovery-dimensions.md`, `value-streams-reference.md` (seven streams — scenario, trigger, stages, stakeholders), `functional-components-reference.md`, `bmm-reference.md` (OMG BMM 1.3 element catalogue and when-to-use)
 - [x] 2.11 Author `plugins/arckit-it4it/schemas/`: `value-stream.json`, `functional-component.json` (+ `README.md`)
 - [x] 2.12 Author `plugins/arckit-it4it/validate-architecture.py` (stdlib-only, embedded draft-07 subset, `gate`/`self-test`/`drift` modes) mirroring OAA's
 - [x] 2.13 Author `plugins/arckit-it4it/recipes/it4it-full.yaml` — `PRIN` → `ITVN` → `ITVS` → `ITSF` → `ITDT` → `ITCF` → `ITOA`
@@ -40,7 +40,7 @@
 
 - [x] 5.1 Author `tests/plugin/test_it4it_doc_types.py` (11 tests) — six codes in `doc-types.mjs` + Codex dual registration; `ITVS` multi-instance parity across .mjs, both bash generators, and Codex; six codes in `/arckit:pages` allow-list; plugin manifest shape; sub-plugin byte-parity; MANDATORY `PRIN` hard gate in all six command bodies; D5 tone guard (no diagram/output mandate beyond template). Companion: `tests/plugin/test_it4it_validate_architecture.py` (15 tests) covers validator `gate`/`self-test`/`drift`/artifact modes.
 - [x] 5.2 Run `python3 -m pytest tests/plugin/test_it4it_doc_types.py tests/plugin/test_it4it_validate_architecture.py -q` — green
-- [x] 5.3 Run the full CI gate set: `check-doc-type-registry.py`, `check-doctype-collisions.py`, `check-multi-instance-parity.py`, `check-recipies.py`, `check-references.py`, `sync-shared-assets.py --check`, `plugins/arckit-it4it/validate-architecture.py gate` — all green
+- [x] 5.3 Run the full CI gate set: `check-doc-type-registry.py`, `check-doctype-collisions.py`, `check-multi-instance-parity.py`, `check_recipes.py`, `check-references.py`, `sync-shared-assets.py --check`, `plugins/arckit-it4it/validate-architecture.py gate` — all green
 
 ## 6. CI Wiring
 
