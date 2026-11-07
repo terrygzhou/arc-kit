@@ -66,12 +66,13 @@ def _artifact_exists(code: str, project_id: str, root: str | None = None) -> boo
         candidates.append(pdir / sub)
     candidates.append(pdir)
     prefix = f"ARC-{project_id}-{code}"
+    pfx = project_id.split("-")[0]
     for cdir in candidates:
         if not cdir.is_dir():
             continue
         for f in cdir.iterdir():
             m = _ARTIFACT_RE.match(f.name)
-            if m and m.group("code") == code and m.group("project") == project_id:
+            if m and m.group("code") == code and m.group("project") == pfx:
                 return True
     return False
 
