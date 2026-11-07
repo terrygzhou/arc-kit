@@ -1,7 +1,12 @@
 # it4it-intake Specification
 
 ## Purpose
-TBD - created by archiving change it4it-overlay. Update Purpose after archive.
+Governs the IT4IT overlay plugin (`arckit-it4it`): how the overlay ships
+(standalone tree plus sub-plugin copy), the six intake commands and their
+doc-type registration, the MANDATORY `PRIN` hard gate on every command,
+the no-diagram-mandate tone guard (S261 snapshot citation, no conformance
+claims), the `it4it-full` bulk-build recipe's core-first dependency order,
+and the CI-enforced schema validator gate.
 
 ## Requirements
 
