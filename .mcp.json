@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "arckit": {
+      "command": "/home/terry/projects/arc-kit/.venv-mcp/bin/arckit-mcp"
+    }
+  }
+}
