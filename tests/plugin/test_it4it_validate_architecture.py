@@ -128,7 +128,8 @@ def test_artifact_mode_usage_and_validation(tmp_path):
         '"id":"ARC-002-ITVS-001-v1.0","stream":"Deploy",'
         '"trigger":{"condition":"all gates passed","frequency":"per release train","source_stream":"Integrate"},'
         '"stakeholder":{"primary":"Deployment Manager","accountable_role":"Release Manager"},'
-        '"stages":[{"name":"Prepare","functional_components":["Release Planning"]}]'
+        '"stages":[{"name":"Prepare","functional_components":["Release Planning"]}],'
+        '"conformance_notes":"S261 referenced as reference architecture; no conformance claimed."'
         '}'
     )
     bad = tmp_path / "value-stream-bad.json"
