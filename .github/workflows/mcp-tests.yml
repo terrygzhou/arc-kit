@@ -1,0 +1,30 @@
+name: MCP Tests
+
+on:
+  pull_request:
+    paths:
+      - "arckit-mcp/**"
+      - "tests/mcp/**"
+      - ".github/workflows/mcp-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "arckit-mcp/**"
+      - "tests/mcp/**"
+      - ".github/workflows/mcp-tests.yml"
+
+jobs:
+  mcp-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install arckit-mcp and test dependencies
+        run: pip install -e ./arckit-mcp pytest
+
+      - name: Run MCP test suite
+        run: python -m pytest tests/mcp -q
