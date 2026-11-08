@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "arckit": {
+      "command": "/home/terry/.local/share/arckit-mcp/bin/arckit-mcp"
+    }
+  }
+}
