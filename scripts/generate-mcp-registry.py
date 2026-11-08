@@ -4,8 +4,8 @@
 Reads the canonical document-type registry in
 plugins/arckit-claude/config/doc-types.mjs and emits a generated Python
 module with DOC_TYPES, SUBDIR_MAP, MULTI_INSTANCE_TYPES and
-KNOWN_TYPES. The generated file is imported by the arckit-mcp server;
-do not edit it by hand.
+KNOWN_TYPES. The generated file lives in the sibling arckit-mcp repo
+and is imported by the arckit-mcp server; do not edit it by hand.
 
 The mjs file is a flat object literal (same constraint
 scripts/check-doc-type-registry.py relies on), so it is parsed with
@@ -13,18 +13,32 @@ regex + json instead of a node subprocess — the generator must run in
 CI without assuming a node toolchain.
 
 Usage:
-    python scripts/generate-mcp-registry.py
+    python scripts/generate-mcp-registry.py [output-path]
+
+    The optional argument overrides the default output location
+    (sibling arckit-mcp repo). The ARCKIT_MCP_ROOT env var also
+    overrides the sibling-repo root.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOC_TYPES_MJS = REPO_ROOT / "plugins" / "arckit-claude" / "config" / "doc-types.mjs"
-OUT_PATH = REPO_ROOT / "arckit-mcp" / "arckit_mcp" / "_registry.py"
+# Default location is the sibling arckit-mcp repo (the generated files live
+# there, not in this tree). Overridable via the ARCKIT_MCP_ROOT env var or
+# a CLI arg, so regeneration also works without the repo tree present.
+def _default_out_path() -> Path:
+    root = Path(os.environ.get("ARCKIT_MCP_ROOT", REPO_ROOT.parent / "arckit-mcp"))
+    return root / "arckit_mcp" / "_registry.py"
+
+
+OUT_PATH = _default_out_path()
 
 
 def _strip_comments(text: str) -> str:
@@ -208,10 +222,17 @@ def render(reg: dict) -> str:
 
 
 def main() -> None:
+    global OUT_PATH
+    if len(sys.argv) > 1:
+        OUT_PATH = Path(sys.argv[1])
     reg = parse_mjs()
     OUT_PATH.write_text(render(reg), encoding="utf-8")
+    try:
+        display = OUT_PATH.relative_to(REPO_ROOT)
+    except ValueError:
+        display = OUT_PATH
     print(
-        f"generated {OUT_PATH.relative_to(REPO_ROOT)}: "
+        f"generated {display}: "
         f"{len(reg['DOC_TYPES'])} doc types, "
         f"{len(reg['SUBDIR_MAP'])} subdir entries, "
         f"{len(reg['MULTI_INSTANCE_TYPES'])} multi-instance types"

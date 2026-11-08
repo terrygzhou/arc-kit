@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Generate arckit-mcp/arckit_mcp/gates.py from command prerequisite blocks.
 
+The generated module lives in the sibling arckit-mcp repo, not in this
+tree. It is imported by the arckit-mcp server; do not edit it by hand.
+
 Scans the command markdown under ``plugins/arckit-{claude,oaa,it4it,togaf-adm}/commands/``
 for prerequisite sections — the ``**MANDATORY`` / ``**RECOMMENDED`` /
 ``**OPTIONAL`` header lines that open a prerequisite block, plus a plain
@@ -29,17 +32,31 @@ bolded word is not a doc-type code (e.g. a prose list like
 ``- **HIGH-RISK**: ...`` inside a non-prerequisite list) is skipped.
 
 Usage:
-    python scripts/generate-mcp-gates.py
+    python scripts/generate-mcp-gates.py [output-path]
+
+    The optional argument overrides the default output location
+    (sibling arckit-mcp repo). The ARCKIT_MCP_ROOT env var also
+    overrides the sibling-repo root.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-OUT_PATH = REPO_ROOT / "arckit-mcp" / "arckit_mcp" / "gates.py"
+# Default location is the sibling arckit-mcp repo (the generated files live
+# there, not in this tree). Overridable via the ARCKIT_MCP_ROOT env var or
+# a CLI arg, so regeneration also works without the repo tree present.
+def _default_out_path() -> Path:
+    root = Path(os.environ.get("ARCKIT_MCP_ROOT", REPO_ROOT.parent / "arckit-mcp"))
+    return root / "arckit_mcp" / "gates.py"
+
+
+OUT_PATH = _default_out_path()
 
 PLUGINS_DIR = REPO_ROOT / "plugins"
 PLUGIN_DIRS = [PLUGINS_DIR / name for name in ("arckit-claude", "arckit-oaa", "arckit-it4it", "arckit-togaf-adm")]
@@ -184,14 +201,21 @@ def render(gates: dict[str, dict[str, str]]) -> str:
 
 
 def main() -> None:
+    global OUT_PATH
+    if len(sys.argv) > 1:
+        OUT_PATH = Path(sys.argv[1])
     gates: dict[str, dict[str, str]] = {}
     for plugin_dir in PLUGIN_DIRS:
         parse_plugin_dir(plugin_dir, gates)
     OUT_PATH.write_text(render(gates), encoding="utf-8")
     total = sum(len(v) for v in gates.values())
     cmds_with = sum(1 for v in gates.values() if v)
+    try:
+        display = OUT_PATH.relative_to(REPO_ROOT)
+    except ValueError:
+        display = OUT_PATH
     print(
-        f"generated {OUT_PATH.relative_to(REPO_ROOT)}: "
+        f"generated {display}: "
         f"{total} gate entries across {cmds_with}/{len(gates)} commands"
     )
 

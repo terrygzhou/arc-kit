@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Generate arckit-mcp/arckit_mcp/handoffs.py from command frontmatter.
 
+The generated module lives in the sibling arckit-mcp repo, not in this
+tree. It is imported by the arckit-mcp server; do not edit it by hand.
+
 Scans the YAML frontmatter of the command markdown under
 ``plugins/arckit-{claude,oaa,it4it,togaf-adm}/commands/`` for the optional
 ``handoffs:`` block. Each handoff entry is a list item of the form::
@@ -32,17 +35,31 @@ The frontmatter is parsed with a small hand-rolled line scanner (no
 list-of-mappings shape ArcKit uses.
 
 Usage:
-    python scripts/generate-mcp-handoffs.py
+    python scripts/generate-mcp-handoffs.py [output-path]
+
+    The optional argument overrides the default output location
+    (sibling arckit-mcp repo). The ARCKIT_MCP_ROOT env var also
+    overrides the sibling-repo root.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-OUT_PATH = REPO_ROOT / "arckit-mcp" / "arckit_mcp" / "handoffs.py"
+# Default location is the sibling arckit-mcp repo (the generated files live
+# there, not in this tree). Overridable via the ARCKIT_MCP_ROOT env var or
+# a CLI arg, so regeneration also works without the repo tree present.
+def _default_out_path() -> Path:
+    root = Path(os.environ.get("ARCKIT_MCP_ROOT", REPO_ROOT.parent / "arckit-mcp"))
+    return root / "arckit_mcp" / "handoffs.py"
+
+
+OUT_PATH = _default_out_path()
 
 PLUGINS_DIR = REPO_ROOT / "plugins"
 PLUGIN_DIRS = [
@@ -208,13 +225,20 @@ def render(handoffs: dict[str, list[tuple[str, str, str]]]) -> str:
 
 
 def main() -> None:
+    global OUT_PATH
+    if len(sys.argv) > 1:
+        OUT_PATH = Path(sys.argv[1])
     handoffs: dict[str, list[tuple[str, str, str]]] = {}
     for plugin_dir in PLUGIN_DIRS:
         parse_plugin_dir(plugin_dir, handoffs)
     OUT_PATH.write_text(render(handoffs), encoding="utf-8")
     total = sum(len(v) for v in handoffs.values())
+    try:
+        display = OUT_PATH.relative_to(REPO_ROOT)
+    except ValueError:
+        display = OUT_PATH
     print(
-        f"generated {OUT_PATH.relative_to(REPO_ROOT)}: "
+        f"generated {display}: "
         f"{total} handoff edges across {len(handoffs)} commands"
     )
 

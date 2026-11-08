@@ -24,7 +24,8 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO_ROOT / "arckit-mcp"))
+# arckit-mcp is now a sibling repo; its generated modules are the parity target.
+sys.path.insert(0, str(REPO_ROOT.parent / "arckit-mcp"))
 
 from arckit_mcp.handoffs import HANDOFFS  # noqa: E402
 
