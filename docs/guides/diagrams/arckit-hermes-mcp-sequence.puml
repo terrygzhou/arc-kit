@@ -1,0 +1,134 @@
+@startuml
+title ArcKit × Hermes Agent — MCP Interaction Sequence\n<<A non-technical user on a Mac asks her local Hermes agent to call the ArcKit MCP server\nrunning on a Linux server; Hermes guides them through framework selection, command\nidentification, and the intake questions that make those commands runnable.>>
+
+actor "User\n(non-technical,\nMac)" as user
+participant "Hermes Agent\n(local, Mac)" as hermes
+participant "MCP Client\n(tool-call layer)" as mcpcl
+box "Linux server" #F0FFF4
+  participant "ArcKit MCP Server\n(plugin: arckit)" as mcp
+  participant "architecture-workflow\nskill" as skill
+  participant "Artifact Commands\n/intake engine" as cmd
+end box
+participant "MCP Servers\n(AWS · Azure · GCP ·\nDataCommons · govrepos · tenders)" as clouds
+
+' ---------- 1. Kickoff ----------
+user -> hermes : "I have an IT architecture project\nbut I don't know where to start —\ncan you call ArcKit?"
+activate hermes
+hermes -> mcpcl : request tool call:\nlist_arckit_tools()
+activate mcpcl
+mcpcl -> mcp : MCP call: tools/list
+activate mcp
+mcp --> mcpcl : tool catalogue\n(workflow, commands, evidence)
+mcpcl --> hermes : tool catalogue
+deactivate mcpcl
+
+' ---------- 2. Framework selection ----------
+hermes -> mcpcl : request tool call:\narckit.workflow.get_plan(\n  context = "new IT architecture project")
+activate mcpcl
+mcpcl -> mcp : MCP call: workflow.get_plan
+mcp -> skill : activate onboarding skill
+activate skill
+skill -> mcp : project state?\ndeep question needed?
+mcp --> skill : no projects/ dir → fresh start,\ncomplexity flag on
+skill --> mcp : plan request acknowledged
+deactivate skill
+mcp --> mcpcl : tailored command plan\n(phase, depth, framework fit)
+mcpcl --> hermes : tailored command plan
+deactivate mcpcl
+
+hermes -> user : "Based on your context the UK Gov\nframework fits best. Here is the\nrecommended command order:"
+user --> hermes : "OK, sounds right"
+
+' ---------- 3. Identify the right commands ----------
+hermes -> mcpcl : request tool call:\narckit.workflow.next_step(plan)
+activate mcpcl
+mcpcl -> mcp : MCP call: workflow.next_step
+activate mcp
+mcp -> mcp : check artifact prerequisites\n(templates, doc control)
+mcp --> mcpcl : next commands: /arckit:requirements\n→ /arckit:framework → /arckit:quality
+mcpcl --> hermes : ordered command list
+deactivate mcpcl
+
+hermes -> user : "These are the commands you will run:\n1) requirements  2) framework  3) quality"
+user --> hermes : "Good, let's start with requirements"
+
+' ---------- 4. Intake questions ----------
+hermes -> mcpcl : request tool call:\narckit.intake.questions(\n  command = "requirements")
+activate mcpcl
+mcpcl -> mcp : MCP call: intake.questions
+activate mcp
+mcp -> cmd : load requirements template\n+ intake questions
+activate cmd
+cmd --> mcp : question set (one at a time)
+mcp --> mcpcl : question 1: "What is the\nprimary business goal?"
+mcpcl --> hermes : question prompt
+deactivate mcpcl
+
+hermes -> user : "Question 1: What is the primary\nbusiness goal of this system?"
+user --> hermes : "Give citizens a single portal to\napply for permits"
+
+hermes -> mcpcl : forward answer
+activate mcpcl
+mcpcl -> mcp : MCP call: intake.answer(q1, "citizen portal")
+activate mcp
+mcp -> cmd : record answer, derive next question
+activate cmd
+cmd --> mcp : question 2: "Which stakeholders\nare involved?"
+mcp --> mcpcl : question 2
+mcpcl --> hermes : question prompt
+deactivate mcpcl
+
+hermes -> user : "Question 2: Which stakeholders are\ninvolved?"
+user --> hermes : "Citizens, planning officers, and\nthe licensing regulator"
+
+hermes -> mcpcl : forward answer
+activate mcpcl
+mcpcl -> mcp : MCP call: intake.answer(q2, "3 stakeholder groups")
+activate mcp
+mcp -> cmd : record answer; intake complete?
+activate cmd
+cmd --> mcp : yes — ready to render
+deactivate cmd
+mcp --> mcpcl : render request + answer payload
+mcpcl --> hermes : render request
+deactivate mcpcl
+
+' ---------- 5. Execute command ----------
+hermes -> mcpcl : request tool call:\narckit.run_command("requirements",\n  answers = {...})
+activate mcpcl
+mcpcl -> mcp : MCP call: commands.run
+activate mcp
+mcp -> cmd : invoke /arckit:requirements\nwith answers
+activate cmd
+cmd -> clouds : optional evidence queries\n(cloud MCP servers)
+activate clouds
+clouds --> cmd : evidence (e.g. AWS service fit)
+deactivate clouds
+cmd -> cmd : render from template →\nARC-001-REQ-v1.0.md
+cmd --> mcp : artifact + summary
+deactivate cmd
+mcp --> mcpcl : summary + artifact path
+mcpcl --> hermes : summary
+deactivate mcpcl
+
+hermes -> user : "Done — your Requirements artifact\nis saved at projects/001/ARC-001-REQ-v1.0.md.\nNext up: /arckit:framework. Continue?"
+user --> hermes : "Yes"
+note right of hermes
+  **Pattern repeats**
+  next_step → intake.questions →
+  answers → run_command → artifact
+end note
+
+legend right
+  | Participant | Where it runs | Role |
+  |---|---|---|
+  | User | Mac (browser/CLI) | Non-technical owner |
+  | Hermes Agent | Mac (local) | Conversational layer; translates intent → tool calls |
+  | MCP Client | Mac (local) | Serialises tool calls to MCP protocol |
+  | ArcKit MCP Server | Linux server | Exposes workflow / intake / commands as MCP tools |
+  | architecture-workflow | Linux server (inside ArcKit) | Onboarding triage & plan |
+  | Artifact Commands | Linux server (inside ArcKit) | /arckit:* commands + intake engine |
+  | Cloud MCP servers | AWS / MS / Google / … | Evidence queries during command runs |
+end legend
+
+@enduml

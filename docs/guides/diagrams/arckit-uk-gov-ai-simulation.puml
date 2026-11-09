@@ -1,0 +1,91 @@
+@startuml
+title ArcKit UK Government AI Delivery Simulation\n<<A new GOV.UK AI decision-support service on the UK Gov path with the AI/ML modifier — from onboarding triage to publication>>
+
+skinparam roundCorner 12
+skinparam defaultFontName "DejaVu Sans"
+skinparam ArrowColor #555
+skinparam NoteBackgroundColor #FDF6E3
+
+' ---------- Lane: Architect session ----------
+actor "Architecture Workflow\n(triage: sector, type, stage)" as triage <<external>>
+
+' ---------- Phase 1: Onboard & plan ----------
+rectangle "Phase 1 — Onboard & plan" as p1 #F5F8FF {
+  rectangle "Tailored Plan\n(UK Gov base + AI/ML mod)" as plan
+}
+
+' ---------- Phase 2: Foundations ----------
+rectangle "Phase 2 — Foundations" as p2 #F0FFF4 {
+  rectangle "Principles & Stakeholders\n(PRIN + STKE, intake-gated)" as principles
+  rectangle "/arckit:strategy\n(wardley map + goals, STRAT)" as strategy
+  rectangle "AI/ML modifier" as mod #FFF3F0 {
+    rectangle "Model Research\n(arckit-research agent)" as ai_research <<cloud>>
+  }
+}
+
+' ---------- Phase 3: Assure & synthesise ----------
+rectangle "Phase 3 — Assure & synthesise" as p3 #FFF8E1 {
+  rectangle "AI Playbook Mapping\n(responsible AI commitments)" as ai_policy
+  rectangle "Cloud MCP\n(AWS / Azure / GCP evidence)" as mcp <<cloud>>
+  rectangle "AI-ML Assurance + DPIA\n(Playbook review, mandated DPIA)" as ai_ml <<security>>
+  rectangle "/arckit:framework\n(phased FWRK + exec guide)" as framework
+  rectangle "Quality-Check\n(per-artefact checks)" as quality
+}
+
+' ---------- Phase 4: Verify & publish ----------
+rectangle "Phase 4 — Verify & publish" as p4 #FFF0F0 {
+  rectangle "/arckit:navigator\n(coverage, DRAFT, next step)" as navigator
+  database "Published\n(APPROVED, traceability intact)" as publish
+}
+
+' ---------- Main path ----------
+triage --> plan : 4 answers
+plan --> principles : gov path + AI/ML
+principles --> strategy : goals
+strategy --> ai_policy : modifier
+ai_policy --> ai_ml : assure
+strategy --> framework : artefacts in
+ai_ml --> framework : assurance in
+framework --> quality : check
+quality --> navigator : gate
+navigator --> publish : next step
+
+' ---------- Branches / evidence ----------
+ai_research --> mcp : evidence queries
+ai_research -[#gray,dashed]-> ai_ml : findings
+
+' ---------- Quality loop ----------
+navigator -[#d62728,dashed]-> framework : gap -> re-run
+
+' ---------- Annotations ----------
+note top of triage
+  **Onboarding**
+  architecture-workflow skill
+  triages without running commands
+  4 answers: UK Gov base + AI/ML mod
+end note
+
+note top of principles
+  **Intake gates**
+  every artefact command interviews
+  the effective template; answers are
+  optional — skips render as TBD
+end note
+
+note top of ai_ml
+  **Assurance**
+  AI/ML modifier injects Playbook
+  review + mandated DPIA; research
+  agent pulls cloud evidence via
+  the six MCP servers
+end note
+
+legend right
+  | Lane | Meaning |
+  |---|---|
+  | Architect session | Triage, plan, navigator, publish |
+  | ArcKit commands | Intake-gated artefact builders |
+  | Evidence & assurance | Research, MCP, AI/ML assurance |
+end legend
+
+@enduml
