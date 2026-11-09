@@ -1,3 +1,5 @@
+docType: OAGOV
+
 # Agile Governance Cadence Template
 
 > Replaces the centralised Architecture Review Board with a distributed governance model. Governance is embedded in sprint rhythm, not a periodic gate.

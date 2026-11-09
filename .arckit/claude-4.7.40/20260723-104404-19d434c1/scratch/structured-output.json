@@ -1,0 +1,26 @@
+{
+  "summary": "Reviewed arckit-it4it v1.0 (6 commands, IT4IT S261 v3.1 overlay, 6 doc types, sub-plugin mirror). Diff is well-structured: marketplace entry, arckit-claude mirror at plugins/arckit-claude/plugins/it4it, doc-types.mjs registration (23 multi-instance types), pages.md allow-list rows (ITVN/ITVS/ITSF/ITDT/ITCF/ITOA), and the 6 commands/recipes/templates/schemas/validate-architecture.py. The IT4IT schema gate is now wired into scripts/ci-local.sh (mirrors the OAA gate), the sub-plugin byte-mirror test passes, and the doc-type registry check confirms all 177 registered codes resolve across recipe output.type, command/agent filenames, and pages.md. Marketplace JSON is valid. The OAA axiom guard and OAA schema gate are present only in ci-local.sh, not in the GitHub Actions lint-markdown workflow (pre-existing gap, same for OAA — the PR follows the existing precedent). Overall the change is coherent, tested, and safe to merge.",
+  "issues": [
+    {
+      "severity": "minor",
+      "title": "IT4IT and OAA schema gates are not in GitHub Actions (ci-local.sh only)",
+      "detail": "Both the new IT4IT schema gate and the existing OAA schema gate + OAA axiom guard are wired into scripts/ci-local.sh but not into any .github/workflows/*.yml. The OAA gate was added that way in b14e3189 (\"restore CI axiom guard\") so this PR follows the established precedent, but neither overlay is validated in GitHub Actions — only when a maintainer runs ci-local.sh locally. If the intent is for CI (GitHub Actions) to run these gates, a step should be added to lint-markdown.yml or a dedicated workflow. As a PR review finding: acceptable to merge (matches OAA precedent), but worth flagging so the gap is consciously closed.",
+      "evidence": "grep for check_oaa_axioms / validate-architecture / gate / OAA across .github/workflows/*.yml returns no hits; both are in scripts/ci-local.sh lines 44 and the new IT4IT gate line."
+    },
+    {
+      "severity": "nit",
+      "title": "Sub-plugin has no config/doc-types.mjs of its own",
+      "detail": "plugins/arckit-claude/plugins/it4it/ has no config/ directory; it relies on the parent arckit's config/doc-types.mjs for the 6 IT4IT codes. This is consistent with the byte-mirror design (the sub-plugin is a copy of arckit-it4it, which also has no config/) and the sync-shared-assets test confirms the mirror is in sync, so this is fine — noted only so a reviewer does not expect a per-sub-plugin registry.",
+      "evidence": "find plugins/arckit-claude/plugins/it4it -name doc-types.mjs returns nothing; the codes are registered in plugins/arckit-claude/config/doc-types.mjs lines 101-108 and 307."
+    }
+  ],
+  "strengths": [
+    "IT4IT schema gate added to ci-local.sh mirroring the OAA gate, so both overlays are now gated consistently",
+    "Doc-type registry check passes: 177 registered codes, all 417 recipe output.type / 797 filename / 177 pages.md references resolve",
+    "Sub-plugin byte-mirror test passes; VERSION files in sync (6.11.0)",
+    "marketplace.json is valid JSON with a well-formed arckit-it4it entry",
+    "pages.md allow-list has all 6 IT4IT codes (ITVN/ITVS/ITSF/ITDT/ITCF/ITOA) under a clear 'IT4IT Overlay' section",
+    "validate-architecture.py gate self-test: 2/2 schemas checked, 0 failures",
+    "Full plugin test suite: 1517 passed, 234 skipped"
+  ]
+}
