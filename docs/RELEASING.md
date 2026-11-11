@@ -94,7 +94,7 @@ claude plugin tag plugins/arckit-claude --dry-run
 # 10. (optional) Prune orphaned plugin dependencies
 claude plugin prune --dry-run
 
-# 11. Tag, push — GitHub Release created automatically
+# 11. Tag, push — one tag at a time, pause between releases
 git tag -a vX.Y.Z -m "vX.Y.Z"
 git push && git push --tags
 
@@ -102,6 +102,26 @@ git push && git push --tags
 #     This also publishes each standalone repo's vX.Y.Z tag and GitHub Release.
 ./scripts/push-extensions.sh
 ```
+
+> **Gotcha: pushing several release tags in one batch can pin the GitHub
+> "Latest release" banner to the older one.** Each release tag push triggers
+> a GitHub Release (see `.github/workflows/release.yml`). When several tags
+> land within seconds, their releases share the same `published_at`
+> timestamp — and GitHub's banner on the repo page does **not** order by
+> semver, so it can point at the older release (this happened at 6.11.0:
+> backfilling `v6.10.1`/`v6.10.2` alongside the new `v6.11.0` batch-pushed
+> all three, and the banner stuck on 6.10.2).
+>
+> - **Push one tag at a time**, pausing between pushes:
+>   `git push origin vX.Y.Z && sleep 30 && git push origin vX.Y.Z+1`.
+> - **Never `git push --tags` when it would carry more than one `v*` tag.**
+>   If you have local tags `vA`, `vB`, `vC` unpushed, push them individually.
+> - **Fixing it later:** delete and re-create the intended tag to force a
+>   fresh, later `published_at` that wins the banner:
+>   `gh release delete vX.Y.Z --cleanup && git push origin :refs/tags/vX.Y.Z`
+>   (then re-tag and push it as the last tag in the sequence).
+> - `push-extensions.sh` inherits the same behaviour on the standalone
+>   repos: run it once per release tag, not in a batch after catching up.
 
 Use `./scripts/push-extensions.sh claude` when you intentionally need to publish only the
 standalone Claude Code marketplace repo. That repo keeps the `arckit` core plugin at the
@@ -122,6 +142,15 @@ After step 11, verify the umbrella GitHub Release and every standalone GitHub Re
 ### Note on `claude plugin tag`
 
 This command creates `{plugin-name}--vX.Y.Z` style tags (e.g. `arckit--v4.14.0`), which would not trigger `.github/workflows/release.yml` (it matches `v[0-9]+.[0-9]+.[0-9]+`). We use `--dry-run` for its validation behaviour only — it cross-checks `plugins/arckit-claude/.claude-plugin/plugin.json` against the marketplace entry in `.claude-plugin/marketplace.json` and exits non-zero on mismatch, catching version drift before the real `git tag -a vX.Y.Z` runs.
+
+## Release workflow triggers
+
+`.github/workflows/release.yml` is **not** tag-push triggered. It fires on:
+
+- **`release: published`** — when a GitHub Release is created (e.g. via `gh release create`); and
+- **`workflow_dispatch`** — manual trigger, with an optional `tag` input.
+
+The tag-push itself only moves the git tag; the Release must be created separately (or the workflow dispatched). That's why `push-extensions.sh` creates/preserves each standalone repo's Release itself rather than relying on a tag-push trigger.
 
 ## v6.0.0+ — single Claude marketplace repo
 
