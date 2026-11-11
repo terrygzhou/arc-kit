@@ -243,6 +243,13 @@ Only include these known artifact types. Match by type code pattern `ARC-{PID}-{
 | **Governance (Community-contributed — OAA Overlay)** | | | |
 | | OASEC | `ARC-*-OASEC-*.md` | Agile Security |
 | | OAGOV | `ARC-*-OAGOV-*.md` | Agile Governance |
+| **Architecture (Community-contributed — IT4IT Overlay)** | | | |
+| | ITVN | `ARC-*-ITVN-*.md` | IT4IT Value Network |
+| | ITVS | `ARC-*-ITVS-*.md` | IT4IT Value Stream |
+| | ITSF | `ARC-*-ITSF-*.md` | IT4IT Strategy to Portfolio |
+| | ITDT | `ARC-*-ITDT-*.md` | IT4IT Develop and Test |
+| | ITCF | `ARC-*-ITCF-*.md` | IT4IT Consume and Fulfil |
+| | ITOA | `ARC-*-ITOA-*.md` | IT4IT Operate and Assure |
 | **Governance** | | | |
 | | RISK | `ARC-*-RISK-*.md` | Risk Register |
 | | TRAC | `ARC-*-TRAC-*.md` | Traceability Matrix |

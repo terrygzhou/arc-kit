@@ -27,7 +27,7 @@ ArcKit is a toolkit for enterprise architects that transforms architecture gover
 ArcKit is a fork of the original [tractorjuice/arc-kit](https://github.com/tractorjuice/arc-kit), which we build on and extend. Our fork diverges from upstream along four deliberate axes:
 
 - **User intake control flow** – guided workflows that actively *interview* the user, driving enterprise architecture planning and delivery through structured, conversational intake (ask-always questions with provenance-persisted answers) rather than passive template-filling. The interview is the control flow: it decides what gets generated, and it is never silently skipped.
-- **Open group standards commands** – first-class, standards-aligned command sets shipped as dedicated plugins: **TOGAF ADM** (`arckit-togaf-adm`) and the **Open Architecture Alliance** (`arckit-oaa`), so governance artefacts map to publicly defined frameworks (Open Group / OAA standards) instead of a single bespoke method.
+- **Open group standards commands** – first-class, standards-aligned command sets shipped as dedicated plugins: **TOGAF ADM** (`arckit-togaf-adm`), the **Open Architecture Alliance** (`arckit-oaa`), and **IT4IT** (`arckit-it4it`), so governance artefacts map to publicly defined frameworks (Open Group / OAA standards) instead of a single bespoke method.
 - **BYO LLM** – Bring-Your-Own-LLM support: `arckit build` recipes run against any local or remote OpenAI-compatible endpoint, decoupling the toolkit from any one model or vendor.
 - **ArchiMate standard adoption** – architecture views expressed in the open **ArchiMate** standard (PlantUML-ArchiMate notation with pinned standard-library includes and self-contained SVG delivery), alongside the existing Mermaid diagrams — not just vendor or ad-hoc notations.
 
@@ -41,7 +41,7 @@ Our roadmap is intentionally **different from upstream** and is where our ongoin
 
 Three ways to run ArcKit - pick the one that fits your workflow:
 
-1. **Claude Code plugin** - the premier experience: 75 core commands, 16 marketplace plugins, autonomous research agents, automation hooks, bundled MCP servers, automatic updates.
+1. **Claude Code plugin** - the premier experience: 75 core commands, 18 marketplace plugins, autonomous research agents, automation hooks, bundled MCP servers, automatic updates.
 2. **Codex CLI** - scaffold a project with `arckit init --ai codex`, then drive ArcKit skills inside Codex.
 3. **Bring Your Own LLM** - run `arckit build` recipes against any local or remote OpenAI-compatible endpoint.
 
@@ -60,7 +60,7 @@ Then in Claude Code, add the ArcKit marketplace:
 /plugin marketplace add terrygzhou/arc-kit
 ```
 
-The marketplace ships **17 plugins** - install the core plus only the overlays you need:
+The marketplace ships **18 plugins** - install the core plus only the overlays you need:
 
 ```bash
 # Core (75 commands - UK Government civilian + generic enterprise)
@@ -73,7 +73,7 @@ claude plugin install arckit arckit-uae
 claude plugin install arckit arckit-{uae,fr,ca,eu,at,au,us,uk-nhs,uk-gcloud}
 
 # Enterprise architecture and AI agent governance overlays
-claude plugin install arckit arckit-togaf-adm arckit-oaa arckit-agent-architecture
+claude plugin install arckit arckit-togaf-adm arckit-oaa arckit-it4it arckit-agent-architecture
 ```
 
 No project initialization is needed - the plugin provides everything. Use the commands directly:
@@ -262,6 +262,28 @@ Open Agile Architecture (C208) — sprint-based, product-driven architecture del
 **Install:** `claude plugin install arckit arckit-oaa`
 **Recipe:** `oaa-full` — strategy → product → ADM Lite → security → governance pipeline
 **Requires:** `arckit` core plugin (recipe resolves `arckit:principles`, `arckit:requirements`, `arckit:stakeholders`)
+
+---
+
+## IT4IT Overlay (`arckit-it4it`) [COMMUNITY]
+
+Open Group IT4IT Standard v3.1 (S261) — the reference architecture for managing the business of IT as product-based investment. Six commands covering all seven value streams and functional components.
+
+| Command | Doc Type | Description |
+|---------|----------|-------------|
+| `/arckit-it4it:it4it-value-network` | `ITVN` | The Value Network — all seven value streams, cross-stream dependencies |
+| `/arckit-it4it:it4it-value-stream` | `ITVS` | One value stream (multi-instance: `ARC-{P}-ITVS-{NNN}-v1.0.md`) |
+| `/arckit-it4it:it4it-strategy-portfolio` | `ITSF` | Strategy to Portfolio — policy, strategy, portfolio backlog, proposal |
+| `/arckit-it4it:it4it-develop-test` | `ITDT` | Develop & Test — backlog, design, pipeline, build, release composition |
+| `/arckit-it4it:it4it-consume-fulfil` | `ITCF` | Consume & Fulfil — offering catalog, order, subscription, fulfillment |
+| `/arckit-it4it:it4it-operate-assure` | `ITOA` | Operate & Assure — service level, incident/problem, monitoring, runbooks |
+
+**Install:** `claude plugin install arckit arckit-it4it`
+**Recipe:** `it4it-full` — value network → strategy portfolio → develop & test → consume & fulfil → operate & assure
+**Requires:** `arckit` core plugin
+**Schemas:** `value-stream.json` and `functional-component.json` — validate with `python3 validate-architecture.py`
+
+IT4IT is S261 — a snapshot, not an approved standard. Artefacts reference it, they do not claim conformance.
 
 ---
 

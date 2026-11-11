@@ -56,6 +56,22 @@ LOCAL_OVERRIDES: dict[str, set[str]] = {
         "references/citation-instructions.md",
         "references/quality-checklist.md",
     },
+    # arckit-it4it extends the shared references with IT4IT-specific content
+    # instead of copying core verbatim: the S261 "reference, not conformance"
+    # citation row (citation-instructions), the IT4IT artefact-type quality
+    # checklist (quality-checklist), and the IT4IT discovery-dimension floor
+    # (intake-discovery-dimensions). All six IT4IT commands resolve these
+    # against their own plugin root, so the customised copies must stay.
+    # intake-instructions.md is NOT here: every overlay keeps the shared
+    # intake block verbatim (repo-wide byte-identity convention, OAA included);
+    # IT4IT's overlay-specific posture lives in intake-discovery-dimensions.md.
+    "arckit-it4it": {
+        "references/citation-instructions.md",
+        "references/quality-checklist.md",
+        "references/intake-discovery-dimensions.md",
+        "references/value-streams-reference.md",
+        "references/functional-components-reference.md",
+    },
 }
 
 

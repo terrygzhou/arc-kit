@@ -4,13 +4,15 @@ All notable changes to ArcKit will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## [Unreleased]
+
+### Added
+
+- **`arckit-it4it` overlay plugin (IT4IT v3.1 / S261 reference architecture, OpenSpec `it4it-overlay`).** Six community-overlay slash commands (`/arckit-it4it:value-network`, `value-stream`, `strategy-portfolio`, `develop-test`, `consume-fulfil`, `operate-assure` — one per IT4IT functional group), two JSON reference schemas (`value-stream.json`, `functional-component.json`), a full `it4it-full.yaml` recipe, and an embedded `validate-architecture.py` CI gate. Shipped as a standalone plugin (`plugins/arckit-it4it/`) and a byte-identical nested sub-plugin copy (`plugins/arckit-claude/plugins/it4it/`). IT4IT is S261 — a snapshot, not an approved standard — so no conformance claim is made; the plugin ships reference-only and is not part of the core converter pipeline.
 
 ### Changed
 
 - **Release-flow docs: one tag at a time.** `docs/RELEASING.md` now warns that batch-pushing several `v*` tags (or a `git push --tags` that carries more than one) creates GitHub Releases that share a `published_at` timestamp, which can pin the "Latest release" banner on the repo page to an older release — the banner is not semver-ordered. The 6.11.0 backfill of `v6.10.1`/`v6.10.2` hit exactly this (banner stuck on 6.10.2). The release flow now says: push one tag at a time with a pause, run `push-extensions.sh` once per tag, and, if the banner ever points the wrong way, delete and re-create the intended tag to force a fresh `published_at`. Also documented that `.github/workflows/release.yml` is **not** tag-push triggered — it fires on `release: published` and `workflow_dispatch` only.
-
 ## [6.11.0] — 2026-10-25
 
 ### Added

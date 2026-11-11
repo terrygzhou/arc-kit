@@ -95,9 +95,17 @@ export const DOC_TYPES = {
   // product architecture, O-AA ADM Lite, agile security, agile governance
   'OASTR':     { name: 'Agile Strategy',                     category: 'Planning' },
   'OAPR':      { name: 'Product Architecture',               category: 'Architecture' },
-  'OAAL':      { name: 'O-AA ADM Lite',                      category: 'Architecture' },
-  'OASEC':     { name: 'Agile Security',                     category: 'Governance' },
-  'OAGOV':     { name: 'Agile Governance',                   category: 'Governance' },
+   'OAAL':      { name: 'O-AA ADM Lite',                      category: 'Architecture' },
+   'OASEC':     { name: 'Agile Security',                     category: 'Governance' },
+   'OAGOV':     { name: 'Agile Governance',                   category: 'Governance' },
+  // IT4IT overlay (arckit-it4it) — Open Group IT4IT S261 v3.1 reference
+  // architecture: value network, value stream, functional groups
+  'ITVN':      { name: 'IT4IT Value Network',                category: 'Architecture' },
+  'ITVS':      { name: 'IT4IT Value Stream',                 category: 'Architecture' },
+  'ITSF':      { name: 'IT4IT Strategy to Portfolio',        category: 'Architecture' },
+  'ITDT':      { name: 'IT4IT Develop and Test',             category: 'Architecture' },
+  'ITCF':      { name: 'IT4IT Consume and Fulfil',           category: 'Architecture' },
+  'ITOA':      { name: 'IT4IT Operate and Assure',           category: 'Architecture' },
   // AI Agent Architecture overlay (community)
   'AAGI':      { name: 'Agent Inventory',                  category: 'Architecture' },
   'AAGR':      { name: 'Agent Architecture Specification', category: 'Architecture' },
@@ -296,6 +304,7 @@ export const MULTI_INSTANCE_TYPES = new Set([
   'GOVR', 'GCSR', 'GLND', 'GRNT',
   'CDAU',
   'SOLN',
+  'ITVS',
 ]);
 
 // Type code -> required subdirectory

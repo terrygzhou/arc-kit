@@ -1,0 +1,59 @@
+recipe: it4it-full
+schema_version: 1
+description: >
+  Open Group IT4IT Standard v3.1 (S261) full lifecycle: value network,
+  value streams, strategy to portfolio, develop & test, consume & fulfil,
+  and operate & assure. IT4IT is referenced as a reference architecture —
+  no conformance claim.
+
+defaults:
+  version: "1.0"
+
+post_build_hooks:
+  - skill: arckit:health
+    args: ""
+  - skill: arckit:traceability
+    args: ""
+  - skill: arckit:pages
+    args: ""
+
+targets:
+  - id: PRIN
+    skill: arckit:principles
+    args: ""
+    output: { project: "000-global", type: PRIN }
+    deps: []
+
+  - id: ITVN
+    skill: arckit-it4it:it4it-value-network
+    args: "{NAME}"
+    output: { project: "{P}-{NAME}", type: ITVN }
+    deps: [PRIN]
+
+  - id: ITSF
+    skill: arckit-it4it:it4it-strategy-portfolio
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: ITSF }
+    deps: [PRIN, ITVN]
+
+  - id: ITDT
+    skill: arckit-it4it:it4it-develop-test
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: ITDT }
+    deps: [PRIN, ITSF]
+
+  - id: ITCF
+    skill: arckit-it4it:it4it-consume-fulfil
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: ITCF }
+    deps: [PRIN, ITDT]
+
+  - id: ITOA
+    skill: arckit-it4it:it4it-operate-assure
+    args: "{P}"
+    output: { project: "{P}-{NAME}", type: ITOA }
+    deps: [PRIN, ITCF]
+
+# ITVS is a multi-instance artefact (one per value stream) and is NOT part
+# of the single-instance full-lifecycle recipe. Run it on demand:
+#   /arckit-it4it:it4it-value-stream <stream>
