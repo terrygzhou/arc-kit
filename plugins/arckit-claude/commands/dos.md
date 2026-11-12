@@ -2,6 +2,10 @@
 description: Generate Digital Outcomes and Specialists (DOS) procurement documentation for UK Digital Marketplace
 argument-hint: "<project ID or title, e.g. '001', 'Data Engineering Specialist'>"
 effort: high
+handoffs:
+  - command: roadmap
+    description: Create delivery roadmap from procurement plan
+    condition: "MVP selected"
 ---
 
 You are helping an enterprise architect prepare Digital Outcomes and Specialists (DOS) procurement documentation for the UK Digital Marketplace.

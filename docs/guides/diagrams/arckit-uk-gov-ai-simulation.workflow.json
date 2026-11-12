@@ -1,0 +1,101 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "ArcKit UK Government AI Delivery Simulation",
+    "subtitle": "A new GOV.UK AI decision-support service on the UK Gov path with the AI/ML modifier — from onboarding triage to publication",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "views": [
+      {
+        "id": "main-path",
+        "label": "Onboard to publish",
+        "focus": ["triage", "plan", "principles", "strategy", "ai-policy", "framework", "navigator", "publish"],
+        "note": "The UK Gov + AI/ML sequence: triage selects the path, intake-gated commands build the artefacts, the navigator gates publication."
+      },
+      {
+        "id": "assurance",
+        "label": "Assurance layer",
+        "focus": ["ai-research", "mcp", "ai-ml"],
+        "note": "The AI/ML modifier injects the assurance cluster: MCP-evidenced research, the AI-ML review, and the mandated DPIA."
+      },
+      {
+        "id": "quality-loop",
+        "label": "Quality loop",
+        "focus": ["quality", "navigator", "publish"],
+        "note": "quality-check gates the loop: gaps return to the navigator as the recommended next step until coverage closes."
+      }
+    ],
+    "output": "docs/guides/diagrams/arckit-uk-gov-ai-simulation.html"
+  },
+  "lanes": [
+    { "id": "architect", "label": "Architect session" },
+    { "id": "arckit", "label": "ArcKit commands", "variant": "exception" },
+    { "id": "tools", "label": "Evidence & assurance" }
+  ],
+  "phases": [
+    { "id": "onboard", "label": "Onboard & plan", "fromCol": 0, "toCol": 1 },
+    { "id": "foundation", "label": "Foundations", "fromCol": 2, "toCol": 3 },
+    { "id": "assurance", "label": "Assure & synthesise", "fromCol": 4, "toCol": 5, "variant": "emphasis" }
+  ],
+  "groups": [
+    { "id": "ai-modifier", "label": "AI/ML modifier", "lane": "tools", "fromCol": 3, "toCol": 4, "variant": "security" },
+    { "id": "close-loop", "label": "Verify & publish", "lane": "architect", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["triage", "plan", "principles", "strategy", "ai-policy", "ai-ml", "framework", "quality", "navigator", "publish"],
+  "nodes": [
+    { "id": "triage", "lane": "architect", "col": 0, "type": "external", "label": "Architecture Workflow", "sublabel": "triage: sector, type, stage", "tag": "no commands run", "width": 150 },
+    { "id": "plan", "lane": "architect", "col": 1, "type": "frontend", "label": "Tailored Plan", "sublabel": "UK Gov base + AI/ML mod", "width": 150 },
+    { "id": "principles", "lane": "arckit", "col": 2, "type": "backend", "label": "Principles & Stakeholders", "sublabel": "PRIN + STKE, intake-gated", "width": 200, "yOffset": 32 },
+    { "id": "strategy", "lane": "arckit", "col": 3, "type": "backend", "label": "/arckit:strategy", "sublabel": "wardley map + goals", "tag": "STRAT", "width": 150 },
+    { "id": "ai-research", "lane": "tools", "col": 3, "type": "cloud", "label": "Model Research", "sublabel": "arckit-research agent", "width": 150, "yOffset": 160 },
+    { "id": "ai-policy", "lane": "arckit", "col": 4, "type": "backend", "label": "AI Playbook Mapping", "sublabel": "responsible AI commitments", "tag": "modifier", "width": 150 },
+    { "id": "mcp", "lane": "tools", "col": 4, "type": "cloud", "label": "Cloud MCP", "sublabel": "AWS / Azure / GCP evidence", "width": 150, "yOffset": 160 },
+    { "id": "ai-ml", "lane": "tools", "col": 5, "type": "security", "label": "AI-ML Assurance + DPIA", "sublabel": "Playbook review, mandated DPIA", "width": 150, "yOffset": 48 },
+    { "id": "framework", "lane": "arckit", "col": 5, "type": "backend", "label": "/arckit:framework", "sublabel": "phased FWRK + exec guide", "width": 150, "yOffset": 120 },
+    { "id": "quality", "lane": "arckit", "col": 5, "type": "backend", "label": "Quality-Check", "sublabel": "per-artefact checks", "width": 150, "yOffset": 192 },
+    { "id": "navigator", "lane": "architect", "col": 5, "type": "frontend", "label": "/arckit:navigator", "sublabel": "coverage, DRAFT, next step", "width": 150, "yOffset": 288 },
+    { "id": "publish", "lane": "architect", "col": 5, "type": "database", "label": "Published", "sublabel": "APPROVED, traceability intact", "width": 150, "yOffset": 376 }
+  ],
+  "edges": [
+    { "id": "triage-plan", "from": "triage", "to": "plan", "label": "4 answers", "variant": "default", "role": "main" },
+    { "id": "plan-principles", "from": "plan", "to": "principles", "label": "gov path + AI/ML", "variant": "emphasis", "role": "main", "route": "up-channel", "channelY": 384, "labelAt": [394, 372] },
+    { "id": "prin-strategy", "from": "principles", "to": "strategy", "label": "goals", "variant": "default", "role": "main" },
+    { "id": "strategy-ai", "from": "strategy", "to": "ai-policy", "label": "modifier", "variant": "security", "role": "branch" },
+    { "id": "ai-research-mcp", "from": "ai-research", "to": "mcp", "label": "evidence queries", "variant": "dashed", "role": "branch" },
+    { "id": "ai-policy-ml", "from": "ai-policy", "to": "ai-ml", "label": "assure", "variant": "security", "role": "branch" },
+    { "id": "ai-research-ml", "from": "ai-research", "to": "ai-ml", "label": "findings", "variant": "dashed", "role": "branch", "route": "up-channel" },
+    { "id": "strategy-framework", "from": "strategy", "to": "framework", "label": "artefacts in", "variant": "emphasis", "role": "main" },
+    { "id": "ml-framework", "from": "ai-ml", "to": "framework", "label": "assurance in", "variant": "default", "role": "branch" },
+    { "id": "fw-quality", "from": "framework", "to": "quality", "label": "check", "variant": "default", "role": "main" },
+    { "id": "quality-nav", "from": "quality", "to": "navigator", "label": "gate", "variant": "default", "role": "main" },
+    { "id": "nav-publish", "from": "navigator", "to": "publish", "label": "next step", "variant": "emphasis", "role": "main" },
+    { "id": "nav-framework", "from": "navigator", "to": "framework", "label": "gap → re-run", "variant": "dashed", "role": "error" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Onboarding",
+      "items": [
+        "architecture-workflow skill triages without running commands",
+        "UK Gov base path + AI/ML modifier from 4 answers"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Intake gates",
+      "items": [
+        "every artefact command interviews the effective template",
+        "answers optional — skips render as TBD, never block"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Assurance",
+      "items": [
+        "AI/ML modifier injects Playbook review + mandated DPIA",
+        "research agent pulls cloud evidence via the six MCP servers"
+      ]
+    }
+  ]
+}

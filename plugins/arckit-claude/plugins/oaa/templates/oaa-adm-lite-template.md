@@ -1,3 +1,5 @@
+docType: OAAL
+
 # O-AA ADM Lite Template
 
 > Maps the TOGAF ADM cycle to agile sprints. Use when delivering AI architectures in 2-4 week engagement windows. References `schemas/vision.json` and `schemas/implementation-strategy.json`.

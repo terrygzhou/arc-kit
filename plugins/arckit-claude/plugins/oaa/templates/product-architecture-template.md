@@ -1,3 +1,5 @@
+docType: OAPR
+
 # Product Architecture Template (O-AA)
 
 > **Standard:** Open Agile Architecture™ (O-AA, C208) — Ch. 14 (Product Architecture)
