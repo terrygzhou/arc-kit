@@ -1,3 +1,5 @@
+docType: ITVS
+
 # IT4IT Value Stream Template
 
 > One value stream of the IT4IT Value Network (S261, Ch. 5): scenario,

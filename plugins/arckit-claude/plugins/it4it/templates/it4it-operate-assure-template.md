@@ -1,3 +1,5 @@
+docType: ITOA
+
 # IT4IT Operate & Assure Template
 
 > The IT4IT Operate & Assure functions (S261, Ch. 9) plus Supporting

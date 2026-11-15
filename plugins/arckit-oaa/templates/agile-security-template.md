@@ -1,3 +1,5 @@
+docType: OASEC
+
 # Agile Security Architecture Template
 
 > Security embedded in every sprint/iteration. Risk-based testing automation, compliance-as-code integration, continuous validation replacing phase-gate checkpoints. Aligned with O-AA Security Playbook (G216).

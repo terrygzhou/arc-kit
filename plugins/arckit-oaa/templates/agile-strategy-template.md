@@ -1,3 +1,5 @@
+docType: OASTR
+
 # Agile Strategy Canvas
 
 > **Template:** Agile Strategy Canvas (O-AA Dual Transformation Planning)

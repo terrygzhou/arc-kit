@@ -1,3 +1,5 @@
+docType: ITCF
+
 # IT4IT Consume & Fulfil Template
 
 > The IT4IT Consume & Fulfil functions (S261, Ch. 8): the Consume function

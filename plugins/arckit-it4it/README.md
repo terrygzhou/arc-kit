@@ -57,3 +57,20 @@ commands (`ITSF`, `ITDT`, `ITCF`, `ITOA`) recommend `ITVN` where available.
 `schemas/value-stream.json` and `schemas/functional-component.json`
 (draft-07) — see `schemas/README.md` for validation via
 `python3 validate-architecture.py`.
+
+## Full receipt: `it4it-full` recipe
+
+`recipes/it4it-full.yaml` is the IT4IT "full receipt" — the canonical set of
+six targets (`PRIN`, `ITVN`, `ITSF`, `ITDT`, `ITCF`, `ITOA`) with their
+dependency edges, ready to hand to the `arckit-build` orchestrator:
+
+```bash
+/arckit:build 001 --recipe it4it-full
+```
+
+Each command's "Show Summary to User" block is the receipt line for its own
+target; the build harness's post-build hooks (`arckit:health`,
+`arckit:traceability`, `arckit:pages`) plus the `## Build Provenance` stamp on
+every artefact together form the build receipt. `ITVS` is deliberately
+excluded from the full set — it is a multi-instance doc type and is run on
+demand per value stream.

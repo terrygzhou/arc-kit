@@ -1,3 +1,5 @@
+docType: ITSF
+
 # IT4IT Strategy to Portfolio Template
 
 > The IT4IT Strategy to Portfolio functions (S261, Ch. 6): policy, strategy,

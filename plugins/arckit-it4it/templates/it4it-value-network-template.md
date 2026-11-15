@@ -1,3 +1,5 @@
+docType: ITVN
+
 # IT4IT Value Network Template
 
 > The single-integration view of the IT4IT Value Network (S261, Ch. 5): all seven

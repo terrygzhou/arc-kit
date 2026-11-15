@@ -1,3 +1,5 @@
+docType: ITDT
+
 # IT4IT Develop & Test Template
 
 > The IT4IT Develop & Test functions (S261, Ch. 7): the Develop function

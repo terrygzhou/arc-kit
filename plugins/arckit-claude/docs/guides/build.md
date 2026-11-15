@@ -39,6 +39,7 @@ Running `/arckit:requirements` then `/arckit:risk` then `/arckit:tcop`… sequen
 |--------|--------:|----------|
 | `uk-saas` | 31 | UK Government managed multi-tenant SaaS — civilian departments, GDS Service Standard, NCSC CAF |
 | `uk-mod-sovereign` | 32 | UK MOD / sovereign / air-gapped — `mod-secure` + `jsp-936`, no SVCASS, sealed-media distribution |
+| `it4it-full` | 6 | IT4IT "full receipt" — the `arckit-it4it` overlay's complete target set (`PRIN`, `ITVN`, `ITSF`, `ITDT`, `ITCF`, `ITOA`), excluding multi-instance `ITVS` |
 
 Recipes ship at `${CLAUDE_PLUGIN_ROOT}/skills/arckit-build/recipes/{name}.yaml`. Override per project at `.arckit/recipes/{name}.yaml`.
 
