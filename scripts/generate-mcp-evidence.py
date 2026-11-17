@@ -33,6 +33,7 @@ The manifest format (``plugins/<plugin>/mcp-evidence.json``)::
           "description": "Validate a sprint compliance-evidence file",
           "arguments": { "type": "object", "properties": { ... }, "required": [...] },
           "schema": "compliance-evidence.json",
+          "codes": ["REQ", "NFR"],
           "impl": "def oaa_check_compliance(evidence): ..."
         }
       ]
@@ -51,6 +52,8 @@ Manifest invariants enforced at generation time:
 * ``schema``, when present, must name a file under the plugin's
   ``schemas/`` directory (validated relative to the manifest's location)
   and be parseable as JSON.
+* ``codes``, when present, must be a non-empty list of non-empty
+  strings — the architecture-document codes the tool covers.
 * ``impl`` must be a syntactically valid single top-level Python
   function definition whose name matches the tool's ``name``
   (compiled with ``ast.parse``).
@@ -220,6 +223,19 @@ def validate_manifest(manifest: dict, plugin_dir: Path) -> None:
                     f"valid JSON: {e}"
                 ) from e
 
+        codes = tool.get("codes")
+        if codes is not None:
+            if (
+                not isinstance(codes, list)
+                or not codes
+                or not all(isinstance(c, str) and c for c in codes)
+            ):
+                raise ManifestError(
+                    f"{plugin_dir.name}/mcp-evidence.json: tools[{i}].codes must "
+                    f"be a non-empty list of non-empty strings (got "
+                    f"{type(codes).__name__})"
+                )
+
 
 def collect() -> list[tuple[Path, dict, Path]]:
     """Return (manifest_path, manifest, plugin_dir) tuples for every manifest."""
@@ -264,14 +280,22 @@ def render_framework_module(manifest: dict, plugin_dir: Path) -> str:
         lines.append(tool["impl"].rstrip())
         lines.append("")
 
-    # TOOLS registry: name -> (callable, description, arguments schema, schema file).
+    # TOOLS registry: name -> (callable, description, arguments schema,
+    # schema file, covered doc codes). arguments are a JSON-schema object
+    # that may contain JSON booleans (e.g. additionalProperties: true),
+    # so it is rendered as a Python literal via _python_literal; json.dumps
+    # would emit bare true/false that Python's parser rejects inside this
+    # Python-literal dict.
     lines.append("TOOLS: dict = {")
     for tool in manifest["tools"]:
         schema_file = json.dumps(tool.get("schema", ""))
+        args_literal = _python_literal(tool["arguments"], sort_keys=False)
+        codes = [json.dumps(c) for c in tool.get("codes", [])]
+        codes_literal = "[" + ", ".join(codes) + "]"
         lines.append(
             f"    {json.dumps(tool['name'])}: ("
             f"{tool['name']}, {json.dumps(tool['description'])}, "
-            f"{json.dumps(tool['arguments'])}, {schema_file}),"
+            f"{args_literal}, {schema_file}, {codes_literal}),"
         )
     lines.append("}")
     lines.append("")
@@ -335,6 +359,7 @@ def render_init(manifests: list[tuple[Path, dict, Path]], schemas: dict[str, dic
                 f"            'description': {json.dumps(tool['description'])},\n"
                 f"            'arguments': {json.dumps(tool['arguments'])},\n"
                 f"            'schema': {json.dumps(tool.get('schema', ''))},\n"
+                f"            'codes': [{', '.join(json.dumps(c) for c in tool.get('codes', []))}],\n"
                 "        },"
             )
         lines.append(f"    {json.dumps(manifest['framework'])}: [")
@@ -359,7 +384,7 @@ def render_init(manifests: list[tuple[Path, dict, Path]], schemas: dict[str, dic
             "    entry = module.TOOLS.get(name)",
             "    if entry is None:",
             "        raise KeyError(f'tool {name!r} not found in framework {framework!r}')",
-            "    callable_, _description, _args_schema, _schema_file = entry",
+            "    callable_, _description, _args_schema, _schema_file, _codes = entry",
             "    return callable_(**arguments)",
             "",
         ]
