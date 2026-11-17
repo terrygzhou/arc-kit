@@ -504,12 +504,29 @@ def load_schema(name: str):
     raise SchemaError(f'schema {name!r} not found in SCHEMAS')
 
 FRAMEWORK_MODULES: dict = {
+    "agent": "agent",
     "it4it": "it4it",
     "oaa": "oaa",
     "togaf": "togaf",
 }
 
 FRAMEWORK_TOOLS: dict = {
+    "agent": [
+        {
+            'name': "agent_check_registry_coverage",
+            'description': "Validate that an agent-architecture evidence report covers the required registry codes. Checks that every mandatory code is cited, that all cited codes exist in the registry, and that no unknown ids are used. Returns valid, missing, unknown, and coverage_report.",
+            'arguments': {"type": "object", "properties": {"codes": {"type": "array", "items": {"type": "string"}, "description": "List of agent-architecture code ids (e.g. AGENT-DESIGN, AGENT-SECURITY) that the evidence report claims to cover."}, "mandatory": {"type": "array", "items": {"type": "string"}, "default": ["AGENT-DESIGN", "AGENT-SECURITY"], "description": "Subset of code ids that must appear; defaults to design + security, the two codes most agent-architecture evidence checks require."}}, "required": ["codes"], "additionalProperties": false},
+            'schema': "",
+            'codes': ["AGT", "AGTT", "AGTS", "AGTR", "AGTL", "AGTP"],
+        },
+        {
+            'name': "agent_check_tool_allowlist",
+            'description': "Check an agent-architecture design for tool-allowlist hygiene: every agent must declare a tools allowlist (deny-first pattern) and every referenced tool must appear in the plugin registry. Returns valid, problems, agent_count, unknown_tools.",
+            'arguments': {"type": "object", "properties": {"agents": {"type": "array", "items": {"type": "object"}, "description": "List of agent design objects; each should carry name, tools (allowlist), and optional tools_deny."}, "registered_tools": {"type": "array", "items": {"type": "string"}, "description": "Tool names registered in the plugin / MCP catalog."}}, "required": ["agents", "registered_tools"], "additionalProperties": false},
+            'schema': "",
+            'codes': ["AGT", "AGTT", "AGTS", "AGTR", "AGTL", "AGTP"],
+        },
+    ],
     "it4it": [
         {
             'name': "it4it_check_value_stream",
