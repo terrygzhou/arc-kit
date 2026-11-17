@@ -1,0 +1,58 @@
+{
+  "framework": "oaa",
+  "description": "Open Agile Architecture evidence tools \u2014 compliance evidence validation and strategy-canvas completeness checks for OAA sprint work.",
+  "tools": [
+    {
+      "name": "oaa_check_compliance_evidence",
+      "description": "Validate a sprint compliance-evidence file (compliance-evidence-sprint-N.yaml) against the OAA compliance-evidence schema. Returns a structured verdict: schema violations (if jsonschema is available), control status rollup (pass/gap/pending counts), scan summary highlights, and next-sprint goals. Use it to check OAA compliance evidence before it feeds a governance report.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "evidence": {
+            "type": "object",
+            "description": "The parsed compliance-evidence document (YAML loaded to a dict, or a JSON object). Must contain 'sprint' and 'controls'.",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "evidence"
+        ]
+      },
+      "schema": "compliance-evidence.json",
+      "impl": "def oaa_check_compliance_evidence(evidence):\n    \"\"\"Validate + roll up an OAA sprint compliance-evidence document.\n\n    Args:\n        evidence: parsed compliance-evidence dict (sprint, controls, ...).\n    Returns:\n        dict with 'valid', 'violations', 'control_rollup', 'scan_highlights',\n        and 'next_sprint_goals'. Never raises on malformed input \u2014 returns\n        valid=False with a violations list instead.\n    \"\"\"\n    violations = []\n    if not isinstance(evidence, dict):\n        return {\n            \"valid\": False,\n            \"violations\": [\"evidence must be an object/dict\"],\n            \"control_rollup\": {},\n            \"scan_highlights\": [],\n            \"next_sprint_goals\": [],\n        }\n    if \"sprint\" not in evidence:\n        violations.append(\"missing required field 'sprint'\")\n    elif not isinstance(evidence[\"sprint\"], int) or evidence[\"sprint\"] < 1:\n        violations.append(\"'sprint' must be a positive integer\")\n    controls = evidence.get(\"controls\")\n    rollup = {\"total\": 0, \"pass\": 0, \"gap\": 0, \"pending\": 0}\n    if not isinstance(controls, list) or not controls:\n        violations.append(\"'controls' must be a non-empty array\")\n    else:\n        for i, c in enumerate(controls):\n            rollup[\"total\"] += 1\n            if not isinstance(c, dict) or \"control\" not in c or \"status\" not in c:\n                violations.append(f\"controls[{i}] missing 'control' or 'status'\")\n                continue\n            status = c[\"status\"]\n            if status in (\"pass\", \"gap\", \"pending\"):\n                rollup[status] += 1\n            else:\n                violations.append(f\"controls[{i}].status {status!r} not in [pass, gap, pending]\")\n    scan_highlights = []\n    for key, scan in (evidence.get(\"scan_summary\") or {}).items():\n        if isinstance(scan, dict) and scan.get(\"status\"):\n            findings = 0\n            for f in (\"critical_findings\", \"high_findings\", \"findings\"):\n                if isinstance(scan.get(f), int):\n                    findings += scan[f]\n            scan_highlights.append({\"scan\": key, \"status\": scan[\"status\"], \"tool\": scan.get(\"tool\"), \"findings\": findings})\n    return {\n        \"valid\": not violations,\n        \"violations\": violations,\n        \"control_rollup\": rollup,\n        \"scan_highlights\": scan_highlights,\n        \"next_sprint_goals\": evidence.get(\"next_sprint_goals\", []),\n    }\n",
+      "codes": [
+        "REQ",
+        "NFR",
+        "RISK",
+        "SOBC",
+        "TRAC"
+      ]
+    },
+    {
+      "name": "oaa_check_strategy_canvas",
+      "description": "Check an OAA Agile Strategy Canvas document for required-structure completeness: design principles (each with principle/axiom/rationale), transformation waves, and resilience mapping entries. Returns a list of structural gaps, not a verdict \u2014 the canvas is a thinking artifact, so completeness matters more than strict schema conformance.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "canvas": {
+            "type": "object",
+            "description": "The parsed strategy-canvas document.",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "canvas"
+        ]
+      },
+      "schema": "strategy-canvas.json",
+      "impl": "def oaa_check_strategy_canvas(canvas):\n    \"\"\"Structural completeness check for an OAA strategy canvas.\"\"\"\n    gaps = []\n    if not isinstance(canvas, dict):\n        return {\"complete\": False, \"gaps\": [\"canvas must be an object/dict\"], \"stats\": {}}\n    principles = canvas.get(\"design_principles\")\n    if not isinstance(principles, list) or not principles:\n        gaps.append(\"'design_principles' must be a non-empty array\")\n    else:\n        for i, p in enumerate(principles):\n            for field in (\"principle\", \"axiom\", \"rationale\"):\n                if not (isinstance(p, dict) and str(p.get(field) or \"\").strip()):\n                    gaps.append(f\"design_principles[{i}] missing {field!r}\")\n    waves = canvas.get(\"transformation_waves\")\n    if not isinstance(waves, list) or not waves:\n        gaps.append(\"'transformation_waves' must be a non-empty array\")\n    else:\n        for i, w in enumerate(waves):\n            if not (isinstance(w, dict) and w.get(\"wave\") and w.get(\"duration\")):\n                gaps.append(f\"transformation_waves[{i}] missing 'wave' or 'duration'\")\n    resilience = canvas.get(\"resilience_mapping\", [])\n    if not isinstance(resilience, list):\n        gaps.append(\"'resilience_mapping', when present, must be an array\")\n    stats = {\n        \"design_principles\": len(principles) if isinstance(principles, list) else 0,\n        \"transformation_waves\": len(waves) if isinstance(waves, list) else 0,\n        \"resilience_mappings\": len(resilience) if isinstance(resilience, list) else 0,\n    }\n    return {\"complete\": not gaps, \"gaps\": gaps, \"stats\": stats}\n",
+      "codes": [
+        "REQ",
+        "NFR",
+        "RISK",
+        "SOBC",
+        "TRAC"
+      ]
+    }
+  ]
+}
