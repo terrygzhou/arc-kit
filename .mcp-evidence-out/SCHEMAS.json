@@ -1,0 +1,303 @@
+{
+  "functional-component.json": {
+    "$id": "arckit-it4it/schemas/functional-component.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A capability unit in the IT4IT architecture that controls specific key data objects (S261, Ch. 6-10). Shared across the four functional-group commands. Reference-only \u2014 S261 is a snapshot, not an approved standard.",
+    "properties": {
+      "cardinalities": {
+        "description": "KDO relationship cardinalities per the S261 catalog",
+        "items": {
+          "properties": {
+            "cardinality": {
+              "enum": [
+                "1:1",
+                "1:m",
+                "n:m"
+              ],
+              "type": "string"
+            },
+            "gap": {
+              "description": "Record deviations as gaps, not choices",
+              "type": "string"
+            },
+            "left": {
+              "type": "string"
+            },
+            "right": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "left",
+            "right",
+            "cardinality"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "components": {
+        "description": "Functional components in scope",
+        "items": {
+          "properties": {
+            "key_attributes": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            },
+            "primary_kdos": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "purpose": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "conformance_notes": {
+        "description": "Must state S261 is referenced as a reference architecture; no conformance claim",
+        "type": "string"
+      },
+      "function": {
+        "description": "S261 function group this component belongs to",
+        "enum": [
+          "Strategy",
+          "Portfolio",
+          "Develop",
+          "Test",
+          "Consume",
+          "Fulfill",
+          "Support",
+          "Assure"
+        ],
+        "type": "string"
+      },
+      "id": {
+        "description": "Document ID, e.g. ARC-002-ITSF-v1.0",
+        "type": "string"
+      },
+      "key_data_objects": {
+        "description": "KDOs controlled or consumed by these components",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "quality_gates": {
+        "description": "Develop & Test: gates with entry/exit criteria",
+        "items": {
+          "properties": {
+            "entry_criteria": {
+              "type": "string"
+            },
+            "exit_criteria": {
+              "type": "string"
+            },
+            "gate": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "gate"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "states": {
+        "description": "State machine for lifecycle KDOs (e.g. proposal states)",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "system_of_record": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "KDO -> authoritative system map",
+        "type": "object"
+      }
+    },
+    "required": [
+      "id",
+      "function",
+      "components",
+      "conformance_notes"
+    ],
+    "title": "IT4IT Functional Component",
+    "type": "object"
+  },
+  "value-stream.json": {
+    "$id": "arckit-it4it/schemas/value-stream.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "One value stream of the IT4IT Value Network (S261, Ch. 5). Reference-only \u2014 S261 is a snapshot, not an approved standard.",
+    "properties": {
+      "conformance_notes": {
+        "description": "Must state S261 is referenced as a reference architecture; no conformance claim",
+        "type": "string"
+      },
+      "cross_stream": {
+        "description": "Inbound/outbound handoff KDOs and their contracts",
+        "items": {
+          "properties": {
+            "contract": {
+              "description": "Cardinality + system-of-record obligation",
+              "type": "string"
+            },
+            "direction": {
+              "enum": [
+                "inbound",
+                "outbound"
+              ],
+              "type": "string"
+            },
+            "handoff_kdo": {
+              "type": "string"
+            },
+            "stream": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "direction",
+            "stream",
+            "handoff_kdo"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "id": {
+        "description": "Document ID, e.g. ARC-002-ITVS-001-v1.0",
+        "type": "string"
+      },
+      "scenario": {
+        "description": "Scenario from the S261 catalog covered by this artefact",
+        "type": "string"
+      },
+      "scenarios": {
+        "description": "S261 catalog scenarios covered",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "stages": {
+        "description": "Ordered stage sequence for this stream",
+        "items": {
+          "properties": {
+            "functional_components": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "kdo_in": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "kdo_out": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "stakeholder": {
+        "properties": {
+          "accountable_role": {
+            "type": "string"
+          },
+          "contributing_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "primary": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "primary"
+        ],
+        "type": "object"
+      },
+      "stream": {
+        "description": "The S261 value stream this artefact covers",
+        "enum": [
+          "Evaluate",
+          "Explore",
+          "Integrate",
+          "Deploy",
+          "Publish",
+          "Consume",
+          "Operate"
+        ],
+        "type": "string"
+      },
+      "system_of_record": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "KDO -> authoritative system map",
+        "type": "object"
+      },
+      "trigger": {
+        "properties": {
+          "condition": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "source_stream": {
+            "description": "Upstream stream that triggers this one (if any)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "condition"
+        ],
+        "type": "object"
+      }
+    },
+    "required": [
+      "id",
+      "stream",
+      "trigger",
+      "stakeholder",
+      "stages",
+      "conformance_notes"
+    ],
+    "title": "IT4IT Value Stream",
+    "type": "object"
+  }
+}
