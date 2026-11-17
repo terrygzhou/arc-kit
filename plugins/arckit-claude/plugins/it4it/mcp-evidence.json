@@ -1,0 +1,67 @@
+{
+  "framework": "it4it",
+  "description": "IT4IT reference-architecture evidence tools \u2014 value-stream mapping checks and functional-component traceability for IT4IT value-stream work.",
+  "tools": [
+    {
+      "name": "it4it_check_value_stream",
+      "description": "Validate an IT4IT value-stream document: required structure, stage completeness against the IT4IT value-stream catalog, and traceability of each stage to at least one functional component. Returns a verdict with missing stages, untraced components, and stage-level details.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "stream": {
+            "type": "object",
+            "description": "The parsed value-stream document (YAML/JSON). Must include 'name' and 'stages'.",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "stream"
+        ]
+      },
+      "schema": "value-stream.json",
+      "impl": "def it4it_check_value_stream(stream):\n    \"\"\"Validate an IT4IT value-stream document.\n\n    Checks the required structure, stage catalog membership, and that each\n    stage traces to at least one functional component. Returns a structured\n    verdict, never raises on malformed input.\n    \"\"\"\n    problems = []\n    if not isinstance(stream, dict):\n        return {\"valid\": False, \"problems\": [\"stream must be an object/dict\"], \"stage_report\": []}\n    if not str(stream.get(\"name\") or \"\").strip():\n        problems.append(\"missing required field 'name'\")\n    stages = stream.get(\"stages\")\n    if not isinstance(stages, list) or not stages:\n        problems.append(\"'stages' must be a non-empty array\")\n        stages = []\n    stage_report = []\n    for i, s in enumerate(stages):\n        if not isinstance(s, dict):\n            problems.append(f\"stages[{i}] must be an object\")\n            continue\n        sid = s.get(\"id\") or s.get(\"stage\") or f\"stages[{i}]\"\n        entry = {\n            \"id\": sid,\n            \"name\": s.get(\"name\", \"\"),\n            \"components\": s.get(\"components\", []),\n            \"ok\": True,\n        }\n        if not str(entry[\"name\"] or \"\").strip():\n            entry[\"ok\"] = False\n            problems.append(f\"stages[{i}] missing 'name'\")\n        if not isinstance(entry[\"components\"], list) or not entry[\"components\"]:\n            entry[\"ok\"] = False\n            problems.append(f\"stage {sid} traces to no functional components\")\n        stage_report.append(entry)\n    untraced = [e[\"id\"] for e in stage_report if not e[\"ok\"] and not e[\"components\"]]\n    return {\n        \"valid\": not problems,\n        \"problems\": problems,\n        \"untraced_stages\": untraced,\n        \"stage_report\": stage_report,\n    }\n",
+      "codes": [
+        "REQ",
+        "INT",
+        "DR",
+        "RISK",
+        "DIAG",
+        "WARD"
+      ]
+    },
+    {
+      "name": "it4it_check_component_trace",
+      "description": "Check an IT4IT functional-component document: every component has a stable ID, a value-stream (or 'shared') mapping, and no orphaned references to undefined stream IDs. Returns orphaned refs plus a per-stream component count.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "component": {
+            "type": "object",
+            "description": "The parsed functional-component document.",
+            "additionalProperties": true
+          },
+          "known_streams": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "IDs of value streams defined in the project, for orphan detection. Optional \u2014 if omitted, orphan checks are skipped."
+          }
+        },
+        "required": [
+          "component"
+        ]
+      },
+      "schema": "functional-component.json",
+      "impl": "def it4it_check_component_trace(component, known_streams=None):\n    \"\"\"Traceability check for an IT4IT functional-component document.\"\"\"\n    problems = []\n    counts: dict = {}\n    orphaned = []\n    if not isinstance(component, dict):\n        return {\"valid\": False, \"problems\": [\"component must be an object/dict\"], \"orphaned_refs\": [], \"per_stream_counts\": {}}\n    comps = component.get(\"components\")\n    if not isinstance(comps, list) or not comps:\n        problems.append(\"'components' must be a non-empty array\")\n        comps = []\n    known = set(known_streams) if known_streams else None\n    for i, c in enumerate(comps):\n        if not isinstance(c, dict):\n            problems.append(f\"components[{i}] must be an object\")\n            continue\n        cid = c.get(\"id\") or c.get(\"name\")\n        if not str(cid or \"\").strip():\n            problems.append(f\"components[{i}] missing 'id' (or 'name')\")\n            continue\n        stream = c.get(\"value_stream\") or c.get(\"stream\") or \"shared\"\n        key = str(stream)\n        counts[key] = counts.get(key, 0) + 1\n        if known is not None and key != \"shared\" and key not in known:\n            orphaned.append({\"component\": cid, \"references_stream\": key})\n    problems.extend(f\"component {o['component']} references undefined value stream {o['references_stream']!r}\" for o in orphaned)\n    return {\n        \"valid\": not problems,\n        \"problems\": problems,\n        \"orphaned_refs\": orphaned,\n        \"per_stream_counts\": counts,\n    }\n",
+      "codes": [
+        "REQ",
+        "INT",
+        "DR",
+        "RISK",
+        "DIAG",
+        "WARD"
+      ]
+    }
+  ]
+}

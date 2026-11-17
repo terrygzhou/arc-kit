@@ -1,0 +1,115 @@
+{
+  "framework": "agent",
+  "description": "Agent-architecture evidence registry for the arckit-agent-architecture plugin. Registry-driven: 6 agent-architecture codes map to the plugin's 6 command files; no bundled JSON/YAML schemas \u2014 tools validate structure against the registry itself.",
+  "codes": [
+    {
+      "id": "AGENT-DESIGN",
+      "command": "agent-design",
+      "description": "Agent design \u2014 task decomposition, tool contracts, context windowing, memory strategy"
+    },
+    {
+      "id": "AGENT-SECURITY",
+      "command": "agent-security",
+      "description": "Agent security \u2014 prompt-injection hardening, tool allowlists, egress control, PII handling"
+    },
+    {
+      "id": "AGENT-GOVERNANCE",
+      "command": "agent-governance",
+      "description": "Agent governance \u2014 review cadence, audit logging, accountability, disposition rules"
+    },
+    {
+      "id": "AGENT-INTEGRATION",
+      "command": "agent-integration",
+      "description": "Agent integration \u2014 MCP/tool wiring, inter-agent handoffs, orchestrator contracts"
+    },
+    {
+      "id": "AGENT-INVENTORY",
+      "command": "agent-inventory",
+      "description": "Agent inventory \u2014 catalogue of agents, models, tool surfaces, owners, lifecycle"
+    },
+    {
+      "id": "AGENT-MATURITY",
+      "command": "agent-maturity",
+      "description": "Agent maturity \u2014 capability-level scoring, capability gaps, transition plan"
+    }
+  ],
+  "tools": [
+    {
+      "name": "agent_check_registry_coverage",
+      "description": "Validate that an agent-architecture evidence report covers the required registry codes. Checks that every mandatory code is cited, that all cited codes exist in the registry, and that no unknown ids are used. Returns valid, missing, unknown, and coverage_report.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of agent-architecture code ids (e.g. AGENT-DESIGN, AGENT-SECURITY) that the evidence report claims to cover."
+          },
+          "mandatory": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "AGENT-DESIGN",
+              "AGENT-SECURITY"
+            ],
+            "description": "Subset of code ids that must appear; defaults to design + security, the two codes most agent-architecture evidence checks require."
+          }
+        },
+        "required": [
+          "codes"
+        ],
+        "additionalProperties": false
+      },
+      "impl": "def agent_check_registry_coverage(codes, mandatory=None):\n    REQUIRED = ['AGENT-DESIGN', 'AGENT-SECURITY']\n    if mandatory is None:\n        mandatory = REQUIRED\n    known = set(['AGENT-DESIGN', 'AGENT-SECURITY', 'AGENT-GOVERNANCE', 'AGENT-INTEGRATION', 'AGENT-INVENTORY', 'AGENT-MATURITY'])\n    cited = set(codes) if isinstance(codes, list) else set()\n    missing = [c for c in mandatory if c not in cited]\n    unknown = [c for c in sorted(cited) if c not in known]\n    total = len(known)\n    covered = len(cited & known)\n    return {\n        'valid': not missing and not unknown,\n        'missing': missing,\n        'unknown': unknown,\n        'coverage_report': {\n            'total_codes': total,\n            'covered_codes': covered,\n            'coverage_pct': round(100.0 * covered / total, 1) if total else 0.0,\n        },\n    }\n",
+      "codes": [
+        "AGT",
+        "AGTT",
+        "AGTS",
+        "AGTR",
+        "AGTL",
+        "AGTP"
+      ]
+    },
+    {
+      "name": "agent_check_tool_allowlist",
+      "description": "Check an agent-architecture design for tool-allowlist hygiene: every agent must declare a tools allowlist (deny-first pattern) and every referenced tool must appear in the plugin registry. Returns valid, problems, agent_count, unknown_tools.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "agents": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "List of agent design objects; each should carry name, tools (allowlist), and optional tools_deny."
+          },
+          "registered_tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tool names registered in the plugin / MCP catalog."
+          }
+        },
+        "required": [
+          "agents",
+          "registered_tools"
+        ],
+        "additionalProperties": false
+      },
+      "impl": "def agent_check_tool_allowlist(agents, registered_tools):\n    problems = []\n    agents = agents if isinstance(agents, list) else []\n    registered = set(registered_tools) if isinstance(registered_tools, list) else set()\n    unknown = set()\n    for a in agents:\n        if not isinstance(a, dict):\n            problems.append('agent entry is not an object')\n            continue\n        name = a.get('name', '<unnamed>')\n        tools = a.get('tools')\n        if not tools:\n            problems.append('%s has no tools allowlist' % name)\n            continue\n        for t in tools:\n            if registered and t not in registered:\n                problems.append('%s references unregistered tool %s' % (name, t))\n                unknown.add(t)\n    return {\n        'valid': not problems,\n        'problems': problems,\n        'agent_count': len(agents),\n        'unknown_tools': sorted(unknown),\n    }\n",
+      "codes": [
+        "AGT",
+        "AGTT",
+        "AGTS",
+        "AGTR",
+        "AGTL",
+        "AGTP"
+      ]
+    }
+  ]
+}

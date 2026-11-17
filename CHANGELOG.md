@@ -5,15 +5,18 @@ All notable changes to ArcKit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [6.12.0] — 2026-11-17
 
 ### Added
 
+- **MCP evidence tooling (`scripts/generate-mcp-evidence.py` + per-framework `mcp-evidence.json` manifests).** The arckit-mcp server now ships eight deterministic evidence checks across four framework overlays — TOGAF ADM (`togaf_check_code_coverage`, `togaf_check_transition_plan`), OAA (`oaa_check_compliance_evidence`, `oaa_check_strategy_canvas`), IT4IT (`it4it_check_value_stream`, `it4it_check_component_trace`), and agent-architecture (`agent_check_registry_coverage`, `agent_check_tool_allowlist`) — each reading the framework's doc-types manifest and reporting artifact-level code-coverage results. Modules are generated under `.mcp-evidence-out/` and published to the standalone `arckit-mcp` repo via `push-extensions.sh` (`ARCKIT_MCP_ROOT` override supported). README gains an `**Evidence tools:**` line in each of the four framework overlay sections. (PRs #12–#15: IT4IT #12, TOGAF ADM #13, OAA #14, agent-architecture #15.)
 - **`arckit-it4it` overlay plugin (IT4IT v3.1 / S261 reference architecture, OpenSpec `it4it-overlay`).** Six community-overlay slash commands (`/arckit-it4it:value-network`, `value-stream`, `strategy-portfolio`, `develop-test`, `consume-fulfil`, `operate-assure` — one per IT4IT functional group), two JSON reference schemas (`value-stream.json`, `functional-component.json`), a full `it4it-full.yaml` recipe, and an embedded `validate-architecture.py` CI gate. Shipped as a standalone plugin (`plugins/arckit-it4it/`) and a byte-identical nested sub-plugin copy (`plugins/arckit-claude/plugins/it4it/`). IT4IT is S261 — a snapshot, not an approved standard — so no conformance claim is made; the plugin ships reference-only and is not part of the core converter pipeline.
 
 ### Changed
 
 - **Release-flow docs: one tag at a time.** `docs/RELEASING.md` now warns that batch-pushing several `v*` tags (or a `git push --tags` that carries more than one) creates GitHub Releases that share a `published_at` timestamp, which can pin the "Latest release" banner on the repo page to an older release — the banner is not semver-ordered. The 6.11.0 backfill of `v6.10.1`/`v6.10.2` hit exactly this (banner stuck on 6.10.2). The release flow now says: push one tag at a time with a pause, run `push-extensions.sh` once per tag, and, if the banner ever points the wrong way, delete and re-create the intended tag to force a fresh `published_at`. Also documented that `.github/workflows/release.yml` is **not** tag-push triggered — it fires on `release: published` and `workflow_dispatch` only.
+
+## [Unreleased]
 
 ## [6.11.0] — 2026-10-25
 
