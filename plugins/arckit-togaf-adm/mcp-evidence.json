@@ -1,0 +1,161 @@
+{
+  "framework": "togaf",
+  "description": "TOGAF Architecture Development Method (ADM) evidence registry for the arckit-togaf-adm plugin. Registry-driven: 12 ADM codes map to the plugin's 12 command files; no bundled JSON/YAML schemas \u2014 tools validate structure against the registry itself.",
+  "codes": [
+    {
+      "id": "ADM-PRELIMINARY",
+      "command": "adm-preliminary",
+      "phase": "Preliminary",
+      "description": "Preparation for the ADM \u2014 determine scope, stakeholders, constraints"
+    },
+    {
+      "id": "DISCOVERY",
+      "command": "discovery",
+      "phase": "Preliminary",
+      "description": "Discover strategic business drivers, candidate architecture principles, and the architecture approach"
+    },
+    {
+      "id": "BIZ-CAP-MAP",
+      "command": "business-capability-map",
+      "phase": "Architecture",
+      "description": "Business Capability Map \u2014 capability hierarchy, maturity levels, ownership"
+    },
+    {
+      "id": "APP-INVENTORY",
+      "command": "application-inventory",
+      "phase": "Architecture",
+      "description": "Application inventory \u2014 catalogue of application assets, lifecycles, owners"
+    },
+    {
+      "id": "APP-RATIONAL",
+      "command": "application-rationalization",
+      "phase": "Architecture",
+      "description": "Application rationalization \u2014 consolidate, retire, re-platform decisioning"
+    },
+    {
+      "id": "GAP-ANALYSIS",
+      "command": "gap-analysis",
+      "phase": "Architecture",
+      "description": "Capability-matrix gap analysis, severity scoring, workstream mapping"
+    },
+    {
+      "id": "TRANS-ARCH",
+      "command": "transition-architecture",
+      "phase": "Transition",
+      "description": "Transition architecture \u2014 work packages, milestones, migration sequencing"
+    },
+    {
+      "id": "ARCH-BOARD",
+      "command": "architecture-board",
+      "phase": "Governance",
+      "description": "Architecture Board governance \u2014 review cadence, decision log, exception tracking"
+    },
+    {
+      "id": "ARCH-CHANGE",
+      "command": "architecture-change",
+      "phase": "Governance",
+      "description": "Architecture change management \u2014 change control, impact analysis, disposition"
+    },
+    {
+      "id": "ARCH-REPO",
+      "command": "architecture-repository",
+      "phase": "Governance",
+      "description": "Architecture repository \u2014 artifact inventory, versioning, traceability links"
+    },
+    {
+      "id": "DATA-ARCH",
+      "command": "data-architecture",
+      "phase": "Architecture",
+      "description": "Data architecture \u2014 data domain, flow, lineage, data-quality evidence"
+    },
+    {
+      "id": "TECH-ARCH",
+      "command": "technology-architecture",
+      "phase": "Architecture",
+      "description": "Technology architecture \u2014 platform, infrastructure, integration, deployment"
+    }
+  ],
+  "tools": [
+    {
+      "name": "togaf_check_code_coverage",
+      "description": "Validate that an architecture evidence report covers the required TOGAF ADM codes. Checks that the report lists every mandatory code, that each cited code exists in the registry, and that no unknown code ids are used. Returns valid, missing, unknown, and coverage_report.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of ADM code ids (e.g. BIZ-CAP-MAP, GAP-ANALYSIS) that the evidence report claims to cover."
+          },
+          "mandatory": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "BIZ-CAP-MAP",
+              "GAP-ANALYSIS"
+            ],
+            "description": "Subset of code ids that must appear; defaults to the two architecture-phase codes that most TOGAF ADM evidence checks require."
+          }
+        },
+        "required": [
+          "codes"
+        ],
+        "additionalProperties": false
+      },
+      "impl": "def togaf_check_code_coverage(codes, mandatory=None):\n    REQUIRED = ['BIZ-CAP-MAP', 'GAP-ANALYSIS']\n    if mandatory is None:\n        mandatory = REQUIRED\n    known = set(['ADM-PRELIMINARY', 'DISCOVERY', 'BIZ-CAP-MAP', 'APP-INVENTORY', 'APP-RATIONAL', 'GAP-ANALYSIS', 'TRANS-ARCH', 'ARCH-BOARD', 'ARCH-CHANGE', 'ARCH-REPO', 'DATA-ARCH', 'TECH-ARCH'])\n    cited = set(codes) if isinstance(codes, list) else set()\n    missing = [c for c in mandatory if c not in cited]\n    unknown = [c for c in sorted(cited) if c not in known]\n    total = len(known)\n    covered = len(cited & known)\n    return {\n        'valid': not missing and not unknown,\n        'missing': missing,\n        'unknown': unknown,\n        'coverage_report': {\n            'total_codes': total,\n            'covered_codes': covered,\n            'coverage_pct': round(100.0 * covered / total, 1) if total else 0.0,\n        },\n    }\n",
+      "codes": [
+        "ADM0",
+        "ADM1",
+        "ADM2",
+        "ADM3",
+        "ADM4",
+        "ADM5",
+        "ADM6",
+        "ADM7",
+        "ADM8",
+        "PREA",
+        "ARC0",
+        "ARC1"
+      ]
+    },
+    {
+      "name": "togaf_check_transition_plan",
+      "description": "Check a TOGAF transition-architecture plan for structural completeness: every work package must have an id, name, and capability it closes; every capability must trace to a gap-analysis code. Returns valid, problems, work_packages, gap_trace.",
+      "arguments": {
+        "type": "object",
+        "properties": {
+          "work_packages": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "List of transition work-package objects; each must carry id, name, and closes (a capability id)."
+          },
+          "capability_gaps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Capability gap ids that the plan claims to close."
+          }
+        },
+        "required": [
+          "work_packages",
+          "capability_gaps"
+        ],
+        "additionalProperties": false
+      },
+      "impl": "def togaf_check_transition_plan(work_packages, capability_gaps):\n    problems = []\n    packages = work_packages if isinstance(work_packages, list) else []\n    gaps = capability_gaps if isinstance(capability_gaps, list) else []\n    closed = set()\n    for i, wp in enumerate(packages):\n        if not isinstance(wp, dict):\n            problems.append('work_packages[%d] is not an object' % i)\n            continue\n        if not wp.get('id') or not wp.get('name'):\n            problems.append('work_packages[%d] missing id/name' % i)\n        closes = wp.get('closes')\n        if not closes:\n            problems.append('work_package %s has no closes field' % wp.get('id'))\n        else:\n            closed.add(closes)\n    gap_set = set(gaps)\n    orphans = sorted(closed - gap_set)\n    if orphans:\n        problems.append('capabilities closed but not in capability_gaps: %s' % orphans)\n    return {\n        'valid': not problems,\n        'problems': problems,\n        'work_packages': len(packages),\n        'gap_trace': {\n            'gaps_declared': len(gap_set),\n            'gaps_closed': len(closed & gap_set),\n            'unclosed_gaps': sorted(gap_set - closed),\n        },\n    }\n",
+      "codes": [
+        "ADM5",
+        "ADM6",
+        "TRANS",
+        "ARC1"
+      ]
+    }
+  ]
+}

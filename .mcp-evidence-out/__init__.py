@@ -278,6 +278,7 @@ def load_schema(name: str):
 
 FRAMEWORK_MODULES: dict = {
     "it4it": "it4it",
+    "togaf": "togaf",
 }
 
 FRAMEWORK_TOOLS: dict = {
@@ -295,6 +296,22 @@ FRAMEWORK_TOOLS: dict = {
             'arguments': {"type": "object", "properties": {"component": {"type": "object", "description": "The parsed functional-component document.", "additionalProperties": true}, "known_streams": {"type": "array", "items": {"type": "string"}, "description": "IDs of value streams defined in the project, for orphan detection. Optional \u2014 if omitted, orphan checks are skipped."}}, "required": ["component"]},
             'schema': "functional-component.json",
             'codes': ["REQ", "INT", "DR", "RISK", "DIAG", "WARD"],
+        },
+    ],
+    "togaf": [
+        {
+            'name': "togaf_check_code_coverage",
+            'description': "Validate that an architecture evidence report covers the required TOGAF ADM codes. Checks that the report lists every mandatory code, that each cited code exists in the registry, and that no unknown code ids are used. Returns valid, missing, unknown, and coverage_report.",
+            'arguments': {"type": "object", "properties": {"codes": {"type": "array", "items": {"type": "string"}, "description": "List of ADM code ids (e.g. BIZ-CAP-MAP, GAP-ANALYSIS) that the evidence report claims to cover."}, "mandatory": {"type": "array", "items": {"type": "string"}, "default": ["BIZ-CAP-MAP", "GAP-ANALYSIS"], "description": "Subset of code ids that must appear; defaults to the two architecture-phase codes that most TOGAF ADM evidence checks require."}}, "required": ["codes"], "additionalProperties": false},
+            'schema': "",
+            'codes': ["ADM0", "ADM1", "ADM2", "ADM3", "ADM4", "ADM5", "ADM6", "ADM7", "ADM8", "PREA", "ARC0", "ARC1"],
+        },
+        {
+            'name': "togaf_check_transition_plan",
+            'description': "Check a TOGAF transition-architecture plan for structural completeness: every work package must have an id, name, and capability it closes; every capability must trace to a gap-analysis code. Returns valid, problems, work_packages, gap_trace.",
+            'arguments': {"type": "object", "properties": {"work_packages": {"type": "array", "items": {"type": "object"}, "description": "List of transition work-package objects; each must carry id, name, and closes (a capability id)."}, "capability_gaps": {"type": "array", "items": {"type": "string"}, "description": "Capability gap ids that the plan claims to close."}}, "required": ["work_packages", "capability_gaps"], "additionalProperties": false},
+            'schema': "",
+            'codes': ["ADM5", "ADM6", "TRANS", "ARC1"],
         },
     ],
 }
