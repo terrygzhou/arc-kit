@@ -244,6 +244,7 @@ Enterprise Architecture Development Method — 9 commands covering the full ADM 
 
 **Install:** `claude plugin install arckit arckit-togaf-adm`
 **Recipe:** `togaf-adm-full` — full ADM cycle via build recipe
+**Evidence tools:** `togaf_check_code_coverage`, `togaf_check_transition_plan` — deterministic code-coverage and transition-plan checks exposed by the arckit-mcp server
 
 ---
 
@@ -262,6 +263,7 @@ Open Agile Architecture (C208) — sprint-based, product-driven architecture del
 **Install:** `claude plugin install arckit arckit-oaa`
 **Recipe:** `oaa-full` — strategy → product → ADM Lite → security → governance pipeline
 **Requires:** `arckit` core plugin (recipe resolves `arckit:principles`, `arckit:requirements`, `arckit:stakeholders`)
+**Evidence tools:** `oaa_check_compliance_evidence`, `oaa_check_strategy_canvas` — deterministic compliance-evidence and strategy-canvas checks exposed by the arckit-mcp server
 
 ---
 
@@ -282,6 +284,7 @@ Open Group IT4IT Standard v3.1 (S261) — the reference architecture for managin
 **Recipe:** `it4it-full` — value network → strategy portfolio → develop & test → consume & fulfil → operate & assure
 **Requires:** `arckit` core plugin
 **Schemas:** `value-stream.json` and `functional-component.json` — validate with `python3 validate-architecture.py`
+**Evidence tools:** `it4it_check_value_stream`, `it4it_check_component_trace` — deterministic value-stream and component-traceability checks exposed by the arckit-mcp server
 
 IT4IT is S261 — a snapshot, not an approved standard. Artefacts reference it, they do not claim conformance.
 
@@ -302,6 +305,7 @@ Governance, design, and security for autonomous AI agent programs — 6 commands
 
 **Install:** `claude plugin install arckit arckit-agent-architecture`
 **Recipe:** `agent-architecture` — full agent architecture lifecycle via build recipe
+**Evidence tools:** `agent_check_registry_coverage`, `agent_check_tool_allowlist` — deterministic registry-coverage and tool-allowlist checks exposed by the arckit-mcp server
 
 ### Combined Recipe: `togaf-agent-full`
 
