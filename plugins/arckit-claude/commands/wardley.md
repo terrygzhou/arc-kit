@@ -326,7 +326,7 @@ For each component, determine:
    - Rapid commoditization risk
    - Skills gap risk
 
-5. **Mathematical Strategic Metrics** (from `tractorjuice/wardleymap_math_model`):
+5. **Mathematical Strategic Metrics** (from `terrygzhou/wardleymap_math_model`):
 
    Compute these metrics for each component and include a summary table in the output:
 

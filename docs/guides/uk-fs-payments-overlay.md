@@ -187,7 +187,7 @@ co-maintainer is in place.
 co-maintainer. Relevant backgrounds include FCA-authorised payments firm compliance leads, payment
 services solicitors, Big Four FS regulatory advisers, and architects with direct FCA supervisory
 engagement experience. If you are interested, [open an issue](https://github.com/terrygzhou/arc-kit/issues)
-with the label `co-maintainer: uk-finance` or DM [@tractorjuice](https://github.com/tractorjuice).
+with the label `co-maintainer: uk-finance` or DM [@terrygzhou](https://github.com/terrygzhou).
 
 Co-maintainer recruitment is a precondition for re-evaluating the overlay for official-baseline
 promotion.

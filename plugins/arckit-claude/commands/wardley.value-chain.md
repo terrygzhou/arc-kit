@@ -155,7 +155,7 @@ For each dependency you draw, verify:
 - Is this a direct dependency, or does it go via an intermediate component?
 - Have you captured all meaningful dependencies, or only the obvious ones?
 
-### Mathematical Validation (from `tractorjuice/wardleymap_math_model`)
+### Mathematical Validation (from `terrygzhou/wardleymap_math_model`)
 
 The value chain must satisfy these mathematical constraints:
 

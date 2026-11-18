@@ -5,8 +5,8 @@
   "defaultEnabled": false,
   "description": "Austrian Overlay for ArcKit — 3 commands for DSG/DSGVO, NISG, and Bundesvergabegesetz public procurement. Requires arckit core plugin.",
   "author": {
-    "name": "TractorJuice",
-    "url": "https://github.com/tractorjuice"
+    "name": "TerryZhou",
+    "url": "https://github.com/terrygzhou"
   },
   "homepage": "https://arckit.org",
   "repository": "https://github.com/terrygzhou/arc-kit",

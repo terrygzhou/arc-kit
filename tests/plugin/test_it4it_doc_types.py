@@ -184,12 +184,13 @@ def test_all_six_it4it_codes_in_pages_allow_list():
 
 def test_it4it_plugin_manifest_shape():
     manifest = json.loads(read(PLUGIN_MANIFEST))
+    expected_version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
     assert manifest["name"] == "arckit-it4it"
-    assert manifest["version"] == "6.11.0"
+    assert manifest["version"] == expected_version
     assert manifest.get("defaultEnabled") is False
     # dependencies is a list of {name, version} objects (manifest schema).
     dep = next(d for d in manifest["dependencies"] if d["name"] == "arckit")
-    assert dep["version"] == "=6.11.0"
+    assert dep["version"] == f"={expected_version}"
     for key in ("default_classification", "organisation_name", "project_issue_prefix", "references_dir"):
         assert key in manifest["userConfig"], f"userConfig missing {key}"
 

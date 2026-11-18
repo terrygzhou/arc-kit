@@ -11,10 +11,10 @@ strategy, architecture, delivery, and assurance. Enables enterprise architects
 to manage architecture principles, requirements, vendor evaluation, risk
 management, and compliance workflows in Mistral Vibe.
 """
-author = "TractorJuice"
-repository = "https://github.com/tractorjuice/arckit-vibe"
+author = "TerryZhou"
+repository = "https://github.com/terrygzhou/arckit-vibe"
 license = "MIT"
-homepage = "https://tractorjuice.github.io/arc-kit/"
+homepage = "https://terrygzhou.github.io/arc-kit/"
 
 [extension.feature_flags]
 enable_community_overlays = true

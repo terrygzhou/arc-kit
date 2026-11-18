@@ -100,7 +100,7 @@ If any of these change materially before the next quarterly review, the maintain
 
 The overlay is currently solo-maintained. For reference, the Australian overlay maintainer is [@royster70](https://github.com/royster70) and the Canadian overlay is anonymous-community. The USA overlay is seeking a federal-civilian SME co-maintainer — backgrounds welcome from agency CISO offices, Senior Agency Officials for Privacy (SAOPs), FedRAMP PMO / 3PAO practitioners, agency Chief AI Officers, or federal architecture leads with direct ATO experience.
 
-If you have relevant federal-civilian architecture experience and are interested in co-maintaining, [open an issue](https://github.com/terrygzhou/arc-kit/issues) or DM [@tractorjuice](https://github.com/tractorjuice).
+If you have relevant federal-civilian architecture experience and are interested in co-maintaining, [open an issue](https://github.com/terrygzhou/arc-kit/issues) or DM [@terrygzhou](https://github.com/terrygzhou).
 
 Co-maintainer recruitment is a precondition for re-evaluating the overlay for official-baseline promotion.
 

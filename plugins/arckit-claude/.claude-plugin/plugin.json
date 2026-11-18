@@ -4,8 +4,8 @@
   "version": "6.12.0",
   "description": "The Enterprise Architecture Governance Harness - 76 slash commands across strategy, architecture, delivery, and assurance",
   "author": {
-    "name": "TractorJuice",
-    "url": "https://github.com/tractorjuice"
+    "name": "TerryZhou",
+    "url": "https://github.com/terrygzhou"
   },
   "repository": "https://github.com/terrygzhou/arc-kit",
   "license": "MIT",

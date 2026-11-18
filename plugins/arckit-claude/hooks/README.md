@@ -178,7 +178,7 @@ this directory — they are not registered hooks, just supporting code:
 
 - `wardley-tidy.mjs` — the wardley-beta label tidier (`tidyMap` /
   `tidyToFixpoint`). Vendored verbatim from
-  [`tractorjuice/wardley-maps-mermaid`](https://github.com/tractorjuice/wardley-maps-mermaid)
+  [`terrygzhou/wardley-maps-mermaid`](https://github.com/terrygzhou/wardley-maps-mermaid)
   `tools/tidy.mjs`.
 - `wardley-label-placement.mjs` — the pure placement engine, itself compiled
   from mermaid's `wardleyLabelPlacement.ts`
@@ -200,7 +200,7 @@ commit here, and run `node --test tests/plugin/wardley-tidy.test.mjs`.
 ` ```wardley ` (OnlineWardleyMaps) block. It reuses the same
 `wardley-label-placement.mjs` engine but swaps the projection layer for the
 OnlineWardleyMaps renderer geometry — recovered from
-[`tractorjuice/onlinewardleymaps`](https://github.com/tractorjuice/onlinewardleymaps)
+[`terrygzhou/onlinewardleymaps`](https://github.com/terrygzhou/onlinewardleymaps)
 (`PositionCalculator.js`, `constants/defaults.js`, `constants/mapstyles.js`,
 `ComponentText.js`). It exports `tidyOwm`, `tidyOwmToFixpoint` and
 `tidyMarkdown`, and runs as a CLI.

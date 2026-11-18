@@ -21,7 +21,7 @@ If no arguments are provided, ask the user for a project slug.
 Run this Bash command to find the highest existing version number:
 
 ```text
-gh repo list tractorjuice --limit 200 --json name --jq '.[].name' | grep -oP 'arckit-test-project-v\K\d+' | sort -n | tail -1
+gh repo list terrygzhou --limit 200 --json name --jq '.[].name' | grep -oP 'arckit-test-project-v\K\d+' | sort -n | tail -1
 ```
 
 Add 1 to get the next version number. Store it as `NEXT_VERSION`.
@@ -29,7 +29,7 @@ Add 1 to get the next version number. Store it as `NEXT_VERSION`.
 ## Step 2: Set variables
 
 - `REPO_NAME` = `arckit-test-project-v${NEXT_VERSION}-${project-slug}`
-- `REPO_FULL` = `tractorjuice/${REPO_NAME}`
+- `REPO_FULL` = `terrygzhou/${REPO_NAME}`
 - `VERSION` = read from `/workspaces/arc-kit/VERSION` (trim whitespace)
 - `TODAY` = today's date in YYYY-MM-DD format
 - `DISPLAY_NAME` = title-case version of project-slug (e.g. `nhs-digital` → `NHS Digital`)
@@ -37,7 +37,7 @@ Add 1 to get the next version number. Store it as `NEXT_VERSION`.
 ## Step 3: Create GitHub repo
 
 ```bash
-gh repo create tractorjuice/${REPO_NAME} --public --description "ArcKit test project: ${DISPLAY_NAME}" --clone --clone-dir /tmp/arckit-test-setup/${REPO_NAME}
+gh repo create terrygzhou/${REPO_NAME} --public --description "ArcKit test project: ${DISPLAY_NAME}" --clone --clone-dir /tmp/arckit-test-setup/${REPO_NAME}
 ```
 
 If this fails, stop and report the error.
@@ -101,7 +101,7 @@ Run ArcKit commands using the Claude Code plugin:
 - `/arckit:requirements` - Requirements specification
 - `/arckit:sobc` - Strategic Outline Business Case
 
-See the [ArcKit Documentation](https://tractorjuice.github.io/arc-kit/) for the full command reference.
+See the [ArcKit Documentation](https://terrygzhou.github.io/arc-kit/) for the full command reference.
 
 ---
 
@@ -159,11 +159,11 @@ projects/
 
 ## Available Commands
 
-This project uses the ArcKit plugin which provides 53 slash commands for architecture governance. See the [full command reference](https://tractorjuice.github.io/arc-kit/).
+This project uses the ArcKit plugin which provides 53 slash commands for architecture governance. See the [full command reference](https://terrygzhou.github.io/arc-kit/).
 
 ## Links
 
-- [ArcKit Documentation](https://tractorjuice.github.io/arc-kit/)
+- [ArcKit Documentation](https://terrygzhou.github.io/arc-kit/)
 - [ArcKit Repository](https://github.com/terrygzhou/arc-kit)
 - [ArcKit Claude Plugin Marketplace](https://github.com/terrygzhou/arc-kit)
 

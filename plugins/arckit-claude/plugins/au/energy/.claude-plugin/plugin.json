@@ -5,8 +5,8 @@
   "defaultEnabled": false,
   "description": "Australian Energy Sector Overlay for ArcKit — 2 commands for AESCSF maturity assessment and energy-sector compliance (AER ring-fencing, AEMC NER/NGR, AEMO interfaces, DERMS/DOE, CSIP-AUS, SOCI escalation). Recipe: au-energy. First Australian sector overlay; composes the arckit-au federal baseline (Essential Eight, ISM, OT security, SOCI/CIRMP, Privacy Act/NDB). Requires arckit core and arckit-au plugins.",
   "author": {
-    "name": "TractorJuice",
-    "url": "https://github.com/tractorjuice"
+    "name": "TerryZhou",
+    "url": "https://github.com/terrygzhou"
   },
   "homepage": "https://arckit.org",
   "repository": "https://github.com/terrygzhou/arc-kit",

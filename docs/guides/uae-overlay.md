@@ -197,7 +197,7 @@ See `uae-overlay-maintenance.md` for the canonical list and the GitHub issues tr
 
 ## Contributing
 
-The overlay is currently maintained by [@tractorjuice](https://github.com/tractorjuice). A UAE domain co-maintainer is being recruited; the recruiting brief is in `uae-overlay-maintenance.md`. Pull requests touching the `uae-*` paths auto-request review through CODEOWNERS.
+The overlay is currently maintained by [@terrygzhou](https://github.com/terrygzhou). A UAE domain co-maintainer is being recruited; the recruiting brief is in `uae-overlay-maintenance.md`. Pull requests touching the `uae-*` paths auto-request review through CODEOWNERS.
 
 If you find a regulatory citation that has shifted, an Executive Regulation that has been gazetted, or a Cabinet Resolution that supersedes a referenced instrument, please open an issue with the source URL and the verified date. The maintenance document's citation register will be updated and the affected commands re-tested.
 

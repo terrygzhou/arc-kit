@@ -5,8 +5,8 @@
   "defaultEnabled": false,
   "description": "Australian Federal Overlay for ArcKit — 10 commands for ASD Essential Eight, ISM, DTA Digital Service Standard, Privacy Act 1988 PIA, OAIC Notifiable Data Breach, PSPF, DTA AI Assurance, DISP supplier attestation, OT security, and SOCI/CIRMP critical-infrastructure governance. Recipe: au-federal. Requires arckit core plugin.",
   "author": {
-    "name": "TractorJuice",
-    "url": "https://github.com/tractorjuice"
+    "name": "TerryZhou",
+    "url": "https://github.com/terrygzhou"
   },
   "homepage": "https://arckit.org",
   "repository": "https://github.com/terrygzhou/arc-kit",

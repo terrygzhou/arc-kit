@@ -4,7 +4,7 @@
  *
  * Originated as tests/mermaid-wardley/convert.mjs in this repo (PRs #339,
  * #340, #341, #344), untracked in #348 (commit 4681f146), then evolved at
- * tractorjuice/wardleymap_math_model with explicit-block pipeline handling
+ * tractorjuice/wardleymap_math_model (now maintained at terrygzhou/wardleymap_math_model)
  * and evolution-stage quoting, and re-vendored here so /arckit:wardley
  * converts OWM deterministically rather than regenerating wardley-beta
  * by hand.

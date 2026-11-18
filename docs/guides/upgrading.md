@@ -44,7 +44,7 @@ arckit init --here --ai codex
 
 > **Note:** For Claude Code users, commands and agents are provided by the ArcKit plugin and update automatically via the marketplace. No `arckit init` needed.
 
-> **Note:** For Gemini CLI users, use the ArcKit extension (`gemini extensions install https://github.com/tractorjuice/arckit-gemini`). Updates via `gemini extensions update arckit`.
+> **Note:** For Gemini CLI users, use the ArcKit extension (`gemini extensions install https://github.com/terrygzhou/arckit-gemini`). Updates via `gemini extensions update arckit`.
 
 > **Note:** `README.md` will be overwritten. If you've customized it, back it up first:
 >

@@ -34,7 +34,7 @@ ArcKit ships in multiple formats, each with its own version file. They are all b
 | `scripts/bump-version.sh <version>` | Updates all version files in one pass |
 | `scripts/sync-claude-plugin-layout.py [--check]` | Mirrors the Claude overlay plugins into `plugins/arckit-claude/plugins/...`, matching the standalone Claude marketplace repository layout used by the local standalone marketplace metadata |
 | `scripts/generate-release-notes.sh [prev-tag]` | Parses `git log` between tags into Keep a Changelog markdown (Added / Fixed / Changed / Breaking Changes), filters out `chore: bump version` commits, auto-detects previous tag if omitted |
-| `scripts/push-extensions.sh [name...]` | Pushes standalone distribution dirs to their separate GitHub repos (the standalone Claude marketplace repo, `tractorjuice/arckit-gemini`, `tractorjuice/arckit-codex`, etc.), then creates or preserves each repo's `vX.Y.Z` tag and GitHub Release. The `claude` target publishes the full Claude Code marketplace repo: core plugin at the root, with overlays under structured `plugins/...` paths. Uses `GH_TOKEN`. Skips repos that don't yet exist on GitHub. Set `ARCKIT_SKIP_EXTENSION_RELEASES=1` only for a commit-only sync |
+| `scripts/push-extensions.sh [name...]` | Pushes standalone distribution dirs to their separate GitHub repos under `terrygzhou` (the standalone Claude marketplace repo, `terrygzhou/arckit-gemini`, `terrygzhou/arckit-codex`, etc.), then creates or preserves each repo's `vX.Y.Z` tag and GitHub Release. The `claude` target publishes the full Claude Code marketplace repo: core plugin at the root, with overlays under structured `plugins/...` paths. Uses `GH_TOKEN`. Skips repos that don't yet exist on GitHub. Set `ARCKIT_SKIP_EXTENSION_RELEASES=1` only for a commit-only sync. Per-distribution publish owners can be overridden with `REPO_OWNER_OVERRIDE` (see the script header) when a target needs to publish to a different account |
 | `.github/workflows/release.yml` | Creates the GitHub Release automatically on `v*` tag push (tag-push triggered, does not commit back to main) |
 
 ## Development Workflow
@@ -131,13 +131,13 @@ and `plugins/uk/gcloud`.
 After step 11, verify the umbrella GitHub Release and every standalone GitHub Release exists:
 
 - `terrygzhou/arc-kit`
-- `tractorjuice/arckit-gemini`
-- `tractorjuice/arckit-codex`
-- `tractorjuice/arckit-opencode`
-- `tractorjuice/arckit-copilot`
-- `tractorjuice/arckit-paperclip`
-- `tractorjuice/arckit-vibe`
-- `tractorjuice/arckit-kimi`
+- `terrygzhou/arckit-gemini`
+- `terrygzhou/arckit-codex`
+- `terrygzhou/arckit-opencode`
+- `terrygzhou/arckit-copilot`
+- `terrygzhou/arckit-paperclip`
+- `terrygzhou/arckit-vibe`
+- `terrygzhou/arckit-kimi`
 
 ### Note on `claude plugin tag`
 

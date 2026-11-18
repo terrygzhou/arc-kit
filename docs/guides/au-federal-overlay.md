@@ -145,7 +145,7 @@ To run:
 /arckit:build <project-name> --recipe au-federal             # full build
 ```
 
-Reference test fixture: [`arckit-test-project-v44-australian-gov`](https://github.com/tractorjuice/arckit-test-project-v44-australian-gov) — the Australian Government PoC test repo.
+Reference test fixture: [`arckit-test-project-v44-australian-gov`](https://github.com/terrygzhou/arckit-test-project-v44-australian-gov) — the Australian Government PoC test repo.
 
 ---
 
@@ -173,7 +173,7 @@ If you are migrating an existing UK-classified ArcKit project to the AU overlay:
 
 ## Co-maintenance
 
-The overlay is currently solo-maintained by [@royster70](https://github.com/royster70). An Australian Federal enterprise architect (or DISP-cleared supplier architect) is being recruited as domain co-maintainer before the overlay can be re-evaluated for official-baseline promotion. If you have relevant Federal/DISP architecture experience and are interested in co-maintaining, [open an issue](https://github.com/terrygzhou/arc-kit/issues) or DM [@tractorjuice](https://github.com/tractorjuice).
+The overlay is currently solo-maintained by [@royster70](https://github.com/royster70). An Australian Federal enterprise architect (or DISP-cleared supplier architect) is being recruited as domain co-maintainer before the overlay can be re-evaluated for official-baseline promotion. If you have relevant Federal/DISP architecture experience and are interested in co-maintaining, [open an issue](https://github.com/terrygzhou/arc-kit/issues) or DM [@terrygzhou](https://github.com/terrygzhou).
 
 ---
 

@@ -24,7 +24,7 @@ VERSION = (ARCKIT_ROOT / "VERSION").read_text().strip()
 TODAY = date.today().isoformat()
 
 REPO_NAME = "arckit-test-project-v46-sdg"
-REPO_FULL = f"tractorjuice/{REPO_NAME}"
+REPO_FULL = f"terrygzhou/{REPO_NAME}"
 CLONE_BASE = Path("/tmp/arckit-test-setup")
 REPO_DIR = CLONE_BASE / REPO_NAME
 

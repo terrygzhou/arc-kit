@@ -5,8 +5,8 @@
   "defaultEnabled": false,
   "description": "Canadian Federal Overlay for ArcKit — 12 commands for AIA, ATIP, ITSG-33, GC Digital Standards, OCAP, OLA, and federal cloud residency. Requires arckit core plugin.",
   "author": {
-    "name": "TractorJuice",
-    "url": "https://github.com/tractorjuice"
+    "name": "TerryZhou",
+    "url": "https://github.com/terrygzhou"
   },
   "homepage": "https://arckit.org",
   "repository": "https://github.com/terrygzhou/arc-kit",

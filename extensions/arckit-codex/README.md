@@ -50,7 +50,7 @@ This creates a project with:
 Install ArcKit as a Codex plugin from the standalone marketplace repository:
 
 ```bash
-codex plugin marketplace add tractorjuice/arckit-codex
+codex plugin marketplace add terrygzhou/arckit-codex
 ```
 
 Enable Codex lifecycle hooks in your user or project config:

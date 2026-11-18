@@ -5,8 +5,8 @@
   "defaultEnabled": false,
   "description": "UK G-Cloud Supplier Bid-Authoring Overlay for ArcKit — 11 supplier-side commands that drive a G-Cloud 14 Digital Marketplace submission end to end: supplier profile, service design, Service Definition Documents (Lots 1/2/3), supplier declaration, pricing, NCSC Cloud Security Principles assertions, competitor benchmark, submission review, and CCS submission packaging. Recipe: uk-gcloud-submission. Requires arckit core plugin. PROPRIETARY — not covered by the repository MIT licence. EXPERIMENTAL.",
   "author": {
-    "name": "TractorJuice",
-    "url": "https://github.com/tractorjuice"
+    "name": "TerryZhou",
+    "url": "https://github.com/terrygzhou"
   },
   "homepage": "https://arckit.org",
   "repository": "https://github.com/terrygzhou/arc-kit",

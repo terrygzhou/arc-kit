@@ -19,4 +19,4 @@ On Claude Code v2.1.143+, `claude plugin disable arckit` will refuse with a copy
 
 ## Maintainer
 
-Currently maintained by @tractorjuice. Recruiting an Austrian domain co-maintainer — see [CONTRIBUTING.md](https://github.com/terrygzhou/arc-kit/blob/main/CONTRIBUTING.md).
+Currently maintained by @terrygzhou. Recruiting an Austrian domain co-maintainer — see [CONTRIBUTING.md](https://github.com/terrygzhou/arc-kit/blob/main/CONTRIBUTING.md).

@@ -11,7 +11,7 @@
  * `tidy-wardley-labels.mjs` PostToolUse hook. Run directly as a CLI — see the
  * bottom of the file.
  *
- * Vendored verbatim from https://github.com/tractorjuice/wardley-maps-mermaid
+ * Vendored verbatim from https://github.com/terrygzhou/wardley-maps-mermaid
  * (`tools/tidy.mjs`, commit 9abfec6adb842266bb13c12105ab8f260397084a). Only the
  * `wardley-label-placement.mjs` import path differs from upstream. Do not
  * hand-edit — re-sync from upstream instead (see hooks/README.md).

@@ -62,10 +62,10 @@ policy_frameworks:
   - { strong: "Government functional standard", title: "GovS 005 Digital", url: "https://www.gov.uk/government/publications/government-functional-standard-govs-005-digital", body: "Supports accountable management of digital, data and technology across services, products and platforms." }
 # worked_examples items: span (kicker), title, url, body
 worked_examples:
-  - { span: "NHS · citizen service", title: "NHS Appointment Booking", url: "https://tractorjuice.github.io/arckit-test-project-v7-nhs-appointment/", body: "End-to-end architecture pack for an NHS-grade booking service." }
-  - { span: "HMRC · AI in tax", title: "HMRC Tax Assistant", url: "https://tractorjuice.github.io/arckit-test-project-v2-hmrc-chatbot/", body: "Conversational AI architecture with NCSC, Service Standard and TCoP evidence." }
-  - { span: "Cabinet Office · cross-gov GenAI", title: "Cabinet Office GenAI Platform", url: "https://tractorjuice.github.io/arckit-test-project-v9-cabinet-office-genai/", body: "Cross-government GenAI platform shaped around AI Playbook, ATRS, Secure by Design." }
-  - { span: "Scottish Courts · justice, devolved gov", title: "Scottish Courts GenAI Strategy", url: "https://tractorjuice.github.io/arckit-test-project-v14-scottish-courts/", body: "AI strategy with devolved-government policy, data and assurance considerations." }
+  - { span: "NHS · citizen service", title: "NHS Appointment Booking", url: "https://terrygzhou.github.io/arckit-test-project-v7-nhs-appointment/", body: "End-to-end architecture pack for an NHS-grade booking service." }
+  - { span: "HMRC · AI in tax", title: "HMRC Tax Assistant", url: "https://terrygzhou.github.io/arckit-test-project-v2-hmrc-chatbot/", body: "Conversational AI architecture with NCSC, Service Standard and TCoP evidence." }
+  - { span: "Cabinet Office · cross-gov GenAI", title: "Cabinet Office GenAI Platform", url: "https://terrygzhou.github.io/arckit-test-project-v9-cabinet-office-genai/", body: "Cross-government GenAI platform shaped around AI Playbook, ATRS, Secure by Design." }
+  - { span: "Scottish Courts · justice, devolved gov", title: "Scottish Courts GenAI Strategy", url: "https://terrygzhou.github.io/arckit-test-project-v14-scottish-courts/", body: "AI strategy with devolved-government policy, data and assurance considerations." }
 # bootstrap_cadence items: day (intensive label), span (spread-cadence label), title (phase), body
 bootstrap_cadence:
   - { day: "Day 0", span: "Kickoff", title: "Embed", body: "Confirm scope, decision horizon, known constraints and stakeholders. Provision access and share internal context." }

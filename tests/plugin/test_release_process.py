@@ -100,12 +100,12 @@ def test_release_process_names_every_standalone_repo():
 
     for distribution_key, (local_dir, repo_name) in EXPECTED_STANDALONE_REPOS.items():
         assert f'[{distribution_key}]="{local_dir}:{repo_name}"' in script
-        # The Claude standalone marketplace publishes from the terrygzhou/arc-kit
-        # monorepo; every other target keeps its own tractorjuice/* GitHub repo.
+        # The Claude marketplace publishes from the terrygzhou/arc-kit monorepo;
+        # every other target publishes from its own terrygzhou/<repo> repo.
         expected_slug = (
             "terrygzhou/arc-kit"
             if distribution_key == "claude"
-            else f"tractorjuice/{repo_name}"
+            else f"terrygzhou/{repo_name}"
         )
         assert expected_slug in release_doc
         assert (REPO_ROOT / local_dir / "README.md").is_file()

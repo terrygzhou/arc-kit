@@ -503,7 +503,7 @@ def init(
         console.print("[dim]  /plugin marketplace add terrygzhou/arc-kit[/dim]")
         console.print("[dim]For Gemini CLI, use the ArcKit extension instead:[/dim]")
         console.print(
-            "[dim]  gemini extensions install https://github.com/tractorjuice/arckit-gemini[/dim]"
+            "[dim]  gemini extensions install https://github.com/terrygzhou/arckit-gemini[/dim]"
         )
 
         choice = typer.prompt("Enter choice", default="1")
@@ -525,7 +525,7 @@ def init(
         )
         console.print("Install in Gemini CLI with:")
         console.print(
-            "  [cyan]gemini extensions install https://github.com/tractorjuice/arckit-gemini[/cyan]"
+            "  [cyan]gemini extensions install https://github.com/terrygzhou/arckit-gemini[/cyan]"
         )
         console.print("\nThe extension provides all 48 commands with zero config.")
         console.print("Updates via: [cyan]gemini extensions update arckit[/cyan]")

@@ -5,7 +5,7 @@
   "description": "Repository tooling for ArcKit: source-grounded, agent-readable repository docs inspired by OpenWiki, plus codebase auditing against architecture principles and requirements.",
   "author": {
     "name": "ArcKit Contributors",
-    "url": "https://github.com/tractorjuice"
+    "url": "https://github.com/terrygzhou"
   },
   "repository": "https://github.com/terrygzhou/arc-kit",
   "license": "MIT",

@@ -21,7 +21,7 @@ python arckit-agent.py --list
 
 # Deploy with a project repo (recommended — agent reads requirements, writes artifacts)
 python arckit-agent.py research \
-    --repo "https://github.com/tractorjuice/arckit-test-project-v1" \
+    --repo "https://github.com/terrygzhou/arckit-test-project-v1" \
     --github-token "$GITHUB_TOKEN" \
     --prompt "Research technology options for the M365 migration project"
 

@@ -13,11 +13,11 @@ set -uo pipefail
 # each standalone repo. Set ARCKIT_SKIP_EXTENSION_RELEASES=1 for a commit-only
 # sync.
 
-DEFAULT_REPO_OWNER="tractorjuice"
+DEFAULT_REPO_OWNER="terrygzhou"
 # Per-distribution publish-owner overrides: detach a standalone repo from the
-# upstream org (e.g. a fork's own Codex repo) without republishing the others.
+# default owner without republishing the others (e.g. publish one distribution
+# to a different account).
 declare -A REPO_OWNER_OVERRIDE=(
-  [codex]="${ARCKIT_CODEX_OWNER:-terrygzhou}"
 )
 REPO_OWNER="$DEFAULT_REPO_OWNER"
 

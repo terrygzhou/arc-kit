@@ -397,4 +397,4 @@ The matrix is most useful as a workshop tool: it forces explicit discussion abou
 
 ## Further Reading
 
-These models are drawn from a broader mathematical framework for Wardley Mapping that includes game theory, stochastic processes, topological analysis, and Bayesian inference. For the full academic treatment, see the [Wardley Map Mathematical Model](https://github.com/tractorjuice/wardleymap_math_model) repository.
+These models are drawn from a broader mathematical framework for Wardley Mapping that includes game theory, stochastic processes, topological analysis, and Bayesian inference. For the full academic treatment, see the [Wardley Map Mathematical Model](https://github.com/terrygzhou/wardleymap_math_model) repository.

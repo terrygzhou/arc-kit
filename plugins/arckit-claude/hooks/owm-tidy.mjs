@@ -6,7 +6,7 @@
  * the same renderer-agnostic placement engine (`wardley-label-placement.mjs`);
  * only the projection layer differs. This file uses the OnlineWardleyMaps
  * renderer geometry, recovered from
- * https://github.com/tractorjuice/onlinewardleymaps:
+ * https://github.com/terrygzhou/onlinewardleymaps:
  *
  *   - PositionCalculator.js  -> projection (NO padding; dot lives in 0..W,0..H)
  *         x = maturity        * mapWidth

@@ -414,8 +414,8 @@ This template is the single source of truth for the pages site — it contains a
 2. Store the entire template content in memory
 3. Replace the placeholder values **in memory** (string replacement) with actual repository details:
    - `'{{REPO}}'` → the repository name (e.g. `'arckit-test-project-v17-fuel-prices'`)
-   - `'{{REPO_URL}}'` → the full repository URL (e.g. `'https://github.com/tractorjuice/arckit-test-project-v17-fuel-prices'`)
-   - `'{{CONTENT_BASE_URL}}'` → the raw content base URL for fallback loading (e.g. `'https://raw.githubusercontent.com/tractorjuice/arckit-test-project-v17-fuel-prices/main'`). For GitHub repos use `https://raw.githubusercontent.com/{owner}/{repo}/{branch}`. For non-GitHub hosting set to `''` (empty string).
+   - `'{{REPO_URL}}'` → the full repository URL (e.g. `'https://github.com/terrygzhou/arckit-test-project-v17-fuel-prices'`)
+   - `'{{CONTENT_BASE_URL}}'` → the raw content base URL for fallback loading (e.g. `'https://raw.githubusercontent.com/terrygzhou/arckit-test-project-v17-fuel-prices/main'`). For GitHub repos use `https://raw.githubusercontent.com/{owner}/{repo}/{branch}`. For non-GitHub hosting set to `''` (empty string).
    - `'{{VERSION}}'` → the ArcKit version from the plugin's VERSION file (`${CLAUDE_PLUGIN_ROOT}/VERSION`)
    - `'{{DEFAULT_DOC}}'` → the default document path (principles if exists, or `''`)
 4. Write the final HTML to `docs/index.html` using the **Write** tool

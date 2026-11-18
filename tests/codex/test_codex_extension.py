@@ -260,7 +260,7 @@ def test_codex_standalone_repo_has_local_marketplace_entry():
 def test_codex_readme_documents_plugin_hook_setup():
     readme = CODEX_README.read_text(encoding="utf-8")
 
-    assert "codex plugin marketplace add tractorjuice/arckit-codex" in readme
+    assert "codex plugin marketplace add terrygzhou/arckit-codex" in readme
     assert "hooks = true" in readme
     assert "plugin_hooks = true" in readme
     assert "hooks/hooks.json" in readme

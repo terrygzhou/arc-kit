@@ -28,4 +28,4 @@ On Claude Code v2.1.143+, `claude plugin disable arckit` will refuse with a copy
 
 ## Maintainer
 
-Currently maintained by @tractorjuice. Recruiting a Canadian federal domain co-maintainer — see [CONTRIBUTING.md](https://github.com/terrygzhou/arc-kit/blob/main/CONTRIBUTING.md).
+Currently maintained by @terrygzhou. Recruiting a Canadian federal domain co-maintainer — see [CONTRIBUTING.md](https://github.com/terrygzhou/arc-kit/blob/main/CONTRIBUTING.md).

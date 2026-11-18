@@ -3,7 +3,7 @@
  *
  * Vendored verbatim from mermaid's `wardleyLabelPlacement.ts`
  * (https://github.com/mermaid-js/mermaid, MIT licence), compiled to ESM and
- * shipped via https://github.com/tractorjuice/wardley-maps-mermaid
+ * shipped via https://github.com/terrygzhou/wardley-maps-mermaid
  * (`tools/vendor/`, commit 9abfec6adb842266bb13c12105ab8f260397084a). Renamed
  * from `.js` to `.mjs` so it loads as ESM. Do not hand-edit — re-sync from
  * upstream instead (see hooks/README.md).

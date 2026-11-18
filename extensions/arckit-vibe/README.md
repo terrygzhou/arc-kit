@@ -4,7 +4,7 @@ The Enterprise Architecture Governance Harness for Mistral Vibe CLI.
 
 > **Status**: Beta (Community Preview) 🟡
 >
-> **Note**: This extension is currently in beta. The extension is published from the standalone `tractorjuice/arckit-vibe` repository and regenerated from ArcKit's canonical plugin sources.
+> **Note**: This extension is currently in beta. The extension is published from the standalone `terrygzhou/arckit-vibe` repository and regenerated from ArcKit's canonical plugin sources.
 
 ## Overview
 
@@ -16,7 +16,7 @@ ArcKit for Mistral Vibe brings the full power of the Enterprise Architecture Gov
 
 ```bash
 # Clone the standalone extension repository
-git clone https://github.com/tractorjuice/arckit-vibe.git
+git clone https://github.com/terrygzhou/arckit-vibe.git
 cd arckit-vibe
 
 # Create the extensions directory if it doesn't exist
@@ -30,7 +30,7 @@ ln -s $(pwd) ~/.vibe/extensions/arckit
 
 ```bash
 # Clone the repository
-git clone https://github.com/tractorjuice/arckit-vibe.git
+git clone https://github.com/terrygzhou/arckit-vibe.git
 
 # Copy the extension to your Vibe extensions directory
 cp -r arckit-vibe ~/.vibe/extensions/arckit
@@ -394,8 +394,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/tractorjuice/arckit-vibe/issues)
-- **Documentation**: [ArcKit Docs](https://tractorjuice.github.io/arc-kit/)
+- **Issues**: [GitHub Issues](https://github.com/terrygzhou/arckit-vibe/issues)
+- **Documentation**: [ArcKit Docs](https://terrygzhou.github.io/arc-kit/)
 - **Discussion**: [GitHub Discussions](https://github.com/terrygzhou/arc-kit/discussions)
 - **ArcKit Repository**: [terrygzhou/arc-kit](https://github.com/terrygzhou/arc-kit)
 

@@ -5,8 +5,8 @@
   "defaultEnabled": false,
   "description": "French Public Sector Overlay for ArcKit — 12 commands for DINUM, ANSSI, RGPD/CNIL, EBIOS, PSSI, SecNumCloud, Diffusion Restreinte, public procurement, and ANSSI cartography. Requires arckit core plugin.",
   "author": {
-    "name": "TractorJuice",
-    "url": "https://github.com/tractorjuice"
+    "name": "TerryZhou",
+    "url": "https://github.com/terrygzhou"
   },
   "homepage": "https://arckit.org",
   "repository": "https://github.com/terrygzhou/arc-kit",
