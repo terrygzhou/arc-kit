@@ -1,5 +1,5 @@
 {
-  "name": "@tractorjuice/arckit-paperclip",
+  "name": "@terrygzhou/arckit-paperclip",
   "version": "6.12.0",
   "description": "ArcKit Paperclip plugin — The Enterprise Architecture Governance Harness, 116 commands across strategy, architecture, delivery, and assurance",
   "type": "module",
@@ -26,10 +26,10 @@
     "templates/",
     "references/"
   ],
-  "author": "tractorjuice",
+  "author": "terrygzhou",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tractorjuice/arckit-paperclip.git"
+    "url": "https://github.com/terrygzhou/arckit-paperclip.git"
   }
 }

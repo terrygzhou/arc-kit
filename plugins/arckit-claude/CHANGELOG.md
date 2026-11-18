@@ -185,7 +185,7 @@ and a new CI guard that fails the build when that happens again. See the root
 
 ### Added
 
-- **Kimi Code CLI extension** (`arckit-kimi`) — ninth distribution format. Every ArcKit command ships as a Kimi Agent Skill invoked with `/skill:arckit-<command>`, with the six bundled MCP servers declared in `kimi.plugin.json` and `architecture-workflow` auto-loaded at session start. Install by starting `kimi` and running `/plugins install https://github.com/tractorjuice/arckit-kimi.git` at the prompt; scaffold a project with `arckit init --ai kimi`.
+- **Kimi Code CLI extension** (`arckit-kimi`) — ninth distribution format. Every ArcKit command ships as a Kimi Agent Skill invoked with `/skill:arckit-<command>`, with the six bundled MCP servers declared in `kimi.plugin.json` and `architecture-workflow` auto-loaded at session start. Install by starting `kimi` and running `/plugins install https://github.com/terrygzhou/arckit-kimi.git` at the prompt; scaffold a project with `arckit init --ai kimi`.
 
 ### Fixed
 
@@ -395,7 +395,7 @@ and a new CI guard that fails the build when that happens again. See the root
   skills, Vibe agent TOML, runtime assets, references, schemas, and MCP
   configuration from the canonical ArcKit plugin sources. The generated Vibe
   payload is published to the standalone
-  [`tractorjuice/arckit-vibe`](https://github.com/tractorjuice/arckit-vibe)
+  [`terrygzhou/arckit-vibe`](https://github.com/terrygzhou/arckit-vibe)
   repository instead of being tracked directly in this repo.
 
 ## [5.13.2] — 2026-06-17
@@ -2193,8 +2193,8 @@ The v2.1.117 floor independently clears all three Claude Code regressions descri
 
 ### Added
 
-- **Gemini CLI native extension** — ArcKit is now available as a Gemini CLI extension at [`tractorjuice/arckit-gemini`](https://github.com/tractorjuice/arckit-gemini), giving Gemini users the same zero-config experience as the Claude Code plugin
-  - Install: `gemini extensions install https://github.com/tractorjuice/arckit-gemini`
+- **Gemini CLI native extension** — ArcKit is now available as a Gemini CLI extension at [`terrygzhou/arckit-gemini`](https://github.com/terrygzhou/arckit-gemini), giving Gemini users the same zero-config experience as the Claude Code plugin
+  - Install: `gemini extensions install https://github.com/terrygzhou/arckit-gemini`
   - Bundled MCP servers (AWS Knowledge, Microsoft Learn via mcp-remote), optional Google Developer Knowledge
   - All 48 commands, templates, scripts, guides, and Wardley Mapping skill included
   - Extension version tracks plugin version (v2.4.1)
