@@ -19,6 +19,7 @@ ArcKit is a toolkit for enterprise architects that transforms architecture gover
 - 🔧 ServiceNow service management design
 - 🔗 Maintaining requirements traceability
 - 📎 Citation traceability for external documents (inline `[DOC-CN]` markers with source quotes)
+- 🏢 Open group standards governance — first-class **TOGAF ADM**, **Open Architecture Alliance (O-AA)**, and **IT4IT** (`arckit-it4it`) command sets shipped as dedicated community plugins
 
 ---
 
@@ -44,6 +45,20 @@ Three ways to run ArcKit - pick the one that fits your workflow:
 1. **Claude Code plugin** - the premier experience: 75 core commands, 18 marketplace plugins, autonomous research agents, automation hooks, bundled MCP servers, automatic updates.
 2. **Codex CLI** - scaffold a project with `arckit init --ai codex`, then drive ArcKit skills inside Codex.
 3. **Bring Your Own LLM** - run `arckit build` recipes against any local or remote OpenAI-compatible endpoint.
+
+**Cross-platform one-liner** — detects which assistants you have and sets up the matching install path (the Python CLI is installed only when a CLI-based assistant is present):
+
+```bash
+# macOS / Linux / WSL
+curl -fsSL https://raw.githubusercontent.com/terrygzhou/arc-kit/main/install.sh | bash
+```
+
+```powershell
+# Windows PowerShell 5+
+irm https://raw.githubusercontent.com/terrygzhou/arc-kit/main/install.ps1 | iex
+```
+
+The script detects `claude`, `codex`, `opencode`, `kimi-code`, `vibe`, and GitHub Copilot on your PATH, installs the ArcKit CLI when a CLI-based assistant (codex / opencode / copilot) is found, and prints per-assistant next-step commands.
 
 ### Claude Code
 
@@ -199,6 +214,29 @@ arckit config set llm.model Qwen3.6-27B
 | Windows (native) | Full support | Full support | Partial | Full support | Full support |
 
 **Windows users**: The Claude Code plugin, GitHub Copilot prompt files, Mistral Vibe extension, and Kimi Code CLI extension work natively on all platforms. For Codex CLI / OpenCode CLI on native Windows (without WSL), some commands containing inline bash snippets may require [Git Bash](https://git-scm.com/downloads/win) or [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install). We recommend WSL2 for the best experience.
+
+### One-line Installer
+
+For a hands-off setup, use the cross-platform one-liners — they detect which AI assistants you have on your `PATH` and set up the matching install path:
+
+```bash
+# macOS / Linux / WSL
+curl -fsSL https://raw.githubusercontent.com/terrygzhou/arc-kit/main/install.sh | bash
+```
+
+```powershell
+# Windows PowerShell 5+
+irm https://raw.githubusercontent.com/terrygzhou/arc-kit/main/install.ps1 | iex
+```
+
+How it works:
+
+- **Detection** — the script checks for `claude`, `codex`, `opencode`, `kimi-code`, `vibe`, and GitHub Copilot (`code` / `code-insiders`) on your `PATH`.
+- **Conditional CLI install** — the ArcKit Python CLI is installed only when a CLI-based assistant (codex, opencode, or copilot) is detected. Claude Code alone uses the plugin marketplace and needs no CLI.
+- **Install chain** — `uv tool install` first, then `pipx`, then `pip install --user` as a fallback; the script picks whichever it finds.
+- **Per-assistant next steps** — when done, the script prints the exact install command for each assistant it detected (e.g. `claude plugin marketplace add terrygzhou/arc-kit` for Claude Code, `arckit init my-project --ai codex` for Codex CLI).
+
+For the manual steps behind each path, see the [Claude Code](#claude-code), [Codex CLI](#codex-cli), and [Bring Your Own LLM](#bring-your-own-llm) sections, or the [Installation from Source](#installation-from-source) section at the end of this README.
 
 ---
 

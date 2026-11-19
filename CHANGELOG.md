@@ -5,6 +5,12 @@ All notable changes to ArcKit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Cross-platform one-liner installers (`install.sh` + `install.ps1`).** The macOS/Linux/WSL one-liner (`curl -fsSL .../install.sh | bash`) and its Windows PowerShell sibling (`irm .../install.ps1 | iex`) now detect which AI assistants are on PATH (`claude`, `codex`, `opencode`, `kimi-code`, `vibe`, `code`/`code-insiders` for Copilot, `paperclip`), install the ArcKit Python CLI **only when a CLI-based assistant (codex / opencode / copilot) is present**, and print per-assistant next-step commands. The Python install chain tries `uv tool install` → `pipx install` → a plain `pip install --user` fallback, all from the `arckit-cli@git+https://github.com/terrygzhou/arc-kit.git` source spec. The README gains a dedicated **One-line Installer** section under Quick Start → Platform Support that documents the two one-liners, the detection + conditional-CLI logic, and the uv→pipx→pip fallback chain, and the feature list now includes the IT4IT overlay (`arckit-it4it`).
+
 ## [6.12.0] — 2026-11-17
 
 ### Added

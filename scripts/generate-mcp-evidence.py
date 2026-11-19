@@ -357,7 +357,7 @@ def render_init(manifests: list[tuple[Path, dict, Path]], schemas: dict[str, dic
                 "        {\n"
                 f"            'name': {json.dumps(tool['name'])},\n"
                 f"            'description': {json.dumps(tool['description'])},\n"
-                f"            'arguments': {json.dumps(tool['arguments'])},\n"
+                f"            'arguments': {_python_literal(tool['arguments'], sort_keys=False)},\n"
                 f"            'schema': {json.dumps(tool.get('schema', ''))},\n"
                 f"            'codes': [{', '.join(json.dumps(c) for c in tool.get('codes', []))}],\n"
                 "        },"
